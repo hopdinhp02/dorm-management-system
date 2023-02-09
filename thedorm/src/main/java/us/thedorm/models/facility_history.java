@@ -25,7 +25,7 @@ public class facility_history {
     @JoinColumn(name = "status")
     private facility_status facility_status;
 
-//    @ManyToOne
-//    @JoinColumn(name = "dorm_facility_id")
-//    private dorm_facility dorm_facility;
+    @ManyToOne
+    @JoinColumn(name = "facility_id")
+    private dorm_facility dormFacilitys;
 }

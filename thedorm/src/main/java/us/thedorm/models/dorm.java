@@ -19,7 +19,8 @@ public class dorm {
     @ManyToOne
     @JoinColumn(name = "branch_id")
     private branch branch;
-    @OneToMany(mappedBy = "dorm", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dorms", cascade = CascadeType.ALL)
     private Collection<room> rooms;
-
+    @OneToMany(mappedBy = "dorms", cascade = CascadeType.ALL)
+    private Collection<booking_request> bookingRequests;
 }

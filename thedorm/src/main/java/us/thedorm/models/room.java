@@ -21,13 +21,13 @@ public class room {
     @Column(insertable=false, updatable=false)
     private long dorm_id;
 //    private int base_price_id;
-    private int type_id;
+ //   private int type_id;
     private int status;
     @ManyToOne
 
     @JoinColumn(name = "dorm_id")
 
-    private dorm dorm;
+    private dorm dorms;
     @ManyToOne
     @JoinColumn(name = "base_price_id")
     private base_price basePrice;
@@ -35,4 +35,6 @@ public class room {
     private Collection<electric_water_usage> electricWaterUsages;
     @OneToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
     private Collection<dorm_facility> dormFacilities;
+    @OneToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
+    private Collection<bed> beds;
 }

@@ -31,7 +31,7 @@ public class booking_request {
 
     @ManyToOne
     @JoinColumn(name = "dorm_id")
-    private dorm dorm;
+    private dorm dorms;
 
     @OneToMany(mappedBy = "booking_request", cascade = CascadeType.ALL)
     private Collection<history_booking_request> history_booking_requests;

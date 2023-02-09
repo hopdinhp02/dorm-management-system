@@ -22,4 +22,7 @@ public class history_base_price {
     @ManyToOne
     @JoinColumn(name = "base_price_id")
     private base_price basePrice;
+    @ManyToOne
+    @JoinColumn(name = "UpdateBy")
+    private user_info user_info;
 }
