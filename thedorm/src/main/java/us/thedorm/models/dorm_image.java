@@ -5,21 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collection;
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class dorm {
+public class dorm_image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name;
+//    private long profile_image_id;
+    private String source;
     @ManyToOne
-    @JoinColumn(name = "branch_id")
-    private branch branch;
-    @OneToMany(mappedBy = "dorm", cascade = CascadeType.ALL)
-    private Collection<room> rooms;
-
+    @JoinColumn(name = "profile_image_id")
+    private profile_image_type profile_image_type;
 }
