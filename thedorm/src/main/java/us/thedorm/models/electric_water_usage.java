@@ -5,21 +5,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collection;
+import java.util.Date;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class dorm {
+public class electric_water_usage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name;
+//    private long room_id;
+    private String type;
+    private Date from_date;
+    private Date to_date;
+    private int from_amount;
+    private int to_amount;
     @ManyToOne
-    @JoinColumn(name = "branch_id")
-    private branch branch;
-    @OneToMany(mappedBy = "dorm", cascade = CascadeType.ALL)
-    private Collection<room> rooms;
-
+    @JoinColumn(name = "room_id")
+    private room rooms;
 }
