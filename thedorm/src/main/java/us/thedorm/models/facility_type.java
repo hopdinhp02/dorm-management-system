@@ -11,15 +11,11 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class dorm {
+public class facility_type {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    @ManyToOne
-    @JoinColumn(name = "branch_id")
-    private branch branch;
-    @OneToMany(mappedBy = "dorm", cascade = CascadeType.ALL)
-    private Collection<room> rooms;
-
+    @OneToMany(mappedBy = "facilityType", cascade = CascadeType.ALL)
+    private Collection<dorm_facility> dormFacilities;
 }
