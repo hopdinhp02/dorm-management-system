@@ -16,13 +16,10 @@ public class facility_history {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private int status;
     private String note;
     private int cost;
     private Date created_date;
     private Date created_by;
-
-
 
     @ManyToOne
     @JoinColumn(name = "status")
