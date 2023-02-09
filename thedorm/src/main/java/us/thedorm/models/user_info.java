@@ -11,7 +11,7 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class resident {
+public class user_info {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,15 +29,15 @@ public class resident {
     private String image;
 
 
-    @OneToMany(mappedBy = "resident", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user_info", cascade = CascadeType.ALL)
     private Collection<booking_request> booking_requests;
-    @OneToMany(mappedBy = "resident", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user_info", cascade = CascadeType.ALL)
     private Collection<billing> billings;
 
-    @OneToMany(mappedBy = "resident", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user_info", cascade = CascadeType.ALL)
     private Collection<resident_history> resident_histories;
 
-    @OneToMany(mappedBy = "resident", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user_info", cascade = CascadeType.ALL)
     private Collection<history_booking_request> history_booking_requests;
     @ManyToOne
     @JoinColumn(name = "role_id")

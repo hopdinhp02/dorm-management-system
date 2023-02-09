@@ -29,7 +29,7 @@ public class history_booking_request {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    private resident resident;
+    private user_info user_info;
 
 
 }

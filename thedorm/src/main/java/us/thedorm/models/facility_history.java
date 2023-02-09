@@ -25,7 +25,7 @@ public class facility_history {
 
 
     @ManyToOne
-    @JoinColumn(name = "facility_id")
+    @JoinColumn(name = "status")
     private facility_status facility_status;
 
 //    @ManyToOne

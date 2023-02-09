@@ -18,5 +18,5 @@ public class role {
     private long id;
     private String name;
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    private Collection<resident> residents;
+    private Collection<user_info> user_infos;
 }

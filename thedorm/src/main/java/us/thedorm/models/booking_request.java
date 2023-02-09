@@ -27,7 +27,7 @@ public class booking_request {
 
     @ManyToOne
     @JoinColumn(name = "resident_id")
-    private resident resident;
+    private user_info user_info;
 
     @ManyToOne
     @JoinColumn(name = "dorm_id")

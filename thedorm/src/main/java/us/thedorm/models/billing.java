@@ -28,6 +28,6 @@ public class billing {
     private Date pay_date;
     @ManyToOne
     @JoinColumn(name = "resident_id")
-    private resident resident;
+    private user_info user_info;
 
 }
