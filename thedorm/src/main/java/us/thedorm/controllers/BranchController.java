@@ -19,15 +19,15 @@ public class BranchController {
     private BranchRepository branchRepository;
 
     @GetMapping("")
-    ResponseEntity<ResponseObject> getAllBranches() {
-        List<branch> foundBranches = branchRepository.findAll();
-        if (foundBranches.size() == 0) {
+    ResponseEntity<ResponseObject> getAllBranchs() {
+        List<branch> foundProducts = branchRepository.findAll();
+        if (foundProducts.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject("failed", "", "")
             );
         }
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "", foundBranches)
+                new ResponseObject("OK", "", foundProducts)
         );
 
     }
@@ -43,7 +43,7 @@ public class BranchController {
     }
 
     @PostMapping("/insert")
-    ResponseEntity<ResponseObject> insertBranch(@RequestBody branch newBranch) {
+    ResponseEntity<ResponseObject> insertProduct(@RequestBody branch newBranch) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", branchRepository.save(newBranch))
         );
@@ -78,4 +78,6 @@ public class BranchController {
                 new ResponseObject("failed", "", "")
         );
     }
+
 }
+

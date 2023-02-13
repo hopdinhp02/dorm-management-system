@@ -1,11 +1,13 @@
 package us.thedorm.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,5 +23,8 @@ public class branch {
     private int type_id;
     private int status;
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Collection<dorm> dorms;
+
+
 }

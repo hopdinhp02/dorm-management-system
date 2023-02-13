@@ -1,5 +1,7 @@
 package us.thedorm.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,9 +20,13 @@ public class dorm {
     private String name;
     @ManyToOne
     @JoinColumn(name = "branch_id")
+    @JsonBackReference// many
     private branch branch;
     @OneToMany(mappedBy = "dorms", cascade = CascadeType.ALL)
+    @JsonManagedReference// one
     private Collection<room> rooms;
     @OneToMany(mappedBy = "dorms", cascade = CascadeType.ALL)
     private Collection<booking_request> bookingRequests;
+
+
 }
