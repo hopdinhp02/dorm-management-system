@@ -18,8 +18,8 @@ public class room {
     private String name;
     private int no_beds;
     private int floor;
-    @Column(insertable=false, updatable=false)
-    private long dorm_id;
+//    @Column(insertable=false, updatable=false)
+//    private long dorm_id;
 //    private int base_price_id;
  //   private int type_id;
     private int status;

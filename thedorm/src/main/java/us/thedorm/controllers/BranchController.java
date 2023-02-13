@@ -17,19 +17,21 @@ import java.util.Optional;
 public class BranchController {
     @Autowired
     private BranchRepository branchRepository;
+
     @GetMapping("")
-    ResponseEntity<ResponseObject> getAllProducts() {
-        List<branch> foundProducts = branchRepository.findAll();
-        if(foundProducts.size() == 0){
+    ResponseEntity<ResponseObject> getAllBranches() {
+        List<branch> foundBranches = branchRepository.findAll();
+        if (foundBranches.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject("failed", "", "")
             );
         }
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "", foundProducts)
+                new ResponseObject("OK", "", foundBranches)
         );
 
     }
+
     @GetMapping("/{id}")
     ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
         Optional<branch> foundBranch = branchRepository.findById(id);
@@ -41,14 +43,14 @@ public class BranchController {
     }
 
     @PostMapping("/insert")
-    ResponseEntity<ResponseObject> insertProduct(@RequestBody branch newBranch){
+    ResponseEntity<ResponseObject> insertBranch(@RequestBody branch newBranch) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", branchRepository.save(newBranch))
         );
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<ResponseObject> updateProduct(@RequestBody branch newBranch, @PathVariable Long id){
+    ResponseEntity<ResponseObject> updateBranch(@RequestBody branch newBranch, @PathVariable Long id) {
         branch updateBranch = branchRepository.findById(id)
                 .map(branch -> {
                     branch.setName(newBranch.getName());
@@ -57,16 +59,16 @@ public class BranchController {
                     branch.setType_id(newBranch.getType_id());
                     branch.setStatus(newBranch.getStatus());
                     return branchRepository.save(branch);
-                }).orElseGet(()-> branchRepository.save(newBranch));
+                }).orElseGet(() -> branchRepository.save(newBranch));
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert Product successfully", updateBranch)
         );
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<ResponseObject> deleteProduct(@PathVariable Long id){
+    ResponseEntity<ResponseObject> deleteBranch(@PathVariable Long id) {
         boolean exists = branchRepository.existsById(id);
-        if(exists){
+        if (exists) {
             branchRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "", "")
@@ -76,6 +78,4 @@ public class BranchController {
                 new ResponseObject("failed", "", "")
         );
     }
-
-
 }
