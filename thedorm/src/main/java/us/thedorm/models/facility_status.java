@@ -21,6 +21,8 @@ public class facility_status {
 
     @OneToMany(mappedBy = "facility_status", cascade = CascadeType.ALL)
     private Collection<facility_history> facility_histories;
+    @OneToMany(mappedBy = "facilityStatus", cascade = CascadeType.ALL)
+    private Collection<dorm_facility> dorm_facilities;
 
 
 }

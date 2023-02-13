@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -15,9 +17,9 @@ public class dorm_facility {
     private long id;
     private String name;
 //    private int type_id;
-    private int status;
+   // private int status;
 //    private long room_id;
-    private long bed_id;
+ //   private long bed_id;
     private int floor;
     @ManyToOne
     @JoinColumn(name = "room_id")
@@ -25,4 +27,13 @@ public class dorm_facility {
     @ManyToOne
     @JoinColumn(name = "type_id")
     private facility_type facilityType;
+    @ManyToOne
+    @JoinColumn(name = "bed_id")
+    private bed beds;
+    @OneToMany(mappedBy = "dormFacilitys",cascade = CascadeType.ALL)
+    private Collection<facility_history> facilityHistory;
+    @ManyToOne
+    @JoinColumn(name = "status")
+    private facility_status facilityStatus;
+
 }

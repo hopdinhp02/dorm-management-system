@@ -27,5 +27,7 @@ public class resident_history {
     @JoinColumn(name = "resident_id")
     private user_info user_info;
 
-
+    @ManyToOne
+    @JoinColumn(name = "bed_id")
+    private bed beds;
 }

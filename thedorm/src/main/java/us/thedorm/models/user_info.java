@@ -39,6 +39,8 @@ public class user_info {
 
     @OneToMany(mappedBy = "user_info", cascade = CascadeType.ALL)
     private Collection<history_booking_request> history_booking_requests;
+    @OneToMany(mappedBy = "user_info", cascade = CascadeType.ALL)
+    private Collection<history_base_price> historyBasePrices;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private role role;
