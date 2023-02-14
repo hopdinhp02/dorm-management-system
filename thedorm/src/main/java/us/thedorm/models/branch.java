@@ -21,5 +21,6 @@ public class branch {
     private int type_id;
     private int status;
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
+    @JsonManagedReference//one
     private Collection<dorm> dorms;
 }

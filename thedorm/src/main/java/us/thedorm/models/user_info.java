@@ -1,5 +1,6 @@
 package us.thedorm.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class user_info {
 
 
     @OneToMany(mappedBy = "user_info", cascade = CascadeType.ALL)
+    @JsonManagedReference//one
     private Collection<booking_request> booking_requests;
     @OneToMany(mappedBy = "user_info", cascade = CascadeType.ALL)
     private Collection<billing> billings;
