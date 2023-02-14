@@ -42,7 +42,7 @@ public class DormController {
                 ));
     }
 
-    @PostMapping("/insert")
+    @PostMapping("/")
     ResponseEntity<ResponseObject> insertDorm(@RequestBody dorm newDorm){
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", dormRepository.save(newDorm))
