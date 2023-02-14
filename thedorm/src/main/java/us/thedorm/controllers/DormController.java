@@ -56,6 +56,7 @@ public class DormController {
 
                     dorm.setName(newDorm.getName());
                     dorm.setBranch(newDorm.getBranch());
+
                     dorm.setRooms(newDorm.getRooms());
                     dorm.setBookingRequests(newDorm.getBookingRequests());
                     return dormRepository.save(dorm);
