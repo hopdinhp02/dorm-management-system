@@ -55,10 +55,8 @@ public class BookingRequestController {
                 .map(booking_request -> {
 
                     booking_request.setUser_info(newBookingRequest.getUser_info());
-                    booking_request.setDorms(newBookingRequest.getDorms());
-                    booking_request.setFloor(newBookingRequest.getFloor());
+                    booking_request.setBed(newBookingRequest.getBed());
                     booking_request.setNote(newBookingRequest.getNote());
-                    booking_request.setPrice(newBookingRequest.getPrice());
                     booking_request.setStart_date(newBookingRequest.getStart_date());
                     booking_request.setEnd_date(newBookingRequest.getEnd_date());
                     booking_request.setCreated_date(newBookingRequest.getCreated_date());

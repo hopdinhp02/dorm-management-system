@@ -58,7 +58,6 @@ public class DormController {
                     dorm.setBranch(newDorm.getBranch());
 
                     dorm.setRooms(newDorm.getRooms());
-                    dorm.setBookingRequests(newDorm.getBookingRequests());
                     return dormRepository.save(dorm);
 
                 }).orElseGet(()-> dormRepository.save(newDorm));

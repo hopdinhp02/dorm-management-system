@@ -18,6 +18,8 @@ public class base_price {
     private int bed_price;
     private int electric_price;
     private int water_price;
+    private int internetPrice;
+    private int cleanPrice;
     @OneToMany(mappedBy = "basePrice", cascade = CascadeType.ALL)
     private Collection<room> rooms;
     @OneToMany(mappedBy = "basePrice", cascade = CascadeType.ALL)

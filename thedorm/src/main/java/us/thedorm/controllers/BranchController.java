@@ -35,13 +35,9 @@ public class BranchController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
-        Optional<branch> foundBranch = branchRepository.findById(id);
-        return foundBranch.isPresent() ? ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("ok", "", foundBranch)
-        ) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ResponseObject("false", "", ""
-                ));
+    Optional<branch> findById(@PathVariable Long id) {
+//        Optional<branch> foundBranch = branchRepository.findById(id);
+        return branchRepository.findById(id);
     }
 
     @PostMapping("/insert")

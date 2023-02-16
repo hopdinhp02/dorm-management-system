@@ -18,7 +18,6 @@ public class resident_history {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private long price;
     private Date checkin_date;
     private Date checkout_date;
     private Date start_date;

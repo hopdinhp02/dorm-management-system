@@ -25,9 +25,7 @@ public class dorm {
     @OneToMany(mappedBy = "dorms", cascade = CascadeType.ALL)
     @JsonManagedReference// one
     private Collection<room> rooms;
-    @OneToMany(mappedBy = "dorms", cascade = CascadeType.ALL)
-    @JsonManagedReference//one
-    private Collection<booking_request> bookingRequests;
+
 
 
 }

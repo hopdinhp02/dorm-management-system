@@ -1,6 +1,7 @@
 package us.thedorm.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +26,12 @@ public class bed {
     @JsonBackReference// many
     private room rooms;
     @OneToMany(mappedBy = "beds", cascade = CascadeType.ALL)
+    @JsonManagedReference//one
     private Collection<dorm_facility> dormFacilities;
     @OneToMany(mappedBy = "beds", cascade = CascadeType.ALL)
+    @JsonManagedReference//one
     private Collection<resident_history> residentHistories;
+    @OneToMany(mappedBy = "bed", cascade = CascadeType.ALL)
+    @JsonManagedReference//one
+    private Collection<booking_request> bookingRequests;
 }
