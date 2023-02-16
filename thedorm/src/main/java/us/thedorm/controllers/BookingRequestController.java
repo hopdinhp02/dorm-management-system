@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.ResponseObject;
 import us.thedorm.models.booking_request;
 import us.thedorm.models.dorm;
+import us.thedorm.models.history_booking_request;
 import us.thedorm.repositories.BookingRequestRepository;
 import us.thedorm.repositories.DormRepository;
+import us.thedorm.repositories.HistoryBookingRequestRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,8 @@ import java.util.Optional;
 public class BookingRequestController {
     @Autowired
     private BookingRequestRepository bookingRequestRepository;
+    @Autowired
+    private HistoryBookingRequestRepository historyBookingRequestRepository;
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllbBookingRequests() {
         List<booking_request> foundBookingRequests = bookingRequestRepository.findAll();
@@ -44,8 +48,11 @@ public class BookingRequestController {
 
     @PostMapping("/")
     ResponseEntity<ResponseObject> insertBookingRequest(@RequestBody booking_request newBookingRequest){
+        booking_request booking = bookingRequestRepository.save(newBookingRequest);
+
+        historyBookingRequestRepository.save(recordChangeInBooking(booking));
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
+                new ResponseObject("OK", "Insert successfully", booking)
         );
     }
 
@@ -53,7 +60,6 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> updateBookingRequest(@RequestBody booking_request newBookingRequest, @PathVariable Long id){
         booking_request updateBookingRequest = bookingRequestRepository.findById(id)
                 .map(booking_request -> {
-
                     booking_request.setUser_info(newBookingRequest.getUser_info());
                     booking_request.setBed(newBookingRequest.getBed());
                     booking_request.setNote(newBookingRequest.getNote());
@@ -61,11 +67,11 @@ public class BookingRequestController {
                     booking_request.setEnd_date(newBookingRequest.getEnd_date());
                     booking_request.setCreated_date(newBookingRequest.getCreated_date());
                     booking_request.setStatus(newBookingRequest.getStatus());
-
-
                     return bookingRequestRepository.save(booking_request);
-
-                }).orElseGet(()-> bookingRequestRepository.save(newBookingRequest));
+                }).orElseGet(()-> null);
+        if(updateBookingRequest != null){
+            historyBookingRequestRepository.save(recordChangeInBooking(updateBookingRequest));
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert Product successfully", updateBookingRequest)
         );
@@ -83,6 +89,16 @@ public class BookingRequestController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("failed", "", "")
         );
+    }
+
+    private  history_booking_request recordChangeInBooking(booking_request booking){
+        history_booking_request historyBookingRequest = new history_booking_request();
+        historyBookingRequest.setBooking_request(booking);
+        historyBookingRequest.setStatus(booking.getStatus());
+        historyBookingRequest.setNote(booking.getNote());
+        historyBookingRequest.setCreatedDate(booking.getCreated_date());
+        historyBookingRequest.setUser_info(booking.getUser_info());
+        return historyBookingRequest;
     }
 
 }

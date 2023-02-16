@@ -17,11 +17,9 @@ public class history_booking_request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private long price;
-    private Date checkin_date;
-    private Date checkout_date;
-    private Date start_date;
-    private Date end_date;
+    private int status;
+    private String note;
+    private Date createdDate;
 
     @ManyToOne
     @JoinColumn(name = "booking_request_id")
