@@ -8,9 +8,17 @@
     </head>
     <body>
         <select id="branchs" onchange="loaddorm()">
-            <option value="-1">select branch</option>
+            <option value="" disabled selected>Chọn một lựa chọn</option>
         </select><br>
-        <select id="dorms"></select>
+        <select id="dorms" onchange="loadrooms()">
+            <option value="" disabled selected>Chọn một lựa chọn</option>
+
+        </select>
+        <br>
+        <select id="rooms" onchange="loadbeds()"></select>
+        <br>
+        <select id="beds"></select>
+        
     </body>
     <script src="js/booking.js"></script>
     </html>
