@@ -1,6 +1,7 @@
 package us.thedorm.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,5 +19,6 @@ public class role {
     private long id;
     private String name;
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @JsonBackReference
     private Collection<user_info> user_infos;
 }
