@@ -32,6 +32,7 @@ public class room {
     private dorm dorms;
     @ManyToOne
     @JoinColumn(name = "base_price_id")
+    @JsonManagedReference
     private base_price basePrice;
     @OneToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
     private Collection<electric_water_usage> electricWaterUsages;

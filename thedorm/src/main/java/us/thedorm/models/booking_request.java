@@ -30,11 +30,11 @@ public class booking_request {
 
     @ManyToOne
     @JoinColumn(name = "resident_id")
-    @JsonBackReference// many
+    @JsonManagedReference// many
     private user_info user_info;
     @ManyToOne
     @JoinColumn(name = "bed_id")
-    @JsonBackReference// many
+    @JsonManagedReference// many
     private bed bed;
 
     @OneToMany(mappedBy = "booking_request", cascade = CascadeType.ALL)

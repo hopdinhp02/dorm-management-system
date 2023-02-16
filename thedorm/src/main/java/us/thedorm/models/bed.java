@@ -32,6 +32,6 @@ public class bed {
     @JsonManagedReference//one
     private Collection<resident_history> residentHistories;
     @OneToMany(mappedBy = "bed", cascade = CascadeType.ALL)
-    @JsonManagedReference//one
+    @JsonBackReference//one
     private Collection<booking_request> bookingRequests;
 }

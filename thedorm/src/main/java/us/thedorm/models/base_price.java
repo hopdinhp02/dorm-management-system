@@ -1,5 +1,6 @@
 package us.thedorm.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class base_price {
     private int internetPrice;
     private int cleanPrice;
     @OneToMany(mappedBy = "basePrice", cascade = CascadeType.ALL)
+    @JsonBackReference
     private Collection<room> rooms;
     @OneToMany(mappedBy = "basePrice", cascade = CascadeType.ALL)
     private Collection<dorm_profile> dormProfiles;
