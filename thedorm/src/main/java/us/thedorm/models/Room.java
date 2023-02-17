@@ -1,6 +1,7 @@
 package us.thedorm.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,12 +14,12 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class room {
+@Table(name = "room")
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    private int no_beds;
     private int floor;
 //    @Column(insertable=false, updatable=false)
 //    private long dorm_id;
@@ -26,19 +27,18 @@ public class room {
  //   private int type_id;
     private int status;
     @ManyToOne
-
     @JoinColumn(name = "dorm_id")
-    @JsonBackReference// many
-    private dorm dorms;
+    private Dorm dorm;
     @ManyToOne
     @JoinColumn(name = "base_price_id")
-    @JsonManagedReference
-    private base_price basePrice;
+    private BasePrice basePrice;
     @OneToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
-    private Collection<electric_water_usage> electricWaterUsages;
+    @JsonIgnore
+    private Collection<ElectricWaterUsage> electricWaterUsages;
     @OneToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
-    private Collection<dorm_facility> dormFacilities;
+    @JsonIgnore
+    private Collection<DormFacility> dormFacilities;
     @OneToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
-    @JsonManagedReference// one
-    private Collection<bed> beds;
+    @JsonIgnore
+    private Collection<Bed> beds;
 }

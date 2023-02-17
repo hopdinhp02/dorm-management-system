@@ -11,18 +11,20 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class history_base_price {
+@Table(name = "history_base_price")
+public class HistoryBasePrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 //    private int base_price_id;
     private String type;
     private int price;
-    private Date created_date;
+    @Column(name = "created_date")
+    private Date createdDate;
     @ManyToOne
     @JoinColumn(name = "base_price_id")
-    private base_price basePrice;
+    private BasePrice basePrice;
     @ManyToOne
     @JoinColumn(name = "UpdateBy")
-    private user_info user_info;
+    private UserInfo userInfo;
 }

@@ -1,7 +1,6 @@
 package us.thedorm.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,19 +12,16 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class dorm {
+@Table(name = "dorm")
+public class Dorm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     @ManyToOne
     @JoinColumn(name = "branch_id")
-    @JsonBackReference// many
-    private branch branch;
-    @OneToMany(mappedBy = "dorms", cascade = CascadeType.ALL)
-    @JsonManagedReference// one
-    private Collection<room> rooms;
-
-
-
+    private Branch branch;
+    @OneToMany(mappedBy = "dorm", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Collection<Room> rooms;
 }

@@ -11,15 +11,16 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class profile_image_type {
+@Table(name = "profile_image_type")
+public class ProfileImageType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-//    private long dorm_profile_id;
+
     private int type;
-    @OneToMany(mappedBy = "profile_image_type", cascade = CascadeType.ALL)
-    private Collection<dorm_image> dormImages;
+    @OneToMany(mappedBy = "profileImageType", cascade = CascadeType.ALL)
+    private Collection<DormImage> dormImages;
     @ManyToOne
     @JoinColumn(name = "dorm_profile_id")
-    private dorm_profile dormProfile;
+    private DormProfile dormProfile;
 }
