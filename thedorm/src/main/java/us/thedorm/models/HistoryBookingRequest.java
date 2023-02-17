@@ -12,22 +12,24 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class history_booking_request {
+@Table(name = "history_booking_request")
+public class HistoryBookingRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private int status;
     private String note;
+    @Column(name = "created_date")
     private Date createdDate;
 
     @ManyToOne
     @JoinColumn(name = "booking_request_id")
-    private booking_request booking_request;
+    private BookingRequest bookingRequest;
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    private user_info user_info;
+    private UserInfo userInfo;
 
 
 }

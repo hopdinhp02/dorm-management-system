@@ -1,7 +1,7 @@
 package us.thedorm.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import us.thedorm.models.billing;
+import us.thedorm.models.Billing;
 
-public interface BillingRepository extends JpaRepository<billing,Long> {
+public interface BillingRepository extends JpaRepository<Billing,Long> {
 }

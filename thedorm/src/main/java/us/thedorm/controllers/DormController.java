@@ -5,9 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.ResponseObject;
-import us.thedorm.models.branch;
-import us.thedorm.models.dorm;
-import us.thedorm.repositories.BranchRepository;
+import us.thedorm.models.Dorm;
 import us.thedorm.repositories.DormRepository;
 
 import java.util.List;
@@ -21,9 +19,9 @@ public class DormController {
     private DormRepository dormRepository;
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllDorms() {
-        List<dorm> foundDorms = dormRepository.findAll();
+        List<Dorm> foundDorms = dormRepository.findAll();
         if(foundDorms.size() == 0){
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("failed", "", "")
             );
         }
@@ -34,7 +32,7 @@ public class DormController {
     }
     @GetMapping("/{id}")
     ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
-        Optional<dorm> foundDorm = dormRepository.findById(id);
+        Optional<Dorm> foundDorm = dormRepository.findById(id);
         return foundDorm.isPresent() ? ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "", foundDorm)
         ) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -42,16 +40,16 @@ public class DormController {
                 ));
     }
 
-    @PostMapping("/")
-    ResponseEntity<ResponseObject> insertDorm(@RequestBody dorm newDorm){
+    @PostMapping("")
+    ResponseEntity<ResponseObject> insertDorm(@RequestBody Dorm newDorm){
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", dormRepository.save(newDorm))
         );
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<ResponseObject> updateDorm(@RequestBody dorm newDorm, @PathVariable Long id){
-        dorm updateDorm = dormRepository.findById(id)
+    ResponseEntity<ResponseObject> updateDorm(@RequestBody Dorm newDorm, @PathVariable Long id){
+        Dorm updateDorm = dormRepository.findById(id)
                 .map(dorm -> {
 
                     dorm.setName(newDorm.getName());
@@ -60,10 +58,17 @@ public class DormController {
                     dorm.setRooms(newDorm.getRooms());
                     return dormRepository.save(dorm);
 
-                }).orElseGet(()-> dormRepository.save(newDorm));
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Insert Product successfully", updateDorm)
+                }).orElseGet(()-> null);
+        if(updateDorm !=null){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Insert Product successfully", updateDorm)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("failed", "", "")
         );
+
+
     }
 
     @DeleteMapping("/{id}")
