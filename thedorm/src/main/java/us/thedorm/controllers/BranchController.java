@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.ResponseObject;
-import us.thedorm.models.branch;
+import us.thedorm.models.Branch;
 import us.thedorm.repositories.BranchRepository;
 
 import java.util.List;
@@ -21,10 +21,10 @@ public class BranchController {
     @GetMapping("")
 
     ResponseEntity<ResponseObject> getAllBranches() {
-        List<branch> foundBranches = branchRepository.findAll();
+        List<Branch> foundBranches = branchRepository.findAll();
         if (foundBranches.size() == 0) {
 
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("failed", "", "")
             );
         }
@@ -35,14 +35,14 @@ public class BranchController {
     }
 
     @GetMapping("/{id}")
-    Optional<branch> findById(@PathVariable Long id) {
-//        Optional<branch> foundBranch = branchRepository.findById(id);
+    Optional<Branch> findById(@PathVariable Long id) {
+//        Optional<Branch> foundBranch = branchRepository.findById(id);
         return branchRepository.findById(id);
     }
 
-    @PostMapping("/insert")
+    @PostMapping("")
 
-    ResponseEntity<ResponseObject> insertBranch(@RequestBody branch newBranch) {
+    ResponseEntity<ResponseObject> insertBranch(@RequestBody Branch newBranch) {
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", branchRepository.save(newBranch))
@@ -51,20 +51,26 @@ public class BranchController {
 
     @PutMapping("/{id}")
 
-    ResponseEntity<ResponseObject> updateBranch(@RequestBody branch newBranch, @PathVariable Long id) {
+    ResponseEntity<ResponseObject> updateBranch(@RequestBody Branch newBranch, @PathVariable Long id) {
 
-        branch updateBranch = branchRepository.findById(id)
+        Branch updateBranch = branchRepository.findById(id)
                 .map(branch -> {
                     branch.setName(newBranch.getName());
                     branch.setAddress(newBranch.getAddress());
                     branch.setPhone(newBranch.getPhone());
-                    branch.setType_id(newBranch.getType_id());
+                    branch.setTypeId(newBranch.getTypeId());
                     branch.setStatus(newBranch.getStatus());
                     return branchRepository.save(branch);
-                }).orElseGet(() -> branchRepository.save(newBranch));
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Insert Product successfully", updateBranch)
+                }).orElseGet(() -> null);
+        if(updateBranch != null){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Insert Product successfully", updateBranch)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("failed", "", "")
         );
+
     }
 
     @DeleteMapping("/{id}")

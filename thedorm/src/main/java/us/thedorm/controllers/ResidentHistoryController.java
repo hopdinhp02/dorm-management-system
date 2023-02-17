@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import us.thedorm.models.ResidentHistory;
 import us.thedorm.models.ResponseObject;
-import us.thedorm.models.resident_history;
 import us.thedorm.repositories.ResidentHistoryRepository;
 
 
@@ -21,9 +21,9 @@ public class ResidentHistoryController {
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAll() {
-        List<resident_history> founds = residentHistoryRepository.findAll();
+        List<ResidentHistory> founds = residentHistoryRepository.findAll();
         if (founds.size() == 0) {
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("failed", "", "")
             );
         }
@@ -35,7 +35,7 @@ public class ResidentHistoryController {
 
     @GetMapping("/{id}")
     ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
-        Optional<resident_history> found = residentHistoryRepository.findById(id);
+        Optional<ResidentHistory> found = residentHistoryRepository.findById(id);
         return found.isPresent() ? ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "", found)
         ) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -43,29 +43,35 @@ public class ResidentHistoryController {
                 ));
     }
 
-    @PostMapping("/insert")
-    ResponseEntity<ResponseObject> insert(@RequestBody resident_history newResidentHistory) {
+    @PostMapping("")
+    ResponseEntity<ResponseObject> insert(@RequestBody ResidentHistory newResidentHistory) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", residentHistoryRepository.save(newResidentHistory))
         );
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<ResponseObject> update(@RequestBody resident_history newResidentHistory, @PathVariable Long id) {
-        resident_history updateHistory = residentHistoryRepository.findById(id)
+    ResponseEntity<ResponseObject> update(@RequestBody ResidentHistory newResidentHistory, @PathVariable Long id) {
+        ResidentHistory updateHistory = residentHistoryRepository.findById(id)
                 .map(history -> {
-                    history.setBeds(newResidentHistory.getBeds());
-                    history.setUser_info(newResidentHistory.getUser_info());
-                    history.setCheckin_date(newResidentHistory.getCheckin_date());
-                    history.setCheckout_date(newResidentHistory.getCheckout_date());
-                    history.setStart_date(newResidentHistory.getStart_date());
-                    history.setEnd_date(newResidentHistory.getEnd_date());
+                    history.setBed(newResidentHistory.getBed());
+                    history.setUserInfo(newResidentHistory.getUserInfo());
+                    history.setCheckinDate(newResidentHistory.getCheckinDate());
+                    history.setCheckoutDate(newResidentHistory.getCheckoutDate());
+                    history.setStartDate(newResidentHistory.getStartDate());
+                    history.setEndDate(newResidentHistory.getEndDate());
                     return residentHistoryRepository.save(history);
 
                 }).orElseGet(() -> null);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Insert Product successfully", updateHistory)
+        if(updateHistory != null){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Insert Product successfully", updateHistory)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("failed", "", "")
         );
+
     }
 
     @DeleteMapping("/{id}")

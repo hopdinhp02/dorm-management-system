@@ -12,21 +12,25 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class resident_history {
+@Table(name = "resident_history")
+public class ResidentHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private Date checkin_date;
-    private Date checkout_date;
-    private Date start_date;
-    private Date end_date;
+    @Column(name = "checkin_date")
+    private Date checkinDate;
+    @Column(name = "checkout_date")
+    private Date checkoutDate;
+    @Column(name = "start_date")
+    private Date startDate;
+    @Column(name = "end_date")
+    private Date endDate;
     @ManyToOne
     @JoinColumn(name = "resident_id")
-    private user_info user_info;
+    private UserInfo userInfo;
 
     @ManyToOne
     @JoinColumn(name = "bed_id")
-    private bed beds;
+    private Bed bed;
 }

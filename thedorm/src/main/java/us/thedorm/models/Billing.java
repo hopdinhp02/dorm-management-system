@@ -12,8 +12,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class billing {
+@Table(name = "billing")
+public class Billing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +22,14 @@ public class billing {
     private String type;
     private int cost;
     private String status;
-
-    private Date created_date;
-    private Date deadline_date;
-    private Date pay_date;
+    @Column(name = "created_date")
+    private Date createdDate;
+    @Column(name = "deadline_date")
+    private Date deadlineDate;
+    @Column(name = "pay_date")
+    private Date payDate;
     @ManyToOne
     @JoinColumn(name = "resident_id")
-    private user_info user_info;
+    private UserInfo userInfo;
 
 }

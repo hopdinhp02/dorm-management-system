@@ -1,7 +1,11 @@
 package us.thedorm.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import us.thedorm.models.user_info;
+import us.thedorm.models.UserInfo;
 
-public interface UserInfoRepo extends JpaRepository<user_info,Long> {
+import java.util.Optional;
+
+
+public interface UserInfoRepo extends JpaRepository<UserInfo,Long> {
+    Optional<UserInfo> findByUsername(String username);
 }

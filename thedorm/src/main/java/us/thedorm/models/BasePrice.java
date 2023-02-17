@@ -1,6 +1,6 @@
 package us.thedorm.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,20 +12,28 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class base_price {
+@Table(name = "base_price")
+public class BasePrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private int bed_price;
-    private int electric_price;
-    private int water_price;
+    @Column(name = "bed_price")
+    private int bedPrice;
+    @Column(name = "electric_price")
+    private int electricPrice;
+    @Column(name = "water_price")
+    private int waterPrice;
+    @Column(name = "internet_price")
     private int internetPrice;
+    @Column(name = "clean_price")
     private int cleanPrice;
     @OneToMany(mappedBy = "basePrice", cascade = CascadeType.ALL)
-    @JsonBackReference
-    private Collection<room> rooms;
+    @JsonIgnore
+    private Collection<Room> rooms;
     @OneToMany(mappedBy = "basePrice", cascade = CascadeType.ALL)
-    private Collection<dorm_profile> dormProfiles;
+    @JsonIgnore
+    private Collection<DormProfile> dormProfiles;
     @OneToMany(mappedBy = "basePrice", cascade = CascadeType.ALL)
-    private Collection<history_base_price> historyBasePrices;
+    @JsonIgnore
+    private Collection<HistoryBasePrice> historyBasePrices;
 }

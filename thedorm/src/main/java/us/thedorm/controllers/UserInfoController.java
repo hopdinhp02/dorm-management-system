@@ -5,8 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.ResponseObject;
-import us.thedorm.models.branch;
-import us.thedorm.models.user_info;
+import us.thedorm.models.UserInfo;
 import us.thedorm.repositories.UserInfoRepo;
 
 import java.util.List;
@@ -14,16 +13,16 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping(path = "/api/v1/user_info")
+@RequestMapping(path = "/api/v1/user-infos")
 public class UserInfoController {
     @Autowired
     private UserInfoRepo userInfoRepo;
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllUserInfo() {
-     List<user_info> foundUserInfo = userInfoRepo.findAll();
+     List<UserInfo> foundUserInfo = userInfoRepo.findAll();
         if (foundUserInfo.size() == 0) {
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("failed", "", "")
             );
         }
@@ -36,7 +35,7 @@ public class UserInfoController {
 
     @GetMapping("/{id}")
     ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
-        Optional<user_info> foundUserInfo  = userInfoRepo.findById(id);
+        Optional<UserInfo> foundUserInfo  = userInfoRepo.findById(id);
         return foundUserInfo.isPresent() ? ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "", foundUserInfo)
         ) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -45,9 +44,9 @@ public class UserInfoController {
     }
 
 
-    @PostMapping("/insert")
+    @PostMapping("")
 
-    ResponseEntity<ResponseObject> insertUserInfo(@RequestBody user_info newUserInfo) {
+    ResponseEntity<ResponseObject> insertUserInfo(@RequestBody UserInfo newUserInfo) {
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", userInfoRepo.save(newUserInfo))
@@ -56,20 +55,27 @@ public class UserInfoController {
 
     @PutMapping("/{id}")
 
-    ResponseEntity<ResponseObject> updateUserInfo(@RequestBody user_info newUserInfo, @PathVariable Long id) {
+    ResponseEntity<ResponseObject> updateUserInfo(@RequestBody UserInfo newUserInfo, @PathVariable Long id) {
 
-        user_info updateUserInfo = userInfoRepo.findById(id)
-                .map(user_info -> {
-                   user_info.setUsername(newUserInfo.getUsername());
-                    user_info.setPassword(newUserInfo.getPassword());
-                    user_info.setName(newUserInfo.getName());
-                    user_info.setEmail(newUserInfo.getEmail());
-                    user_info.setPhone(newUserInfo.getPhone());
-                    return userInfoRepo.save(user_info);
-                }).orElseGet(() -> userInfoRepo.save(newUserInfo));
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Update successfully", updateUserInfo)
+        UserInfo updateUserInfo = userInfoRepo.findById(id)
+                .map(userInfo -> {
+                    userInfo.setUsername(newUserInfo.getUsername());
+                    userInfo.setPassword(newUserInfo.getPassword());
+                    userInfo.setName(newUserInfo.getName());
+                    userInfo.setEmail(newUserInfo.getEmail());
+                    userInfo.setPhone(newUserInfo.getPhone());
+                    return userInfoRepo.save(userInfo);
+                }).orElseGet(() -> null);
+
+        if(updateUserInfo != null){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Insert Product successfully", updateUserInfo)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("failed", "", "")
         );
+
     }
 
     @DeleteMapping("/{id}")
