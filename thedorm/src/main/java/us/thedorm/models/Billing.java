@@ -19,9 +19,13 @@ public class Billing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String type;
+//    private String type;
+@Enumerated(EnumType.STRING)
+private TypeBilling typeBilling;
     private int cost;
-    private String status;
+//    private String status;
+    @Enumerated(EnumType.STRING)
+    private StatusBilling statusBilling;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "deadline_date")
