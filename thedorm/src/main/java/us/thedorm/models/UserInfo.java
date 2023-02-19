@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,13 +16,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user_info")
+
 @Builder
 public class UserInfo implements UserDetails {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +60,7 @@ public class UserInfo implements UserDetails {
     @OneToMany(mappedBy = "userInfo")
     @JsonIgnore
     private Collection<HistoryBasePrice> historyBasePrices;
+
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -94,4 +99,5 @@ public class UserInfo implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
