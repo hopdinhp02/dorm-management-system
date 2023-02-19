@@ -29,3 +29,28 @@ function loadBooking() {
             console.error('Error:', error);
         });
 }
+
+
+
+function addProduct() {
+    url = "http://localhost:8080/api/v1/Products/insert";
+    productName = document.getElementById("productName").value;
+    jsonData = { productName: productName };
+    fetch(url,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(jsonData)
+        }
+    )
+        .then(respone => respone.json())
+        .then(data => {
+
+            console.log(data);
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+}
