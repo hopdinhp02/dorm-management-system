@@ -8,10 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import us.thedorm.models.Billing;
 import us.thedorm.models.StatusBilling;
 import us.thedorm.models.TypeBilling;
-@Repository
-@Transactional
+
 public interface BillingRepository extends JpaRepository<Billing,Long> {
-    @Modifying
-    @Query(value = "insert into billing(type,cost,status,resident_id) values(?1,?2,?3,?4);", nativeQuery = true)
-    void insertBilling(TypeBilling typeBilling, int cost, StatusBilling statusBilling,long resident_id);
+
 }

@@ -11,10 +11,6 @@ import us.thedorm.models.TypeBilling;
 
 import java.util.Date;
 
-@Repository
-@Transactional
+
 public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory,Long> {
-    @Modifying
-    @Query(value = "insert into resident_history(resident_id,bed_id,checkin_date,checkout_date) values(?1,?2,?3,?4);", nativeQuery = true)
-    void insertResidentHistory(long resident_id, long bed_id, Date checkin_date, Date checkout_date);
 }
