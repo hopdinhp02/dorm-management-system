@@ -11,7 +11,7 @@ import us.thedorm.repositories.ResidentHistoryRepository;
 
 import java.util.Date;
 
-
+@Service
 public class BookingService {
  private BillingRepository billingRepository;
  private ResidentHistoryRepository residentHistoryRepository;
