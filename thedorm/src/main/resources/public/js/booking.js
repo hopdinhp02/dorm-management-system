@@ -29,12 +29,12 @@ function loaddorm() {
     const selectElement = document.getElementById("branchs");
     const branchId = selectElement.value;
     console.log("branchid: "+branchId);
-    let url = "http://localhost:8081/api/v1/branchs/" + branchId;
+    let url = "http://localhost:8081/api/v1/dorms/branch/" + branchId;
     
     fetch(url)
         .then(response => response.json())
         .then(jsonData => {
-            jsonData.data.dorms.forEach(element => {
+            jsonData.data.forEach(element => {
                 var option = document.createElement("option");
                 option.text = element.name;
                 option.value = element.id;
@@ -57,11 +57,11 @@ function loadrooms() {
     const selectElement = document.getElementById("dorms");
     const dormId = selectElement.value;
     console.log("dormid: "+dormId);
-    let url = "http://localhost:8081/api/v1/dorms/" + dormId;
+    let url = "http://localhost:8081/api/v1/rooms/dorm/" + dormId;
     fetch(url)
         .then(response => response.json())
         .then(jsonData => {
-            jsonData.data.rooms.forEach(element => {
+            jsonData.data.forEach(element => {
                 var option = document.createElement("option");
                 option.text = element.name;
                 option.value = element.id;
@@ -85,11 +85,11 @@ function loadbeds() {
     const selectElement = document.getElementById("rooms");
     const roomId = selectElement.value;
     console.log("roomid for bed: "+roomId);
-    let url = "http://localhost:8081/api/v1/rooms/" + roomId;
+    let url = "http://localhost:8081/api/v1/beds/room/" + roomId;
     fetch(url)
         .then(response => response.json())
         .then(jsonData => {
-            jsonData.data.beds.forEach(element => {
+            jsonData.data.forEach(element => {
                 var option = document.createElement("option");
                 option.text = element.name;
                 option.value = element.id;
