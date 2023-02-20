@@ -20,8 +20,8 @@ public class Branch {
     private String name;
     private String address;
     private String phone;
-    @Column(name = "type_id")
-    private int typeId;
+//    @Column(name = "type_id")
+//    private int typeId;
     private int status;
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
     @JsonIgnore

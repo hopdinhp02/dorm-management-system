@@ -27,8 +27,9 @@ public class BookingRequest {
     private Date endDate;
     @Column(name = "created_date")
     private Date createdDate;
-    private int status;
-
+//    private int status;
+@Enumerated(EnumType.STRING)
+private StatusBookingRequest statusBookingRequest;
 
     @ManyToOne
     @JoinColumn(name = "resident_id")
