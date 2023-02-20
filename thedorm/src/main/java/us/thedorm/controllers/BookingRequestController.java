@@ -22,7 +22,7 @@ public class BookingRequestController {
     @Autowired
     private HistoryBookingRequestRepository historyBookingRequestRepository;
     @GetMapping("")
-    ResponseEntity<ResponseObject> getAllbBookingRequests() {
+    ResponseEntity<ResponseObject> getAllBookingRequests() {
         List<BookingRequest> foundBookingRequests = bookingRequestRepository.findAll();
         if(foundBookingRequests.size() == 0){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
