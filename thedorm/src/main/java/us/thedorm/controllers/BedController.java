@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.Bed;
 import us.thedorm.models.ResponseObject;
+import us.thedorm.models.Room;
 import us.thedorm.repositories.BedRepository;
 
 import java.util.List;
@@ -42,6 +43,12 @@ public class BedController {
                 ));
     }
 
+    @GetMapping("/room/{id}")
+    ResponseEntity<ResponseObject> findByRoomId(@PathVariable Long id) {
+        List<Bed> foundBeds = bedRepository.getBedsByRoom_Id(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "", foundBeds));
+    }
     @PostMapping("")
     ResponseEntity<ResponseObject> insertBed(@RequestBody Bed newBed) {
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -54,7 +61,7 @@ public class BedController {
         Bed updateBed = bedRepository.findById(id)
                 .map(bed -> {
                     bed.setName(newBed.getName());
-                    bed.setRooms(newBed.getRooms());
+                    bed.setRoom(newBed.getRoom());
                     bed.setStatus(newBed.getStatus());
                     bed.setDormFacilities(newBed.getDormFacilities());
                     bed.setResidentHistories(newBed.getResidentHistories());
