@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping(path = "/api/v1/elec-water-usage")
+@RequestMapping(path = "/api/v1/elec-water-usages")
 public class ElectricWaterUsageController {
     @Autowired
     private ElectricWaterUsageRepo electricWaterUsageRepo;
@@ -61,7 +61,7 @@ public class ElectricWaterUsageController {
                     electricWaterUsage.setToDate(newElectricWaterUsage.getToDate());
                     electricWaterUsage.setFromAmount(newElectricWaterUsage.getFromAmount());
                     electricWaterUsage.setToAmount(newElectricWaterUsage.getToAmount());
-                    electricWaterUsage.setRooms(newElectricWaterUsage.getRooms());
+                    electricWaterUsage.setRoom(newElectricWaterUsage.getRoom());
                     return electricWaterUsageRepo.save(electricWaterUsage);
 
                 }).orElseGet(() -> null);
