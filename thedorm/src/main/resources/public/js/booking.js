@@ -103,3 +103,36 @@ function loadbeds() {
 } 
 
   
+function addBookingRequests() {
+    url = "http://localhost:8081/api/v1/booking-requests";
+    ResidentID = document.getElementById("ResidentID").value;
+    BedID = document.getElementById("BedID").value;
+    Note = document.getElementById("Note").value; 
+    StartDate = document.getElementById("startdate").value;
+    EndDate = document.getElementById("EndDate").value;
+    CreatedDate = document.getElementById("CreatedDate").value;
+    Status = document.getElementById("Status").value;
+    console.log(ResidentID);
+    jsonData = { userInfo:{id: ResidentID} ,bed:{id : BedID} , note: Note,startDate: StartDate,
+    endDate: EndDate ,createdDate: CreatedDate, status: Status }; 
+    console.log(jsonData);
+    fetch(url,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(jsonData)
+        }
+    )
+        .then(respone => respone.json())
+        .then(data => {
+
+            console.log(data);
+        })
+        .then(loadProduct)
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
