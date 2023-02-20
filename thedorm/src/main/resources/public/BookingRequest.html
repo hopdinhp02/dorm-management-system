@@ -15,16 +15,16 @@
 
     <h1>Booking Request</h1>
     <form>
-    ResidentID: <input type="number"><br>
-    BedID: <input type="number"><br>
-    Note: <input type="text"><br>
-    Created date: <input type="datetime-local"><br>
-    Start date: <input type="datetime-local"><br>
-    End date: <input type="datetime-local"><br>
-    Status: <input type="number" id="" name=""><br>
-    </form>
-
-    <table class="table table-bordered" id="bookingTable">
+    ResidentID: <input type="number" id="ResidentID"><br>
+    BedID: <input type="number" id="BedID"><br>
+    Note: <input type="text" id="Note"><br>
+    Created date: <input type="datetime-local" id="CreatedDate"><br>
+    Start date: <input type="datetime-local" id="startdate"><br>
+    End date: <input type="datetime-local" id="EndDate"><br>
+    Status: <input type="number" id="Status" ><br>
+    </form><br>
+    <button class="btn btn-primary" type="submit" onclick="addBookingRequests()">Add</button>
+    <table class="table table-bordered">
         <thead>
           <tr>
             <tr>
@@ -49,6 +49,5 @@
 
       </table><br>
 </body>
-
 <script src="js/BookingRequest.js"></script>
 </html>
