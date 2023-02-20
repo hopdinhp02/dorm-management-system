@@ -23,9 +23,10 @@ function loadBooking() {
                 <td>${element.createdDate}</td>
                 <td>
                 <select onchange=" accept(${element.id}, this.value)">
-                     <option value="0" ${element.status==0?"selected":""}>0</option>
-                     <option value="1"  ${element.status==1?"selected":""}>1</option>
-                     <option value="2"  ${element.status==2?"selected":""}>2</option>
+                     <option value="Processing" ${element.status=="Processing"?"selected":""}>Processing</option>
+                     <option value="Paying"  ${element.status=="Paying"?"selected":""}>Paying</option>
+                     <option value="Accept"  ${element.status=="Accept"?"selected":""}>Accept</option>
+                     <option value="Decline"  ${element.status=="Decline"?"selected":""}>Decline</option>
                 </select>
                 </td>
                 </tr>`;
@@ -187,10 +188,10 @@ function updateBookingRequest(id, value){
           StartDate = document.getElementById("startdate").value;
           EndDate = document.getElementById("EndDate").value;
           CreatedDate = document.getElementById("CreatedDate").value;
-          Status = document.getElementById("Status").value;
+    
           console.log(ResidentID);
           jsonData = { userInfo:{id: ResidentID} ,bed:{id : BedID} , note: Note,startDate: StartDate,
-          endDate: EndDate ,createdDate: CreatedDate, status: Status }; 
+          endDate: EndDate ,createdDate: CreatedDate}; 
           console.log(jsonData);
           fetch(url,
               {

@@ -3,6 +3,7 @@ package us.thedorm.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +13,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "bed")
+@Table(name = "resident_history")
+@Builder
 public class ResidentHistory {
 
     @Id

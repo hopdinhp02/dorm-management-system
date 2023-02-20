@@ -18,6 +18,7 @@ function loadResidentHistory() {
                 <td>${element.startDate}</td>
                 <td>${element.endDate}</td>
                 <td>${element.userInfo.id}</td>
+                <td>${element.bed.id}</td>
                 </tr>`;
                
             });

@@ -111,10 +111,9 @@ function addBookingRequests() {
     StartDate = document.getElementById("startdate").value;
     EndDate = document.getElementById("EndDate").value;
     CreatedDate = document.getElementById("CreatedDate").value;
-    Status = document.getElementById("Status").value;
     console.log(ResidentID);
     jsonData = { userInfo:{id: ResidentID} ,bed:{id : BedID} , note: Note,startDate: StartDate,
-    endDate: EndDate ,createdDate: CreatedDate, status: Status }; 
+    endDate: EndDate ,createdDate: CreatedDate}; 
     console.log(jsonData);
     fetch(url,
         {

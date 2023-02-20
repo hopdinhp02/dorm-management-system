@@ -9,6 +9,8 @@ import us.thedorm.models.Billing;
 import us.thedorm.models.StatusBilling;
 import us.thedorm.models.TypeBilling;
 
-public interface BillingRepository extends JpaRepository<Billing,Long> {
+import java.util.Optional;
 
+public interface BillingRepository extends JpaRepository<Billing,Long> {
+    Optional<Billing> findTopByUserInfo_IdAndTypeOrderByIdDesc(long id, TypeBilling type);
 }
