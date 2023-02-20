@@ -25,7 +25,7 @@ public class DormFacility {
     private int floor;
     @ManyToOne
     @JoinColumn(name = "room_id")
-    private Room rooms;
+    private Room room;
     @ManyToOne
     @JoinColumn(name = "type_id")
     private FacilityType facilityType;

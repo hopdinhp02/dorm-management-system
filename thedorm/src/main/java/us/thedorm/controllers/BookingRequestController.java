@@ -22,7 +22,7 @@ public class BookingRequestController {
     @Autowired
     private HistoryBookingRequestRepository historyBookingRequestRepository;
     @GetMapping("")
-    ResponseEntity<ResponseObject> getAllbBookingRequests() {
+    ResponseEntity<ResponseObject> getAllBookingRequests() {
         List<BookingRequest> foundBookingRequests = bookingRequestRepository.findAll();
         if(foundBookingRequests.size() == 0){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -58,13 +58,14 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> updateBookingRequest(@RequestBody BookingRequest newBookingRequest, @PathVariable Long id){
         BookingRequest updateBookingRequest = bookingRequestRepository.findById(id)
                 .map(booking_request -> {
-                    booking_request.setUserInfo(newBookingRequest.getUserInfo());
-                    booking_request.setBed(newBookingRequest.getBed());
-                    booking_request.setNote(newBookingRequest.getNote());
-                    booking_request.setStartDate(newBookingRequest.getStartDate());
-                    booking_request.setEndDate(newBookingRequest.getEndDate());
-                    booking_request.setCreatedDate(newBookingRequest.getCreatedDate());
-                    booking_request.setStatusBookingRequest(newBookingRequest.getStatusBookingRequest());
+//                    booking_request.setUserInfo(newBookingRequest.getUserInfo());
+//                    booking_request.setBed(newBookingRequest.getBed());
+//                    booking_request.setNote(newBookingRequest.getNote());
+//                    booking_request.setStartDate(newBookingRequest.getStartDate());
+//                    booking_request.setEndDate(newBookingRequest.getEndDate());
+//                    booking_request.setCreatedDate(newBookingRequest.getCreatedDate());
+                    booking_request.setStatus(newBookingRequest.getStatus());
+
                     return bookingRequestRepository.save(booking_request);
                 }).orElseGet(()-> null);
         if(updateBookingRequest != null){

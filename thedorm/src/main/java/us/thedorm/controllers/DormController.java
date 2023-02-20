@@ -39,6 +39,14 @@ public class DormController {
                 new ResponseObject("false", "", ""
                 ));
     }
+    @GetMapping("/branch/{id}")
+    ResponseEntity<ResponseObject> findByBranchId(@PathVariable Long id) {
+        List<Dorm> foundDorms = dormRepository.getDormsByBranch_Id(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "", foundDorms));
+
+    }
+
 
     @PostMapping("")
     ResponseEntity<ResponseObject> insertDorm(@RequestBody Dorm newDorm){

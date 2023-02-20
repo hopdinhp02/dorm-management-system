@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <link rel="stylesheet" href="css/font-awesome.min.css" >
+    <link rel="stylesheet" href="css/elegant-icons.css" >
 </head>
 <body>
   
@@ -21,20 +24,31 @@
     Status: <input type="number" id="" name=""><br>
     </form>
 
-    <table id="bookingTable">
-        <tr> 
-            <th> id</th>
-            <th>note</th>
-            <th>startdate</th>
-            <th>Enddate</th>
-            <th>Createddate</th>
-            <th>status</th>
-            <th>bedid</th>
-            <th>residentid</th>
+    <table class="table table-bordered" id="bookingTable">
+        <thead>
+          <tr>
+            <tr>
+              <th>ID</th>
+              <th>BedID</th>
+              <th>UserID</th>
+              <th>Note</th>
+              <th>StartDate</th>
+              <th>EndDate</th>
+              <th>CreatedDate</th>
+              <th>Status</th>
+            </thead>
+        <tbody id="booking">
+          <tr>
+            <th scope="row"></th>
+            <td ></td>
+            <td></td>
+            <td></td>
+          </tr>
 
-        </tr>
-    </table>
+        </tbody>
+
+      </table><br>
 </body>
-<script src="js/Booking.js"></script>
+
 <script src="js/BookingRequest.js"></script>
 </html>

@@ -22,7 +22,7 @@ public class Bed {
     private int status;
     @ManyToOne
     @JoinColumn(name = "room_id")
-    private Room rooms;
+    private Room room;
     @OneToMany(mappedBy = "bed", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<DormFacility> dormFacilities;

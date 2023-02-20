@@ -54,12 +54,13 @@ public class ResidentHistoryController {
     ResponseEntity<ResponseObject> update(@RequestBody ResidentHistory newResidentHistory, @PathVariable Long id) {
         ResidentHistory updateHistory = residentHistoryRepository.findById(id)
                 .map(history -> {
-                    history.setBed(newResidentHistory.getBed());
-                    history.setUserInfo(newResidentHistory.getUserInfo());
+
                     history.setCheckinDate(newResidentHistory.getCheckinDate());
                     history.setCheckoutDate(newResidentHistory.getCheckoutDate());
                     history.setStartDate(newResidentHistory.getStartDate());
                     history.setEndDate(newResidentHistory.getEndDate());
+                    history.setUserInfo(newResidentHistory.getUserInfo());
+                    history.setBed(newResidentHistory.getBed());
                     return residentHistoryRepository.save(history);
 
                 }).orElseGet(() -> null);

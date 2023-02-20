@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import us.thedorm.models.Dorm;
 import us.thedorm.models.ResponseObject;
 import us.thedorm.models.Room;
 import us.thedorm.repositories.RoomRepository;
@@ -42,6 +43,13 @@ public class RoomController {
                 ));
     }
 
+    @GetMapping("/dorm/{id}")
+    ResponseEntity<ResponseObject> findByDormId(@PathVariable Long id) {
+        List<Room> foundRooms = roomRepository.getRoomsByDorm_Id(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "", foundRooms));
+
+    }
     @PostMapping("")
     ResponseEntity<ResponseObject> insertProduct(@RequestBody Room newRoom) {
         return ResponseEntity.status(HttpStatus.OK).body(
