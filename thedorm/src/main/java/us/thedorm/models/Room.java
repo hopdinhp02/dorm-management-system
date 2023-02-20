@@ -32,13 +32,13 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "base_price_id")
     private BasePrice basePrice;
-    @OneToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<ElectricWaterUsage> electricWaterUsages;
-    @OneToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<DormFacility> dormFacilities;
-    @OneToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<Bed> beds;
 }

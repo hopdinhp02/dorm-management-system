@@ -28,5 +28,5 @@ public class ElectricWaterUsage {
     private int toAmount;
     @ManyToOne
     @JoinColumn(name = "room_id")
-    private Room rooms;
+    private Room room;
 }
