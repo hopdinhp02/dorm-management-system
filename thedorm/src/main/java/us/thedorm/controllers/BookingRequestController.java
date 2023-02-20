@@ -65,6 +65,7 @@ public class BookingRequestController {
 //                    booking_request.setEndDate(newBookingRequest.getEndDate());
 //                    booking_request.setCreatedDate(newBookingRequest.getCreatedDate());
                     booking_request.setStatus(newBookingRequest.getStatus());
+
                     return bookingRequestRepository.save(booking_request);
                 }).orElseGet(()-> null);
         if(updateBookingRequest != null){
@@ -96,7 +97,7 @@ public class BookingRequestController {
     private HistoryBookingRequest recordChangeInBooking(BookingRequest booking){
         HistoryBookingRequest historyBookingRequest = new HistoryBookingRequest();
         historyBookingRequest.setBookingRequest(booking);
-        historyBookingRequest.setStatus(booking.getStatus());
+//        historyBookingRequest.setStatus(booking.getStatus());
         historyBookingRequest.setNote(booking.getNote());
         historyBookingRequest.setCreatedDate(booking.getCreatedDate());
         historyBookingRequest.setUserInfo(booking.getUserInfo());

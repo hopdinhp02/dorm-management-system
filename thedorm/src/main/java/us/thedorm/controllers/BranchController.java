@@ -58,7 +58,7 @@ public class BranchController {
                     branch.setName(newBranch.getName());
                     branch.setAddress(newBranch.getAddress());
                     branch.setPhone(newBranch.getPhone());
-                    branch.setTypeId(newBranch.getTypeId());
+//                    branch.setTypeId(newBranch.getTypeId());
                     branch.setStatus(newBranch.getStatus());
                     return branchRepository.save(branch);
                 }).orElseGet(() -> null);

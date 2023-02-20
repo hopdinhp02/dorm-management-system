@@ -39,6 +39,7 @@ public class UserInfo implements UserDetails {
     private String phone;
 
     private String image;
+    private double balance;
 
 
     @OneToMany(mappedBy = "userInfo")
