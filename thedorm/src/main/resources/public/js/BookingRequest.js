@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 function loadBooking() {
+    loadbranch();
     let url = "http://localhost:8081/api/v1/booking-requests";
     let bookingTable = document.getElementById("booking");
     let bookingRequest = ``;
@@ -183,15 +184,12 @@ function updateBookingRequest(id, value){
       function addBookingRequests() {
           url = "http://localhost:8081/api/v1/booking-requests";
           ResidentID = document.getElementById("ResidentID").value;
-          BedID = document.getElementById("BedID").value;
+          BedID = document.getElementById("beds").value;
           Note = document.getElementById("Note").value; 
-          StartDate = document.getElementById("startdate").value;
-          EndDate = document.getElementById("EndDate").value;
-          CreatedDate = document.getElementById("CreatedDate").value;
+          
     
           console.log(ResidentID);
-          jsonData = { userInfo:{id: ResidentID} ,bed:{id : BedID} , note: Note,startDate: StartDate,
-          endDate: EndDate ,createdDate: CreatedDate}; 
+          jsonData = { userInfo:{id: ResidentID} ,bed:{id : BedID} , note: Note}; 
           console.log(jsonData);
           fetch(url,
               {
