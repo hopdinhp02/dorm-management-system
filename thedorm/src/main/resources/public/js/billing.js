@@ -13,13 +13,13 @@ function loadBilling() {
             dataJson.data.forEach(element => {
                 billing += `<tr>
                 <td>${element.id}</td>
+                <td>${element.userInfo.id}</td>
                 <td>${element.type}</td>
                 <td>${element.cost}</td>
                 <td>${element.status}</td>
                 <td>${element.createdDate}</td>
                 <td>${element.deadlineDate}</td>
                 <td>${element.payDate}</td>
-                <td>${element.userInfo.id}</td>
                 </tr>`;
                
             });
