@@ -106,7 +106,7 @@ function loadbeds() {
 function addBookingRequests() {
     url = "http://localhost:8081/api/v1/booking-requests";
     ResidentID = document.getElementById("ResidentID").value;
-    BedID = document.getElementById("BedID").value;
+    BedID = document.getElementById("beds").value;
     Note = document.getElementById("Note").value; 
     StartDate = document.getElementById("startdate").value;
     EndDate = document.getElementById("EndDate").value;

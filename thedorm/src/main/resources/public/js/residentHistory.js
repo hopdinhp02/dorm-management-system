@@ -13,12 +13,12 @@ function loadResidentHistory() {
             dataJson.data.forEach(element => {
                 residentHistory += `<tr>
                 <td>${element.id}</td>
+                <td>${element.userInfo.id}</td>
+                <td>${element.bed.id}</td>
                 <td>${element.checkinDate}</td>
                 <td>${element.checkoutDate}</td>
                 <td>${element.startDate}</td>
                 <td>${element.endDate}</td>
-                <td>${element.userInfo.id}</td>
-                <td>${element.bed.id}</td>
                 </tr>`;
                
             });
