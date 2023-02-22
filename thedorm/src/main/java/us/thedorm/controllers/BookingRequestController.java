@@ -5,10 +5,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
+
+import us.thedorm.repositories.BedRepository;
+
 import us.thedorm.repositories.BookingRequestRepository;
 import us.thedorm.repositories.HistoryBookingRequestRepository;
 import us.thedorm.service.BookingService;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +29,8 @@ public class BookingRequestController {
     private HistoryBookingRequestRepository historyBookingRequestRepository;
     @Autowired
     private BookingService bookingService;
+    @Autowired
+    private BedRepository bedRepository;
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllBookingRequests() {
         List<BookingRequest> foundBookingRequests = bookingRequestRepository.findAll();
@@ -66,7 +75,20 @@ public class BookingRequestController {
 //        BookingRequest booking = bookingRequestRepository.save(newBookingRequest);
 //        System.out.println(booking);
 //        historyBookingRequestRepository.save(recordChangeInBooking(booking));
+        LocalDate firstDateOfNextMonth = LocalDate.now().plusMonths(1).withDayOfMonth(1);
+        Date startDate = Date.from(firstDateOfNextMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Instant lastDateOfNextMonth = firstDateOfNextMonth.plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant().minusMillis(1);
+        Date endDate = Date.from(lastDateOfNextMonth);
+        newBookingRequest.setStartDate(startDate);
+        newBookingRequest.setEndDate(endDate);
+        newBookingRequest.setCreatedDate(new Date());
         newBookingRequest.setStatus(StatusBookingRequest.Processing);
+        Optional<Bed> bookBed = bedRepository.findById(newBookingRequest.getBed().getId()) ;
+        if(bookBed.isPresent()){
+            bookBed.get().setStatus(StatusBed.NotAvailable);
+            bedRepository.save(bookBed.get());
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
         );
