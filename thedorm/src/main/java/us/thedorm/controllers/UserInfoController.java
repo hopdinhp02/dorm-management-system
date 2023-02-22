@@ -93,21 +93,11 @@ public class UserInfoController {
                 new ResponseObject("failed", "", "")
         );
     }
-    @PutMapping("/topUp")
-    ResponseEntity<ResponseObject> TopUp(@RequestBody UserInfo newUserInfo, @PathVariable Long id){
+    @PutMapping("/{id}/topup")
+    ResponseEntity<ResponseObject> topUp(@RequestBody UserInfo newUserInfo, @PathVariable Long id){
         UserInfo TopUp = userInfoRepo.findById(id)
                 .map(userInfo -> {
-                    userInfo.setUsername(newUserInfo.getUsername());
-                    userInfo.setPassword(newUserInfo.getPassword());
-                    userInfo.setName(newUserInfo.getName());
-                    userInfo.setEmail(newUserInfo.getEmail());
-                    userInfo.setPhone(newUserInfo.getPhone());
-                    if(userInfo.getBalance() == 0){
-                        userInfo.setBalance(newUserInfo.getBalance());
-                    }else{
-
                         userInfo.setBalance(userInfo.getBalance()+newUserInfo.getBalance());
-                    }
 
                     return userInfoRepo.save(userInfo);
                 }).orElseGet(() -> null);
