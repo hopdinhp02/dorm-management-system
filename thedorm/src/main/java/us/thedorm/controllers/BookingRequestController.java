@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import us.thedorm.models.ResponseObject;
-import us.thedorm.models.BookingRequest;
-import us.thedorm.models.HistoryBookingRequest;
-import us.thedorm.models.StatusBookingRequest;
+import us.thedorm.models.*;
 import us.thedorm.repositories.BookingRequestRepository;
 import us.thedorm.repositories.HistoryBookingRequestRepository;
 import us.thedorm.service.BookingService;
@@ -46,6 +43,22 @@ public class BookingRequestController {
         ) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("false", "", ""
                 ));
+    }
+
+    @PostMapping("/user-info/{id}")
+    ResponseEntity<ResponseObject> checkUserIdInBookingRequest(@PathVariable Long id) {
+
+
+         Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusOrderByIdDesc(id,StatusBookingRequest.Processing);
+
+        if(foundBookingRequest.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("", "", false)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", true)
+        );
     }
 
     @PostMapping("")
