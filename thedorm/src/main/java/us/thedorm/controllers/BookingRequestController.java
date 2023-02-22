@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.ResponseObject;
 import us.thedorm.models.BookingRequest;
 import us.thedorm.models.HistoryBookingRequest;
+import us.thedorm.models.StatusBookingRequest;
 import us.thedorm.repositories.BookingRequestRepository;
 import us.thedorm.repositories.HistoryBookingRequestRepository;
+import us.thedorm.service.BookingService;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,8 @@ public class BookingRequestController {
     private BookingRequestRepository bookingRequestRepository;
     @Autowired
     private HistoryBookingRequestRepository historyBookingRequestRepository;
+    @Autowired
+    private BookingService bookingService;
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllBookingRequests() {
         List<BookingRequest> foundBookingRequests = bookingRequestRepository.findAll();
@@ -49,6 +53,7 @@ public class BookingRequestController {
 //        BookingRequest booking = bookingRequestRepository.save(newBookingRequest);
 //        System.out.println(booking);
 //        historyBookingRequestRepository.save(recordChangeInBooking(booking));
+        newBookingRequest.setStatus(StatusBookingRequest.Processing);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
         );
@@ -64,6 +69,11 @@ public class BookingRequestController {
 //                    booking_request.setStartDate(newBookingRequest.getStartDate());
 //                    booking_request.setEndDate(newBookingRequest.getEndDate());
 //                    booking_request.setCreatedDate(newBookingRequest.getCreatedDate());
+                    if(booking_request.getStatus().equals(StatusBookingRequest.Processing) && newBookingRequest.getStatus().equals(StatusBookingRequest.Paying) ){
+                        bookingService.addBilling(booking_request);
+                    }else if(booking_request.getStatus().equals(StatusBookingRequest.Paying) && newBookingRequest.getStatus().equals(StatusBookingRequest.Accept) ){
+                        bookingService.addResidentHistory(booking_request);
+                    }
                     booking_request.setStatus(newBookingRequest.getStatus());
 
                     return bookingRequestRepository.save(booking_request);

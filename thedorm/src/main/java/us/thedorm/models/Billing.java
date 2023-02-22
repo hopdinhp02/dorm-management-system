@@ -3,6 +3,7 @@ package us.thedorm.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "billing")
+@Builder
 public class Billing {
 
     @Id
@@ -21,11 +23,11 @@ public class Billing {
 
 //    private String type;
 @Enumerated(EnumType.STRING)
-private TypeBilling typeBilling;
+private TypeBilling type;
     private int cost;
 //    private String status;
     @Enumerated(EnumType.STRING)
-    private StatusBilling statusBilling;
+    private StatusBilling status;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "deadline_date")

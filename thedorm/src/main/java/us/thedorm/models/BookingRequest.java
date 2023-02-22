@@ -29,7 +29,7 @@ public class BookingRequest {
     private Date createdDate;
 //    private int status;
 @Enumerated(EnumType.STRING)
-private StatusBookingRequest statusBookingRequest;
+private StatusBookingRequest status;
 
     @ManyToOne
     @JoinColumn(name = "resident_id")
