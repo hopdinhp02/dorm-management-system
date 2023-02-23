@@ -93,6 +93,25 @@ public class UserInfoController {
                 new ResponseObject("failed", "", "")
         );
     }
+    @PutMapping("/{id}/topup")
+    ResponseEntity<ResponseObject> topUp(@RequestBody UserInfo newUserInfo, @PathVariable Long id){
+        UserInfo TopUp = userInfoRepo.findById(id)
+                .map(userInfo -> {
+                        userInfo.setBalance(userInfo.getBalance()+newUserInfo.getBalance());
+
+                    return userInfoRepo.save(userInfo);
+                }).orElseGet(() -> null);
+
+        if(TopUp != null){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Insert Product successfully", TopUp)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("failed", "", "")
+        );
+
+    }
 
 
 
