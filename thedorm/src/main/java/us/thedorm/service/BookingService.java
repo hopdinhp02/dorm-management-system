@@ -61,11 +61,16 @@ return null;
  }
 
 
- public void checkBed(BookingRequest bookingRequest){
-//  Long roomId = bookingRequest.
-////  Optional<Bed> foundBeds = bedRepository.findBedsByRoom_IdAndStatusBed()
-
- }
+// public BookingRequest checkBookingRequest(UserInfo userInfo){
+//         BookingRequest bookingRequest = (BookingRequest) bookingRequestRepository.getBookingRequestByUserInfoId(userInfo.getId());
+//
+//  if(bookingRequest!= null){
+//   bookingRequest.setStatus(StatusBookingRequest.Decline);
+//  }
+//
+//  return bookingRequestRepository.save(bookingRequest);
+//
+// }
 
 
 }
