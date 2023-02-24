@@ -5,13 +5,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import us.thedorm.models.ResponseObject;
-import us.thedorm.models.BookingRequest;
-import us.thedorm.models.HistoryBookingRequest;
+import us.thedorm.models.*;
+import us.thedorm.repositories.BedRepository;
 import us.thedorm.repositories.BookingRequestRepository;
 import us.thedorm.repositories.HistoryBookingRequestRepository;
 import us.thedorm.service.BookingService;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,7 @@ public class BookingRequestController {
     @Autowired
     private HistoryBookingRequestRepository historyBookingRequestRepository;
     @Autowired
+    private BedRepository bedRepository;
     private BookingService bookingService;
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllBookingRequests() {
@@ -63,12 +67,12 @@ public class BookingRequestController {
         newBookingRequest.setStartDate(startDate);
         newBookingRequest.setEndDate(endDate);
         newBookingRequest.setCreatedDate(new Date());
-        newBookingRequest.setStatus(StatusBookingRequest.Processing);
+        newBookingRequest.setStatus(BookingRequest.Status.Processing);
         Optional<Bed> bookBed = bedRepository.findById(newBookingRequest.getBed().getId()) ;
 
         if(bookBed.isPresent()){
-            if(bookBed.get().getStatus()==StatusBed.Available){
-                bookBed.get().setStatus(StatusBed.NotAvailable);
+            if(bookBed.get().getStatus()== Bed.Status.Available){
+                bookBed.get().setStatus(Bed.Status.NotAvailable);
                 bedRepository.save(bookBed.get());
             }
             else{
@@ -78,7 +82,10 @@ public class BookingRequestController {
 
         }
         newBookingRequest.setUserInfo(user);
-
+        newBookingRequest.setUserInfo(user);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
+        );
     }
 
     @PutMapping("/{id}")
@@ -128,7 +135,7 @@ public class BookingRequestController {
     @GetMapping("/userInfo/is-booked")
     ResponseEntity<ResponseObject> checkUserIdInBookingRequest() {
         UserInfo user =  (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(),StatusBookingRequest.Decline);
+        Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(),BookingRequest.Status.Decline);
 
         if(foundBookingRequest.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(
