@@ -1,12 +1,11 @@
 package us.thedorm.controllers;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import us.thedorm.models.Bed;
-import us.thedorm.models.ResponseObject;
-import us.thedorm.models.Room;
+import us.thedorm.models.*;
 import us.thedorm.repositories.BedRepository;
 
 import java.util.List;
@@ -49,6 +48,13 @@ public class BedController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "", foundBeds));
     }
+    @GetMapping("/room/{id}/available")
+    ResponseEntity<ResponseObject> findBedsByRoomId(@PathVariable Long id) {
+        List<Bed> foundBeds = bedRepository.getBedsByRoom_IdAndStatus(id,StatusBed.Available);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "", foundBeds));
+    }
+
     @PostMapping("")
     ResponseEntity<ResponseObject> insertBed(@RequestBody Bed newBed) {
         return ResponseEntity.status(HttpStatus.OK).body(

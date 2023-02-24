@@ -20,8 +20,10 @@ public class Bed {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-   // private long room_id;
-    private int status;
+
+    @Enumerated(EnumType.STRING)
+    private StatusBed status;
+
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;

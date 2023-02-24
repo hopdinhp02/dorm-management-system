@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import us.thedorm.models.Bed;
 import us.thedorm.models.Dorm;
 import us.thedorm.models.ResponseObject;
 import us.thedorm.models.Room;
+import us.thedorm.repositories.BedRepository;
 import us.thedorm.repositories.RoomRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +21,8 @@ import java.util.Optional;
 public class RoomController {
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private BedRepository bedRepository;
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllRoom() {
@@ -94,4 +99,8 @@ public class RoomController {
                 new ResponseObject("failed", "", "")
         );
     }
+
+
+
+
 }

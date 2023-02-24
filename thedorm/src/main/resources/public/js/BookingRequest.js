@@ -163,7 +163,7 @@ function updateBookingRequest(id, value){
           const selectElement = document.getElementById("rooms");
           const roomId = selectElement.value;
           console.log("roomid for bed: "+roomId);
-          let url = "http://localhost:8081/api/v1/beds/room/" + roomId;
+          let url = "http://localhost:8081/api/v1/beds/room/" + roomId+"/available";
           fetch(url)
               .then(response => response.json())
               .then(jsonData => {
