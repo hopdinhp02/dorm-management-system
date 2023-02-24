@@ -16,13 +16,21 @@ import java.util.Collection;
 @Table(name = "bed")
 @Builder
 public class Bed {
+    public enum Status {
+
+        Available,
+
+        NotAvailable
+
+
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private StatusBed status;
+    private Status status;
 
     @ManyToOne
     @JoinColumn(name = "room_id")
