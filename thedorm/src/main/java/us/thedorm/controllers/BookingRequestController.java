@@ -9,6 +9,7 @@ import us.thedorm.models.*;
 import us.thedorm.repositories.BedRepository;
 import us.thedorm.repositories.BookingRequestRepository;
 import us.thedorm.repositories.HistoryBookingRequestRepository;
+import us.thedorm.repositories.RoomRepository;
 import us.thedorm.service.BookingService;
 
 import java.time.Instant;
@@ -29,6 +30,9 @@ public class BookingRequestController {
     @Autowired
     private BedRepository bedRepository;
     private BookingService bookingService;
+    @Autowired
+    private RoomRepository roomRepository;
+
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllBookingRequests() {
         List<BookingRequest> foundBookingRequests = bookingRequestRepository.findAll();
@@ -70,18 +74,28 @@ public class BookingRequestController {
         newBookingRequest.setStatus(BookingRequest.Status.Processing);
         Optional<Bed> bookBed = bedRepository.findById(newBookingRequest.getBed().getId()) ;
 
-        if(bookBed.isPresent()){
-            if(bookBed.get().getStatus()== Bed.Status.Available){
+
+        if(bookBed.isPresent()) {
+            if (bookBed.get().getStatus() == Bed.Status.Available) {
                 bookBed.get().setStatus(Bed.Status.NotAvailable);
                 bedRepository.save(bookBed.get());
-            }
-            else{
+                int cost = bookBed.get().getRoom().getBasePrice().getBedPrice();
+
+                if(user.getBalance()>= cost) {
+                    user.setBalance(user.getBalance() - cost);
+                    newBookingRequest.setStatus(BookingRequest.Status.Accept);
+                }
+                    newBookingRequest.setStatus(BookingRequest.Status.Decline);
+
+
+
+            } else {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("OK", "This Bed is not available", ""));
             }
 
         }
-        newBookingRequest.setUserInfo(user);
+
         newBookingRequest.setUserInfo(user);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
