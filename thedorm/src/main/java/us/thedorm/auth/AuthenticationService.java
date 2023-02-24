@@ -6,7 +6,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import us.thedorm.config.JwtService;
-import us.thedorm.models.Role;
 import us.thedorm.models.UserInfo;
 import us.thedorm.repositories.UserInfoRepo;
 
@@ -23,7 +22,7 @@ public class AuthenticationService {
     var user = UserInfo.builder()
             .username(request.getUsername())
         .password(passwordEncoder.encode(request.getPassword()))
-        .role(Role.USER)
+        .role(UserInfo.Role.USER)
         .build();
     repository.save(user);
     var jwtToken = jwtService.generateToken(user);

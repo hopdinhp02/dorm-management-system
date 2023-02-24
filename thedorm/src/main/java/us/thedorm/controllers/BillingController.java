@@ -56,9 +56,9 @@ public class BillingController {
     ResponseEntity<ResponseObject> update(@RequestBody Billing newBilling, @PathVariable Long id) {
       Billing update = billingRepository.findById(id)
                 .map(billing -> {
-                    billing.setType(newBilling.getType());
-                    billing.setCost(newBilling.getCost());
                     billing.setStatus(newBilling.getStatus());
+                    billing.setCost(newBilling.getCost());
+                    billing.setType(newBilling.getType());
                     billing.setCreatedDate(newBilling.getCreatedDate());
                     billing.setDeadlineDate(newBilling.getDeadlineDate());
                     billing.setPayDate(newBilling.getPayDate());

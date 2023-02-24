@@ -5,18 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import us.thedorm.models.*;
-
-import us.thedorm.repositories.BedRepository;
-
+import us.thedorm.models.ResponseObject;
+import us.thedorm.models.BookingRequest;
+import us.thedorm.models.HistoryBookingRequest;
 import us.thedorm.repositories.BookingRequestRepository;
 import us.thedorm.repositories.HistoryBookingRequestRepository;
 import us.thedorm.service.BookingService;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,8 +25,6 @@ public class BookingRequestController {
     private HistoryBookingRequestRepository historyBookingRequestRepository;
     @Autowired
     private BookingService bookingService;
-    @Autowired
-    private BedRepository bedRepository;
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllBookingRequests() {
         List<BookingRequest> foundBookingRequests = bookingRequestRepository.findAll();
@@ -60,6 +53,7 @@ public class BookingRequestController {
 //        BookingRequest booking = bookingRequestRepository.save(newBookingRequest);
 //        System.out.println(booking);
 //        historyBookingRequestRepository.save(recordChangeInBooking(booking));
+
         UserInfo user =  (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        System.out.println(user);
         LocalDate firstDateOfNextMonth = LocalDate.now().plusMonths(1).withDayOfMonth(1);
@@ -84,9 +78,7 @@ public class BookingRequestController {
 
         }
         newBookingRequest.setUserInfo(user);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
-        );
+
     }
 
     @PutMapping("/{id}")
@@ -99,9 +91,9 @@ public class BookingRequestController {
 //                    booking_request.setStartDate(newBookingRequest.getStartDate());
 //                    booking_request.setEndDate(newBookingRequest.getEndDate());
 //                    booking_request.setCreatedDate(newBookingRequest.getCreatedDate());
-                    if(booking_request.getStatus().equals(StatusBookingRequest.Processing) && newBookingRequest.getStatus().equals(StatusBookingRequest.Paying) ){
+                    if(booking_request.getStatus().equals(BookingRequest.Status.Processing) && newBookingRequest.getStatus().equals(BookingRequest.Status.Paying) ){
                         bookingService.addBilling(booking_request);
-                    }else if(booking_request.getStatus().equals(StatusBookingRequest.Paying) && newBookingRequest.getStatus().equals(StatusBookingRequest.Accept) ){
+                    }else if(booking_request.getStatus().equals(BookingRequest.Status.Paying) && newBookingRequest.getStatus().equals(BookingRequest.Status.Accept) ){
                         bookingService.addResidentHistory(booking_request);
                     }
                     booking_request.setStatus(newBookingRequest.getStatus());

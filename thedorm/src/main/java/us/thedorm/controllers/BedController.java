@@ -50,7 +50,7 @@ public class BedController {
     }
     @GetMapping("/room/{id}/available")
     ResponseEntity<ResponseObject> findBedsByRoomId(@PathVariable Long id) {
-        List<Bed> foundBeds = bedRepository.getBedsByRoom_IdAndStatus(id,StatusBed.Available);
+        List<Bed> foundBeds = bedRepository.getBedsByRoom_IdAndStatus(id, Bed.Status.Available);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "", foundBeds));
     }
