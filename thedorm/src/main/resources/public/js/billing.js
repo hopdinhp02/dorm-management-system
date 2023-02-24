@@ -6,7 +6,13 @@ function loadBilling() {
     let url = "http://localhost:8081/api/v1/billings";
     let billingTable = document.getElementById("billing");
     let billing = ``;
-    fetch(url)
+    fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+        }
+      })
         .then(response => response.json())
         .then(dataJson => {
             console.log(dataJson);

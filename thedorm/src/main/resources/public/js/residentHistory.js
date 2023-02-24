@@ -6,7 +6,13 @@ function loadResidentHistory() {
     let url = "http://localhost:8081/api/v1/resident-histories";
     let residentHistoryTable = document.getElementById("residentHistory");
     let residentHistory = ``;
-    fetch(url)
+    fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+        }
+      })
         .then(response => response.json())
         .then(dataJson => {
             console.log(dataJson);

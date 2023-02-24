@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface BookingRequestRepository extends JpaRepository<BookingRequest,Long> {
 
-     Optional<BookingRequest> findTopByUserInfo_IdAndStatusOrderByIdDesc(long id, StatusBookingRequest status);
+     Optional<BookingRequest> findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(long id, StatusBookingRequest status);
 }

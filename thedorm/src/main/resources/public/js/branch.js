@@ -1,7 +1,13 @@
 let branchTable = document.getElementById("branchTable");
 function loadProduct() {
     let url = "http://localhost:8081/api/v1/branchs";
-    fetch(url)
+    fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+        }
+      })
         .then(response => response.json())
         .then(dataJson => {
             dataJson.data.forEach(element => {
