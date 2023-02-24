@@ -24,9 +24,9 @@ public class BookingService {
   Billing newBilling = Billing
           .builder()
           .userInfo(UserInfo.builder().id(bookingRequest.getUserInfo().getId()).build())
-          .type(TypeBilling.Bed)
+          .type(Billing.Type.Bed)
           .cost(bookingRequest.getBed().getRoom().getBasePrice().getBedPrice())
-          .status(StatusBilling.Unpaid)
+          .status(Billing.Status.Unpaid)
           .createdDate(new Date())
           .build();
   return billingRepository.save(newBilling);
@@ -34,9 +34,9 @@ public class BookingService {
 
  public ResidentHistory addResidentHistory(BookingRequest bookingRequest){
   Long userId = bookingRequest.getUserInfo().getId();
-  Optional<Billing> bill = billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(userId, TypeBilling.Bed);
+  Optional<Billing> bill = billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(userId,Billing.Type.Bed);
   if(bill.isPresent()){
-   bill.get().setStatus(StatusBilling.Paid);
+   bill.get().setStatus(Billing.Status.Paid);
    bill.get().setPayDate(new Date());
    billingRepository.save(bill.get());
    ResidentHistory newResidentHistory = ResidentHistory

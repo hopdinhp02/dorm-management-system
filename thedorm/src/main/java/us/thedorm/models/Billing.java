@@ -16,18 +16,25 @@ import java.util.Date;
 @Table(name = "billing")
 @Builder
 public class Billing {
+public enum Status{
+    Paid,Unpaid,Refund
+}
+public enum Type{
+    Bed, Water, Electric, Internet, Clean
+}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    private String type;
+
+    //    private String type;
 @Enumerated(EnumType.STRING)
-private TypeBilling type;
+private Type type;
     private int cost;
 //    private String status;
     @Enumerated(EnumType.STRING)
-    private StatusBilling status;
+    private Status status;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "deadline_date")

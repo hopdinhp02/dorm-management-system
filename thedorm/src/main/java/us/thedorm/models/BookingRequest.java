@@ -15,6 +15,13 @@ import java.util.Date;
 @AllArgsConstructor
 @Table(name = "booking_request")
 public class BookingRequest {
+    public enum Status{
+        Processing,
+        Paying,
+        Accept,
+        Decline
+
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -29,7 +36,7 @@ public class BookingRequest {
     private Date createdDate;
 //    private int status;
 @Enumerated(EnumType.STRING)
-private StatusBookingRequest status;
+private Status status;
 
     @ManyToOne
     @JoinColumn(name = "resident_id")

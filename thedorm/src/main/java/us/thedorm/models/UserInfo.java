@@ -23,8 +23,11 @@ import java.util.List;
 
 @Builder
 public class UserInfo implements UserDetails {
+    public enum Role {
+        ADMIN,
+        USER
 
-
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
