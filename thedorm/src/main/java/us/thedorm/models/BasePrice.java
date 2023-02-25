@@ -17,8 +17,8 @@ public class BasePrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "bed_price")
-    private int bedPrice;
+    @Column(name = "slot_price")
+    private int slotPrice;
     @Column(name = "electric_price")
     private int electricPrice;
     @Column(name = "water_price")

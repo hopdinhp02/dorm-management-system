@@ -1,8 +1,6 @@
 package us.thedorm.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,8 +35,11 @@ public class Room {
     private Collection<ElectricWaterUsage> electricWaterUsages;
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Collection<DormFacility> dormFacilities;
+    private Collection<Facility> dormFacilities;
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Collection<Bed> beds;
+    private Collection<Slot> slots;
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Collection<Facility> facilities;
 }

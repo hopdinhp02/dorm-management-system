@@ -3,6 +3,7 @@ package us.thedorm.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,19 +13,29 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "dorm")
-public class Dorm {
+@Table(name = "facility")
+@Builder
+public class Facility {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name;
+    @OneToOne
+    @JoinColumn(name="facilityDetailId")
+    private FacilityDetail facilityDetail;
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private Room room;
     @ManyToOne
     @JoinColumn(name = "branch_id")
     private Branch branch;
-    @OneToMany(mappedBy = "dorm", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Collection<Room> rooms;
-    @OneToMany(mappedBy = "dorm", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Collection<Facility> facilities;
+
+    @ManyToOne
+    @JoinColumn(name = "slot_id")
+    private Slot slot;
+//
+
+    @ManyToOne
+    @JoinColumn(name = "dorm_id")
+    private Dorm dorm;
 }

@@ -26,4 +26,7 @@ public class Branch {
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<Dorm> Dorms;
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Collection<Facility> facilities;
 }

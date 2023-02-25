@@ -101,10 +101,10 @@ public class UserInfoController {
 
                     return userInfoRepo.save(userInfo);
                 }).orElseGet(() -> null);
-
+// nếu giá trị top up trả về khác null ( tức là đã cập nhật balance )
         if(TopUp != null){
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("OK", "Insert Product successfully", TopUp)
+                    new ResponseObject("OK", "Top up successfully", TopUp)
             );
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(

@@ -62,6 +62,12 @@ public class UserInfo implements UserDetails {
     @OneToMany(mappedBy = "userInfo")
     @JsonIgnore
     private Collection<HistoryBasePrice> historyBasePrices;
+    @OneToMany(mappedBy = "userInfo")
+    @JsonIgnore
+    private Collection<CheckInOut> checkInOuts;
+    @OneToMany(mappedBy = "user_info")
+    @JsonIgnore
+    private Collection<CheckInOut> checkInOut;
 
 
     @Enumerated(EnumType.STRING)

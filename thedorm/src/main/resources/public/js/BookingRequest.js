@@ -47,9 +47,9 @@ function checkUserIsBook() {
             
                 </select>
                 <br>
-                Room: <select id="rooms" onchange="loadbeds()"></select>
+                Room: <select id="rooms" onchange="loadslots()"></select>
                 <br>
-                Bed: <select id="beds"></select><br>
+                slot: <select id="slots"></select><br>
                 Note: <input type="text" id="Note"><br>
               </form><br>
               <button class="btn btn-primary" type="submit" onclick="addBookingRequests()">Add</button>`;
@@ -79,7 +79,7 @@ function loadBooking() {
             dataJson.data.forEach(element => {
                 bookingRequest += `<tr>
                 <td>${element.id}</td>
-                <td>${element.bed.id}</td>
+                <td>${element.slot.id}</td>
                 <td>${element.userInfo.id}</td>
                 <td>${element.note}</td>
                 <td>${element.startDate}</td>
@@ -236,7 +236,7 @@ function loadrooms() {
 
         )
         .then(
-            loadbeds
+            loadslots
         )
         .catch(error => {
             console.error('Error:', error);
@@ -244,13 +244,13 @@ function loadrooms() {
 }
 
 
-function loadbeds() {
-    let bedDropDown = document.getElementById("beds");
-    bedDropDown.innerHTML = '';
+function loadslots() {
+    let slotDropDown = document.getElementById("slots");
+    slotDropDown.innerHTML = '';
     const selectElement = document.getElementById("rooms");
     const roomId = selectElement.value;
-    console.log("roomid for bed: " + roomId);
-    let url = "http://localhost:8081/api/v1/beds/room/" + roomId + "/available";
+    console.log("roomid for slot: " + roomId);
+    let url = "http://localhost:8081/api/v1/slots/room/" + roomId + "/available";
     fetch(url, {
         method: 'GET',
         headers: {
@@ -264,7 +264,7 @@ function loadbeds() {
                 var option = document.createElement("option");
                 option.text = element.name;
                 option.value = element.id;
-                bedDropDown.append(option);
+                slotDropDown.append(option);
             });
 
         })
@@ -276,9 +276,9 @@ function loadbeds() {
 
 function addBookingRequests() {
     url = "http://localhost:8081/api/v1/booking-requests";
-    BedID = document.getElementById("beds").value;
+    slotID = document.getElementById("slots").value;
     Note = document.getElementById("Note").value;
-    jsonData = { bed: { id: BedID }, note: Note };
+    jsonData = { slot: { id: slotID }, note: Note };
     console.log(jsonData);
     fetch(url,
         {

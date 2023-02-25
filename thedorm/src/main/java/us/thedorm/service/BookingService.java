@@ -1,19 +1,14 @@
 package us.thedorm.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import us.thedorm.models.*;
-import us.thedorm.repositories.BedRepository;
+import us.thedorm.repositories.SlotRepository;
 import us.thedorm.repositories.BillingRepository;
 import us.thedorm.repositories.BookingRequestRepository;
 import us.thedorm.repositories.ResidentHistoryRepository;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,14 +20,14 @@ public class BookingService {
  @Autowired
  private BookingRequestRepository bookingRequestRepository;
  @Autowired
- private BedRepository bedRepository;
+ private SlotRepository slotRepository;
 
  public Billing addBilling(BookingRequest bookingRequest){
   Billing newBilling = Billing
           .builder()
           .userInfo(UserInfo.builder().id(bookingRequest.getUserInfo().getId()).build())
-          .type(Billing.Type.Bed)
-          .cost(bookingRequest.getBed().getRoom().getBasePrice().getBedPrice())
+          .type(Billing.Type.slot)
+          .cost(bookingRequest.getSlot().getRoom().getBasePrice().getSlotPrice())
           .status(Billing.Status.Unpaid)
           .createdDate(new Date())
           .build();
@@ -42,7 +37,7 @@ public class BookingService {
  public ResidentHistory addResidentHistory(BookingRequest bookingRequest){
 
   Long userId = bookingRequest.getUserInfo().getId();
-  Optional<Billing> bill = billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(userId,Billing.Type.Bed);
+  Optional<Billing> bill = billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(userId,Billing.Type.slot);
   if(bill.isPresent()){
    bill.get().setStatus(Billing.Status.Paid);
    bill.get().setPayDate(new Date());
@@ -50,7 +45,7 @@ public class BookingService {
    ResidentHistory newResidentHistory = ResidentHistory
            .builder()
            .userInfo(UserInfo.builder().id(userId).build())
-           .bed(Bed.builder().id(bookingRequest.getBed().getId()).build())
+           .slot(Slot.builder().id(bookingRequest.getSlot().getId()).build())
            .startDate(bookingRequest.getStartDate())
            .endDate(bookingRequest.getEndDate())
            .build();
@@ -58,6 +53,18 @@ public class BookingService {
   }
 
 return null;
+ }
+// public ResidentHistory updateBalance(BookingRequest bookingRequest){
+//  Long userId = bookingRequest.getUserInfo().getId();
+//  Optional<Billing> bill = billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(userId,Billing.Type.slot);
+//  if(bill.isPresent()){
+//   bill.get().setStatus(Billing.Status.Refund);
+//   bill.get().setRefundDate(new Date());
+//   billingRepository.save(bill.get());
+//   ResidentHistory newResidentHistory = ResidentHistory
+//           .builder()
+//           .userInfo(UserInfo.builder().id(userId).balance())
+//  }
  }
 
 
@@ -73,4 +80,4 @@ return null;
 // }
 
 
-}
+
