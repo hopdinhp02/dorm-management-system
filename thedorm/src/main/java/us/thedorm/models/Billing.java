@@ -20,7 +20,7 @@ public enum Status{
     Paid,Unpaid,Refund
 }
 public enum Type{
-    Bed, Water, Electric, Internet, Clean
+    slot, Water, Electric, Internet, Clean
 }
 
     @Id
@@ -41,6 +41,8 @@ private Type type;
     private Date deadlineDate;
     @Column(name = "pay_date")
     private Date payDate;
+    @Column(name = "refund_date")
+    private Date RefundDate;
     @ManyToOne
     @JoinColumn(name = "resident_id")
     private UserInfo userInfo;

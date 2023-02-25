@@ -33,6 +33,6 @@ public class ResidentHistory {
     private UserInfo userInfo;
 
     @ManyToOne
-    @JoinColumn(name = "bed_id")
-    private Bed bed;
+    @JoinColumn(name = "slot_id")
+    private Slot slot;
 }

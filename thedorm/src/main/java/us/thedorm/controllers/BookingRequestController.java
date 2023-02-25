@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
-import us.thedorm.repositories.BedRepository;
+import us.thedorm.repositories.SlotRepository;
 import us.thedorm.repositories.BookingRequestRepository;
 import us.thedorm.repositories.HistoryBookingRequestRepository;
 import us.thedorm.service.BookingService;
@@ -27,8 +27,9 @@ public class BookingRequestController {
     @Autowired
     private HistoryBookingRequestRepository historyBookingRequestRepository;
     @Autowired
-    private BedRepository bedRepository;
     private BookingService bookingService;
+    @Autowired
+    private SlotRepository slotRepository;
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllBookingRequests() {
         List<BookingRequest> foundBookingRequests = bookingRequestRepository.findAll();
@@ -54,12 +55,8 @@ public class BookingRequestController {
 
     @PostMapping("")
     ResponseEntity<?> insertBookingRequest(@RequestBody BookingRequest newBookingRequest){
-//        BookingRequest booking = bookingRequestRepository.save(newBookingRequest);
-//        System.out.println(booking);
-//        historyBookingRequestRepository.save(recordChangeInBooking(booking));
 
         UserInfo user =  (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        System.out.println(user);
         LocalDate firstDateOfNextMonth = LocalDate.now().plusMonths(1).withDayOfMonth(1);
         Date startDate = Date.from(firstDateOfNextMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Instant lastDateOfNextMonth = firstDateOfNextMonth.plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant().minusMillis(1);
@@ -68,20 +65,19 @@ public class BookingRequestController {
         newBookingRequest.setEndDate(endDate);
         newBookingRequest.setCreatedDate(new Date());
         newBookingRequest.setStatus(BookingRequest.Status.Processing);
-        Optional<Bed> bookBed = bedRepository.findById(newBookingRequest.getBed().getId()) ;
+        Optional<Slot> bookslot = slotRepository.findById(newBookingRequest.getSlot().getId()) ;
 
-        if(bookBed.isPresent()){
-            if(bookBed.get().getStatus()== Bed.Status.Available){
-                bookBed.get().setStatus(Bed.Status.NotAvailable);
-                bedRepository.save(bookBed.get());
+        if(bookslot.isPresent()){
+            if(bookslot.get().getStatus()== Slot.Status.Available){
+                bookslot.get().setStatus(Slot.Status.NotAvailable);
+                slotRepository.save(bookslot.get());
             }
             else{
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("OK", "This Bed is not available", ""));
+                        new ResponseObject("OK", "This slot is not available", ""));
             }
 
         }
-        newBookingRequest.setUserInfo(user);
         newBookingRequest.setUserInfo(user);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
@@ -92,17 +88,16 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> updateBookingRequest(@RequestBody BookingRequest newBookingRequest, @PathVariable Long id){
         BookingRequest updateBookingRequest = bookingRequestRepository.findById(id)
                 .map(booking_request -> {
-//                    booking_request.setUserInfo(newBookingRequest.getUserInfo());
-//                    booking_request.setBed(newBookingRequest.getBed());
-//                    booking_request.setNote(newBookingRequest.getNote());
-//                    booking_request.setStartDate(newBookingRequest.getStartDate());
-//                    booking_request.setEndDate(newBookingRequest.getEndDate());
-//                    booking_request.setCreatedDate(newBookingRequest.getCreatedDate());
+
                     if(booking_request.getStatus().equals(BookingRequest.Status.Processing) && newBookingRequest.getStatus().equals(BookingRequest.Status.Paying) ){
                         bookingService.addBilling(booking_request);
                     }else if(booking_request.getStatus().equals(BookingRequest.Status.Paying) && newBookingRequest.getStatus().equals(BookingRequest.Status.Accept) ){
                         bookingService.addResidentHistory(booking_request);
                     }
+                else if(booking_request.getStatus().equals(BookingRequest.Status.Accept) && newBookingRequest.getStatus().equals(BookingRequest.Status.Decline) ){
+            bookingService.addResidentHistory(booking_request);
+        }
+
                     booking_request.setStatus(newBookingRequest.getStatus());
 
                     return bookingRequestRepository.save(booking_request);
@@ -135,7 +130,7 @@ public class BookingRequestController {
     @GetMapping("/userInfo/is-booked")
     ResponseEntity<ResponseObject> checkUserIdInBookingRequest() {
         UserInfo user =  (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(),BookingRequest.Status.Decline);
+        Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(), BookingRequest.Status.Decline);
 
         if(foundBookingRequest.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(

@@ -29,5 +29,5 @@ public class FacilityHistory {
 
     @ManyToOne
     @JoinColumn(name = "facility_id")
-    private DormFacility dormFacilities;
+    private Facility dormFacilities;
 }
