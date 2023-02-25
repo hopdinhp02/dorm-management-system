@@ -6,7 +6,7 @@
 @font-face {
   font-family: "Flaticon";
   src: url("../fonts/Flaticon.eot");
-  src: url("../fonts/Flaticon.eot?#iefix") format("emslotded-opentype"),
+  src: url("../fonts/Flaticon.eot?#iefix") format("embedded-opentype"),
        url("../fonts/Flaticon.woff") format("woff"),
        url("../fonts/Flaticon.ttf") format("truetype"),
        url("../fonts/Flaticon.svg#Flaticon") format("svg");
@@ -45,7 +45,7 @@
 .flaticon-014-ring-bell:before { content: "\f10d"; }
 .flaticon-015-door-hanger:before { content: "\f10e"; }
 .flaticon-016-washing-machine:before { content: "\f10f"; }
-.flaticon-017-sunslot:before { content: "\f110"; }
+.flaticon-017-sunbed:before { content: "\f110"; }
 .flaticon-018-iron:before { content: "\f111"; }
 .flaticon-019-television:before { content: "\f112"; }
 .flaticon-020-telephone:before { content: "\f113"; }
@@ -54,7 +54,7 @@
 .flaticon-023-hair-dryer:before { content: "\f116"; }
 .flaticon-024-towel:before { content: "\f117"; }
 .flaticon-025-pillow:before { content: "\f118"; }
-.flaticon-026-slot:before { content: "\f119"; }
+.flaticon-026-bed:before { content: "\f119"; }
 .flaticon-027-mirror:before { content: "\f11a"; }
 .flaticon-028-vacuum-cleaner:before { content: "\f11b"; }
 .flaticon-029-wifi:before { content: "\f11c"; }
