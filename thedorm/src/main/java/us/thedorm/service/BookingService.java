@@ -20,6 +20,8 @@ import java.util.Optional;
 public class BookingService {
  @Autowired
  private BillingRepository billingRepository;
+
+
  @Autowired
  private ResidentHistoryRepository residentHistoryRepository;
  @Autowired
@@ -38,6 +40,9 @@ public class BookingService {
           .build();
   return billingRepository.save(newBilling);
  }
+
+
+
 
  public ResidentHistory addResidentHistory(BookingRequest bookingRequest){
 

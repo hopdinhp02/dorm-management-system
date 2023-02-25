@@ -73,6 +73,7 @@ public class BookingRequestController {
         newBookingRequest.setCreatedDate(new Date());
         newBookingRequest.setStatus(BookingRequest.Status.Processing);
         Optional<Bed> bookBed = bedRepository.findById(newBookingRequest.getBed().getId()) ;
+//        Optional<Bed> bookBed = bedRepository.findById(3L) ;
 
 
         if(bookBed.isPresent()) {
@@ -80,15 +81,7 @@ public class BookingRequestController {
                 bookBed.get().setStatus(Bed.Status.NotAvailable);
                 bedRepository.save(bookBed.get());
                 int cost = bookBed.get().getRoom().getBasePrice().getBedPrice();
-
-                if(user.getBalance()>= cost) {
-                    user.setBalance(user.getBalance() - cost);
-                    newBookingRequest.setStatus(BookingRequest.Status.Accept);
-                }
-                    newBookingRequest.setStatus(BookingRequest.Status.Decline);
-
-
-
+                user.setBalance(user.getBalance() - cost);
             } else {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("OK", "This Bed is not available", ""));
@@ -104,6 +97,7 @@ public class BookingRequestController {
 
     @PutMapping("/{id}")
     ResponseEntity<ResponseObject> updateBookingRequest(@RequestBody BookingRequest newBookingRequest, @PathVariable Long id){
+        UserInfo user =  (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         BookingRequest updateBookingRequest = bookingRequestRepository.findById(id)
                 .map(booking_request -> {
 //                    booking_request.setUserInfo(newBookingRequest.getUserInfo());
@@ -116,7 +110,10 @@ public class BookingRequestController {
                         bookingService.addBilling(booking_request);
                     }else if(booking_request.getStatus().equals(BookingRequest.Status.Paying) && newBookingRequest.getStatus().equals(BookingRequest.Status.Accept) ){
                         bookingService.addResidentHistory(booking_request);
+                    }else if(booking_request.getStatus().equals(BookingRequest.Status.Decline)){
+                        user.setBalance(user.getBalance());
                     }
+
                     booking_request.setStatus(newBookingRequest.getStatus());
 
                     return bookingRequestRepository.save(booking_request);

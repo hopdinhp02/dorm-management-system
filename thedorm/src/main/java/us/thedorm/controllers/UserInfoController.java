@@ -3,9 +3,13 @@ package us.thedorm.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import us.thedorm.models.Bed;
+import us.thedorm.models.BookingRequest;
 import us.thedorm.models.ResponseObject;
 import us.thedorm.models.UserInfo;
+import us.thedorm.repositories.BedRepository;
 import us.thedorm.repositories.UserInfoRepo;
 
 import java.util.List;
@@ -17,6 +21,8 @@ import java.util.Optional;
 public class UserInfoController {
     @Autowired
     private UserInfoRepo userInfoRepo;
+    @Autowired
+    private BedRepository bedRepository;
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllUserInfo() {
@@ -111,6 +117,27 @@ public class UserInfoController {
                 new ResponseObject("failed", "", "")
         );
 
+    }
+
+    @GetMapping("/{id}/check-balance")
+    ResponseEntity<ResponseObject> checkBalanceForBookingRequest(@PathVariable Long id) {
+        UserInfo user =  (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Bed> bookBed = bedRepository.findById(id);
+        if(bookBed.isPresent()) {
+            int cost = bookBed.get().getRoom().getBasePrice().getBedPrice();
+
+            if (user.getBalance() < cost) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("", "Can't Book", false)
+                );
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "OKK", true)
+            );
+
+        }
+
+        return null;
     }
 
 
