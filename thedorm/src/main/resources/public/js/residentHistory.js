@@ -20,7 +20,7 @@ function loadResidentHistory() {
                 residentHistory += `<tr>
                 <td>${element.id}</td>
                 <td>${element.userInfo.id}</td>
-                <td>${element.bed.id}</td>
+                <td>${element.slot.id}</td>
                 <td>${element.checkinDate}</td>
                 <td>${element.checkoutDate}</td>
                 <td>${element.startDate}</td>

@@ -42,8 +42,8 @@ private Status status;
     @JoinColumn(name = "resident_id")
     private UserInfo userInfo;
     @ManyToOne
-    @JoinColumn(name = "bed_id")
-    private Bed bed;
+    @JoinColumn(name = "slot_id")
+    private Slot slot;
 
     @OneToMany(mappedBy = "bookingRequest", cascade = CascadeType.ALL)
     @JsonIgnore

@@ -72,20 +72,20 @@ function loadrooms() {
         
         ) 
         .then(
-            loadbeds
+            loadslots
         )   
         .catch(error => {
             console.error('Error:', error);
         });
 } 
 
-let bedDropDown = document.getElementById("beds");
-function loadbeds() {
-    bedDropDown.innerHTML = '';
+let slotDropDown = document.getElementById("slots");
+function loadslots() {
+    slotDropDown.innerHTML = '';
     const selectElement = document.getElementById("rooms");
     const roomId = selectElement.value;
-    console.log("roomid for bed: "+roomId);
-    let url = "http://localhost:8081/api/v1/beds/room/" + roomId;
+    console.log("roomid for slot: "+roomId);
+    let url = "http://localhost:8081/api/v1/slots/room/" + roomId;
     fetch(url)
         .then(response => response.json())
         .then(jsonData => {
@@ -93,7 +93,7 @@ function loadbeds() {
                 var option = document.createElement("option");
                 option.text = element.name;
                 option.value = element.id;
-                bedDropDown.append(option);
+                slotDropDown.append(option);
             });
 
         })
@@ -106,13 +106,13 @@ function loadbeds() {
 function addBookingRequests() {
     url = "http://localhost:8081/api/v1/booking-requests";
     ResidentID = document.getElementById("ResidentID").value;
-    BedID = document.getElementById("beds").value;
+    slotID = document.getElementById("slots").value;
     Note = document.getElementById("Note").value; 
     StartDate = document.getElementById("startdate").value;
     EndDate = document.getElementById("EndDate").value;
     CreatedDate = document.getElementById("CreatedDate").value;
     console.log(ResidentID);
-    jsonData = { userInfo:{id: ResidentID} ,bed:{id : BedID} , note: Note,startDate: StartDate,
+    jsonData = { userInfo:{id: ResidentID} ,slot:{id : slotID} , note: Note,startDate: StartDate,
     endDate: EndDate ,createdDate: CreatedDate}; 
     console.log(jsonData);
     fetch(url,

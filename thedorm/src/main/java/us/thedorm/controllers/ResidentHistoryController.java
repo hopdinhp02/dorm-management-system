@@ -60,7 +60,7 @@ public class ResidentHistoryController {
                     history.setStartDate(newResidentHistory.getStartDate());
                     history.setEndDate(newResidentHistory.getEndDate());
                     history.setUserInfo(newResidentHistory.getUserInfo());
-                    history.setBed(newResidentHistory.getBed());
+                    history.setSlot(newResidentHistory.getSlot());
                     return residentHistoryRepository.save(history);
 
                 }).orElseGet(() -> null);

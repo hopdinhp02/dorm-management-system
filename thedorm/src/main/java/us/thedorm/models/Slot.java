@@ -13,16 +13,14 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "bed")
+@Table(name = "slot")
 @Builder
-public class Bed {
+public class Slot {
     public enum Status {
 
         Available,
 
         NotAvailable
-
-
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,13 +33,13 @@ public class Bed {
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
-    @OneToMany(mappedBy = "bed", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "slot", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Collection<DormFacility> dormFacilities;
-    @OneToMany(mappedBy = "bed", cascade = CascadeType.ALL)
+    private Collection<Facility> facilities;
+    @OneToMany(mappedBy = "slot", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<ResidentHistory> residentHistories;
-    @OneToMany(mappedBy = "bed", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "slot", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<BookingRequest> bookingRequests;
 }
