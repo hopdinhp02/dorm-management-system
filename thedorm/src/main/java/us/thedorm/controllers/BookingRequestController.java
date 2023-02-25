@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
+
 import us.thedorm.repositories.SlotRepository;
+
 import us.thedorm.repositories.BookingRequestRepository;
 import us.thedorm.repositories.HistoryBookingRequestRepository;
 import us.thedorm.service.BookingService;
@@ -27,6 +29,7 @@ public class BookingRequestController {
     @Autowired
     private HistoryBookingRequestRepository historyBookingRequestRepository;
     @Autowired
+    private BedRepository bedRepository;
     private BookingService bookingService;
     @Autowired
     private SlotRepository slotRepository;
@@ -65,12 +68,15 @@ public class BookingRequestController {
         newBookingRequest.setEndDate(endDate);
         newBookingRequest.setCreatedDate(new Date());
         newBookingRequest.setStatus(BookingRequest.Status.Processing);
+
         Optional<Slot> bookslot = slotRepository.findById(newBookingRequest.getSlot().getId()) ;
 
         if(bookslot.isPresent()){
             if(bookslot.get().getStatus()== Slot.Status.Available){
                 bookslot.get().setStatus(Slot.Status.NotAvailable);
                 slotRepository.save(bookslot.get());
+
+
             }
             else{
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -79,6 +85,8 @@ public class BookingRequestController {
 
         }
         newBookingRequest.setUserInfo(user);
+
+
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
         );
@@ -130,7 +138,9 @@ public class BookingRequestController {
     @GetMapping("/userInfo/is-booked")
     ResponseEntity<ResponseObject> checkUserIdInBookingRequest() {
         UserInfo user =  (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(), BookingRequest.Status.Decline);
+
+        Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(),BookingRequest.Status.Decline);
+
 
         if(foundBookingRequest.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(
