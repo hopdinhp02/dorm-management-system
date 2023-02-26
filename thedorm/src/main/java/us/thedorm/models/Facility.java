@@ -21,7 +21,7 @@ public class Facility {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @OneToOne
-    @JoinColumn(name="facilityDetailId")
+    @JoinColumn(name="facility_detail_id")
     private FacilityDetail facilityDetail;
     @ManyToOne
     @JoinColumn(name = "room_id")
@@ -38,4 +38,8 @@ public class Facility {
     @ManyToOne
     @JoinColumn(name = "dorm_id")
     private Dorm dorm;
+
+    @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Collection<FacilityHistory> facilityHistories;
 }

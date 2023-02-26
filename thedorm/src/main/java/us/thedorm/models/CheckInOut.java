@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "CheckInOut")
+@Table(name = "check_in_out")
 public class CheckInOut {
     public enum Type{
         checkin,
@@ -22,10 +22,10 @@ public class CheckInOut {
     private long id;
     @ManyToOne
     @JoinColumn(name = "guardId")
-    private UserInfo userInfo;
+    private UserInfo guard;
     @ManyToOne
     @JoinColumn(name = "residentId")
-    private UserInfo user_info;
+    private UserInfo resident;
     private Date createDate;
     private Date confirmDate;
 

@@ -7,7 +7,7 @@ import us.thedorm.models.UserInfo;
 import java.util.Optional;
 
 
-public interface UserInfoRepo extends JpaRepository<UserInfo,Long> {
+public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
     Optional<UserInfo> findByUsername(String username);
 
 

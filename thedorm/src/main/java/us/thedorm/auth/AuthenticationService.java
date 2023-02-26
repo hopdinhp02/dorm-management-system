@@ -7,13 +7,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import us.thedorm.config.JwtService;
 import us.thedorm.models.UserInfo;
-import us.thedorm.repositories.UserInfoRepo;
+import us.thedorm.repositories.UserInfoRepository;
 
 @Service
 @RequiredArgsConstructor
 
 public class AuthenticationService {
-  private final UserInfoRepo repository;
+  private final UserInfoRepository repository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;

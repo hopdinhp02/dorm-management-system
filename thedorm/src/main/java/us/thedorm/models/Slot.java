@@ -36,6 +36,10 @@ public class Slot {
     @OneToMany(mappedBy = "slot", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<Facility> facilities;
+
+    @OneToMany(mappedBy = "slot", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Collection<FacilityHistory> facilityHistories;
     @OneToMany(mappedBy = "slot", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<ResidentHistory> residentHistories;
