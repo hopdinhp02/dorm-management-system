@@ -52,7 +52,7 @@ public class CheckInOutController {
         );
     }
 
-
+    @PutMapping("/{id}")
     ResponseEntity<ResponseObject> update(@RequestBody CheckInOut newCheckInOut, @PathVariable Long id) {
 
       CheckInOut update = checkInOutRepository.findById(id)
