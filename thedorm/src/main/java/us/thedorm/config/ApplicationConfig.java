@@ -12,14 +12,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import us.thedorm.models.UserInfo;
-import us.thedorm.repositories.UserInfoRepo;
+import us.thedorm.repositories.UserInfoRepository;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-  private final UserInfoRepo repository;
+  private final UserInfoRepository repository;
 
   @Bean
   public UserDetailsService userDetailsService() {

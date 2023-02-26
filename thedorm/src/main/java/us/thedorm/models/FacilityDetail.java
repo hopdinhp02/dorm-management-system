@@ -18,7 +18,13 @@ import java.util.Date;
 @Builder
 public class FacilityDetail {
     public enum Type{
-        slot
+        bed
+
+    }
+    public enum Status{
+        good,
+        broken,
+        irreparable
 
     }
     @Id
@@ -32,7 +38,7 @@ public class FacilityDetail {
     private int value;
     private String codeProduct;
    private Type type;
-    private String status;
+    private Status status;
     @OneToMany(mappedBy = "facilityDetail",cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<Maintenance> maintenances;

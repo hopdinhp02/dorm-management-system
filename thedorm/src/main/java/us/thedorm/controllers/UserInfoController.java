@@ -9,7 +9,7 @@ import us.thedorm.models.ResponseObject;
 import us.thedorm.models.Slot;
 import us.thedorm.models.UserInfo;
 import us.thedorm.repositories.SlotRepository;
-import us.thedorm.repositories.UserInfoRepo;
+import us.thedorm.repositories.UserInfoRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,13 +19,13 @@ import java.util.Optional;
 @RequestMapping(path = "/api/v1/user-infos")
 public class UserInfoController {
     @Autowired
-    private UserInfoRepo userInfoRepo;
+    private UserInfoRepository userInfoRepository;
     @Autowired
     private SlotRepository slotRepository;
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllUserInfo() {
-        List<UserInfo> foundUserInfo = userInfoRepo.findAll();
+        List<UserInfo> foundUserInfo = userInfoRepository.findAll();
         if (foundUserInfo.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("failed", "", "")
@@ -40,7 +40,7 @@ public class UserInfoController {
 
     @GetMapping("/{id}")
     ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
-        Optional<UserInfo> foundUserInfo = userInfoRepo.findById(id);
+        Optional<UserInfo> foundUserInfo = userInfoRepository.findById(id);
         return foundUserInfo.isPresent() ? ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "", foundUserInfo)
         ) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -53,21 +53,21 @@ public class UserInfoController {
     ResponseEntity<ResponseObject> insertUserInfo(@RequestBody UserInfo newUserInfo) {
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Insert successfully", userInfoRepo.save(newUserInfo))
+                new ResponseObject("OK", "Insert successfully", userInfoRepository.save(newUserInfo))
         );
     }
 
     @PutMapping("/{id}")
     ResponseEntity<ResponseObject> updateUserInfo(@RequestBody UserInfo newUserInfo, @PathVariable Long id) {
 
-        UserInfo updateUserInfo = userInfoRepo.findById(id)
+        UserInfo updateUserInfo = userInfoRepository.findById(id)
                 .map(userInfo -> {
                     userInfo.setUsername(newUserInfo.getUsername());
                     userInfo.setPassword(newUserInfo.getPassword());
                     userInfo.setName(newUserInfo.getName());
                     userInfo.setEmail(newUserInfo.getEmail());
                     userInfo.setPhone(newUserInfo.getPhone());
-                    return userInfoRepo.save(userInfo);
+                    return userInfoRepository.save(userInfo);
                 }).orElseGet(() -> null);
 
         if (updateUserInfo != null) {
@@ -84,9 +84,9 @@ public class UserInfoController {
     @DeleteMapping("/{id}")
     ResponseEntity<ResponseObject> deleteUserInfo(@PathVariable Long id) {
 
-        boolean exists = userInfoRepo.existsById(id);
+        boolean exists = userInfoRepository.existsById(id);
         if (exists) {
-            userInfoRepo.deleteById(id);
+            userInfoRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "", "")
             );
@@ -98,11 +98,11 @@ public class UserInfoController {
 
     @PutMapping("/{id}/topup")
     ResponseEntity<ResponseObject> topUp(@RequestBody UserInfo newUserInfo, @PathVariable Long id) {
-        UserInfo TopUp = userInfoRepo.findById(id)
+        UserInfo TopUp = userInfoRepository.findById(id)
                 .map(userInfo -> {
                     userInfo.setBalance(userInfo.getBalance() + newUserInfo.getBalance());
 
-                    return userInfoRepo.save(userInfo);
+                    return userInfoRepository.save(userInfo);
                 }).orElseGet(() -> null);
 // nếu giá trị top up trả về khác null ( tức là đã cập nhật balance )
         if (TopUp != null) {
