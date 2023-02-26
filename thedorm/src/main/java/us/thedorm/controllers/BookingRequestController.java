@@ -71,6 +71,10 @@ public class BookingRequestController {
             if(bookslot.get().getStatus()== Slot.Status.Available){
                 bookslot.get().setStatus(Slot.Status.NotAvailable);
                 slotRepository.save(bookslot.get());
+
+                int cost = bookslot.get().getRoom().getBasePrice().getSlotPrice();
+                user.setBalance(user.getBalance() - cost);
+
             }
             else{
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -86,6 +90,9 @@ public class BookingRequestController {
 
     @PutMapping("/{id}")
     ResponseEntity<ResponseObject> updateBookingRequest(@RequestBody BookingRequest newBookingRequest, @PathVariable Long id){
+
+        UserInfo user =  (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        Optional<BookingRequest> bookingRequest = bookingRequestRepository.findById(id);
         BookingRequest updateBookingRequest = bookingRequestRepository.findById(id)
                 .map(booking_request -> {
 
@@ -94,9 +101,12 @@ public class BookingRequestController {
                     }else if(booking_request.getStatus().equals(BookingRequest.Status.Paying) && newBookingRequest.getStatus().equals(BookingRequest.Status.Accept) ){
                         bookingService.addResidentHistory(booking_request);
                     }
-                else if(booking_request.getStatus().equals(BookingRequest.Status.Accept) && newBookingRequest.getStatus().equals(BookingRequest.Status.Decline) ){
-            bookingService.addResidentHistory(booking_request);
-        }
+
+                     else if(newBookingRequest.getStatus().equals(BookingRequest.Status.Decline) ){
+
+                      user.setBalance(user.getBalance() + booking_request.getSlot().getRoom().getBasePrice().getSlotPrice());
+                    }
+
 
                     booking_request.setStatus(newBookingRequest.getStatus());
 
