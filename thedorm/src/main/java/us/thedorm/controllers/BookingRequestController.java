@@ -6,9 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
-import us.thedorm.repositories.SlotRepository;
-import us.thedorm.repositories.BookingRequestRepository;
-import us.thedorm.repositories.HistoryBookingRequestRepository;
+import us.thedorm.repositories.*;
 import us.thedorm.service.BookingService;
 
 import java.time.Instant;
@@ -25,7 +23,12 @@ public class BookingRequestController {
     @Autowired
     private BookingRequestRepository bookingRequestRepository;
     @Autowired
+    private UserInfoRepository userInfoRepository;
+    @Autowired
     private HistoryBookingRequestRepository historyBookingRequestRepository;
+
+    @Autowired
+    private ResidentHistoryRepository residentHistoryRepository;
     @Autowired
     private BookingService bookingService;
     @Autowired
@@ -65,6 +68,7 @@ public class BookingRequestController {
         newBookingRequest.setEndDate(endDate);
         newBookingRequest.setCreatedDate(new Date());
         newBookingRequest.setStatus(BookingRequest.Status.Processing);
+
         Optional<Slot> bookslot = slotRepository.findById(newBookingRequest.getSlot().getId()) ;
 
         if(bookslot.isPresent()){
@@ -74,6 +78,7 @@ public class BookingRequestController {
 
                 int cost = bookslot.get().getRoom().getBasePrice().getSlotPrice();
                 user.setBalance(user.getBalance() - cost);
+                userInfoRepository.save(user);
 
             }
             else{
@@ -161,5 +166,39 @@ public class BookingRequestController {
         historyBookingRequest.setUserInfo(booking.getUserInfo());
         return historyBookingRequest;
     }
+
+    @GetMapping("/guard/check-in")
+    ResponseEntity<ResponseObject> checkIn(@RequestBody UserInfo resident) {
+
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(resident.getId());
+        if(residentHistory.isPresent()){
+            residentHistory.get().setCheckinDate(new Date());
+            residentHistoryRepository.save(residentHistory.get());
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "checked", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", "")
+        );
+    }
+
+    @GetMapping("/guard/check-out")
+    ResponseEntity<ResponseObject> checkOut(@RequestBody UserInfo resident) {
+
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(resident.getId());
+        if(residentHistory.isPresent()){
+            residentHistory.get().setCheckoutDate(new Date());
+            residentHistoryRepository.save(residentHistory.get());
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "checked", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", "")
+        );
+    }
+
+
 
 }

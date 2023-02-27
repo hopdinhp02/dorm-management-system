@@ -57,8 +57,8 @@ public class CheckInOutController {
 
       CheckInOut update = checkInOutRepository.findById(id)
                 .map(check_InOut -> {
-                    check_InOut.setUserInfo(newCheckInOut.getUserInfo());
-                    check_InOut.setUser_info(newCheckInOut.getUser_info());
+                    check_InOut.setGuard(newCheckInOut.getGuard());
+                    check_InOut.setResident(newCheckInOut.getResident());
                     check_InOut.setCreateDate(newCheckInOut.getCreateDate());
                     check_InOut.setConfirmDate(newCheckInOut.getConfirmDate());
                     check_InOut.setType(newCheckInOut.getType());
