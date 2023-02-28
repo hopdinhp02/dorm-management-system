@@ -240,7 +240,7 @@ public class BookingRequestController {
                 findBookingScheduleByBranch_Id(bookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
 
         if (bookingSchedule.isPresent()) {
-            if (bookingRequest.getCreatedDate().after(bookingSchedule.get().getNewStartDate()) && bookingRequest.getStartDate()
+            if (bookingRequest.getCreatedDate().after(bookingSchedule.get().getNewStartDate()) && bookingRequest.getCreatedDate()
                     .before(bookingSchedule.get().getNewEndDate())) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
@@ -261,7 +261,7 @@ public class BookingRequestController {
                 findBookingScheduleByBranch_Id(bookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
 
         if(bookingSchedule.isPresent()) {
-            if (bookingRequest.getCreatedDate().after(bookingSchedule.get().getKeepStartDate()) && bookingRequest.getStartDate()
+            if (bookingRequest.getCreatedDate().after(bookingSchedule.get().getKeepStartDate()) && bookingRequest.getCreatedDate()
                     .before(bookingSchedule.get().getKeepEndDate())) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
@@ -280,17 +280,21 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> checkLiving() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<ResidentHistory> residentHistory = residentHistoryRepository.findByUserInfo_IdOrderByEndDate(user.getId());
+//        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.
+//                findBookingScheduleByBranch_Id(residentHistory.get().getSlot().getRoom().getDorm().getBranch().getId());
+//
 
-        if (residentHistory.isPresent()) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("", "OK", true)
-                );
-            }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Not Ok", false)
-        );
+        Date date = new Date();
+        if (residentHistory.get().getEndDate().after(date)) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "OK", true)
+            );
 
         }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("", "OK", false)
+        );
+    }
 
 
     @GetMapping("/get-old-slot")
