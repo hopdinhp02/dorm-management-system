@@ -33,6 +33,9 @@ public class BookingRequestController {
     private BookingService bookingService;
     @Autowired
     private SlotRepository slotRepository;
+    @Autowired
+    private BookingScheduleRepository bookingScheduleRepository;
+
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllBookingRequests() {
         List<BookingRequest> foundBookingRequests = bookingRequestRepository.findAll();
@@ -198,6 +201,11 @@ public class BookingRequestController {
                 new ResponseObject("OK", "", "")
         );
     }
+
+
+
+
+
 
 
 
