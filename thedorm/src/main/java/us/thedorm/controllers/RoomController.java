@@ -53,7 +53,7 @@ public class RoomController {
 
     }
     @PostMapping("")
-    ResponseEntity<ResponseObject> insertProduct(@RequestBody Room newRoom) {
+    ResponseEntity<ResponseObject> insertRoom(@RequestBody Room newRoom) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", roomRepository.save(newRoom))
         );

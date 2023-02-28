@@ -28,5 +28,7 @@ public class CheckInOut {
     private UserInfo resident;
     private Date createDate;
     private Date confirmDate;
+
+    @Enumerated(EnumType.STRING)
     private Type type;
 }
