@@ -209,6 +209,7 @@ public class BookingRequestController {
 //    ResponseEntity<ResponseObject> KeepBooking(@RequestBody BookingRequest newBookingRequest) {
 //
 //        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//
 //        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
 //
 //
@@ -235,12 +236,12 @@ public class BookingRequestController {
 
 
     @GetMapping("/check-day-booking")
-    ResponseEntity<ResponseObject> checkDayBooking(@RequestBody BookingRequest bookingRequest) {
-        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.
-                findBookingScheduleByBranch_Id(bookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
+    ResponseEntity<ResponseObject> checkDayBooking(@RequestBody Branch branch) {
+        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
 
+          Date date = new Date();
         if (bookingSchedule.isPresent()) {
-            if (bookingRequest.getCreatedDate().after(bookingSchedule.get().getNewStartDate()) && bookingRequest.getCreatedDate()
+            if (date.after(bookingSchedule.get().getNewStartDate()) && date
                     .before(bookingSchedule.get().getNewEndDate())) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
@@ -255,14 +256,12 @@ public class BookingRequestController {
 
 
     @GetMapping("/check-day-keep")
-    ResponseEntity<ResponseObject> checkDayKeep(@RequestBody BookingRequest bookingRequest) {
+    ResponseEntity<ResponseObject> checkDayKeep(@RequestBody Branch branch) {
 
-        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.
-                findBookingScheduleByBranch_Id(bookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
-
+        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
+        Date date = new Date();
         if(bookingSchedule.isPresent()) {
-            if (bookingRequest.getCreatedDate().after(bookingSchedule.get().getKeepStartDate()) && bookingRequest.getCreatedDate()
-                    .before(bookingSchedule.get().getKeepEndDate())) {
+            if (date.after(bookingSchedule.get().getKeepStartDate()) && date.before(bookingSchedule.get().getKeepEndDate())) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
                 );
@@ -280,6 +279,7 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> checkLiving() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<ResidentHistory> residentHistory = residentHistoryRepository.findByUserInfo_IdOrderByEndDate(user.getId());
+
 //        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.
 //                findBookingScheduleByBranch_Id(residentHistory.get().getSlot().getRoom().getDorm().getBranch().getId());
 //
@@ -300,9 +300,10 @@ public class BookingRequestController {
     @GetMapping("/get-old-slot")
     ResponseEntity<ResponseObject> getOldSlot() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Optional<ResidentHistory> residentHistory = residentHistoryRepository.findByUserInfo_IdOrderByEndDate(user.getId());
 
-       residentHistory.get().getSlot().setStatus(Slot.Status.Available);
+//       residentHistory.get().getSlot().setStatus(Slot.Status.Available);
 
         return residentHistory.map(history -> ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("", "OK", history.getSlot())
