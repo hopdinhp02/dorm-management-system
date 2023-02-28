@@ -3,10 +3,7 @@ package us.thedorm.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import us.thedorm.models.*;
-import us.thedorm.repositories.SlotRepository;
-import us.thedorm.repositories.BillingRepository;
-import us.thedorm.repositories.BookingRequestRepository;
-import us.thedorm.repositories.ResidentHistoryRepository;
+import us.thedorm.repositories.*;
 
 import java.util.Date;
 import java.util.Optional;
@@ -15,6 +12,8 @@ import java.util.Optional;
 public class BookingService {
  @Autowired
  private BillingRepository billingRepository;
+ @Autowired
+ BookingScheduleRepository bookingScheduleRepository;
  @Autowired
  private ResidentHistoryRepository residentHistoryRepository;
  @Autowired
@@ -54,6 +53,26 @@ public class BookingService {
 
 return null;
  }
+
+
+ public boolean checkBookDate(BookingRequest bookingRequest) {
+  Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.
+          findBookingScheduleByBranch_Id(bookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
+
+  if(bookingSchedule.isPresent()){
+   if(bookingRequest.getCreatedDate().after(bookingSchedule.get().getNewStartDate()) && bookingRequest.getStartDate()
+           .before(bookingSchedule.get().getNewEndDate())){
+    return true;
+   }
+
+  }
+  return false;
+ }
+
+
+
+
+
 // public ResidentHistory updateBalance(BookingRequest bookingRequest){
 //  Long userId = bookingRequest.getUserInfo().getId();
 //  Optional<Billing> bill = billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(userId,Billing.Type.slot);
