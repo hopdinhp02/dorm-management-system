@@ -243,6 +243,7 @@ public class BookingRequestController {
         if (bookingSchedule.isPresent()) {
             if (date.after(bookingSchedule.get().getNewStartDate()) && date
                     .before(bookingSchedule.get().getNewEndDate())) {
+
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
                 );
@@ -278,7 +279,7 @@ public class BookingRequestController {
     @GetMapping("/check-living")
     ResponseEntity<ResponseObject> checkLiving() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findByUserInfo_IdOrderByEndDate(user.getId());
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
 
 //        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.
 //                findBookingScheduleByBranch_Id(residentHistory.get().getSlot().getRoom().getDorm().getBranch().getId());
@@ -301,14 +302,14 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> getOldSlot() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findByUserInfo_IdOrderByEndDate(user.getId());
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
 
 //       residentHistory.get().getSlot().setStatus(Slot.Status.Available);
 
         return residentHistory.map(history -> ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("", "OK", history.getSlot())
         )).orElseGet(() -> ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Not Ok", "")
+                new ResponseObject("OK", "Not Ok", "false")
         ));
 
     }
