@@ -10,7 +10,9 @@ import java.util.Optional;
 
 
 public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory,Long> {
-    Optional<ResidentHistory> findTopByUserInfo_IdOrderByIdDesc(long id);
+    Optional<ResidentHistory> findTopByUserInfo_IdOrderByEndDate(long id);
     Optional<ResidentHistory> findByUserInfo_IdOrderByEndDate(long id);
+
+    Optional<ResidentHistory> findTopByUserInfo_IdOrderByIdDesc(long id);
 
 }
