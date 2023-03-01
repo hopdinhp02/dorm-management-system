@@ -261,20 +261,26 @@ public class BookingRequestController {
 
         Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
         Date date = new Date();
+        if(bookingSchedule.isPresent()) {
             if (date.after(bookingSchedule.get().getKeepStartDate()) && date.before(bookingSchedule.get().getKeepEndDate())) {
+
                 List<Slot> slots = slotRepository.findAll();
+
                 for (Slot slot : slots) {
                     slot.setStatus(Slot.Status.Available);
                     slotRepository.save(slot);
                 }
-
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
                 );
             }
+
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Not Valid", false)
         );
+
     }
 
     @GetMapping("/check-living")
@@ -287,11 +293,13 @@ public class BookingRequestController {
 //
 
         Date date = new Date();
-        if (residentHistory.get().getEndDate().after(date)) {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("", "OK", true)
-            );
+        if(residentHistory.isPresent()) {
+            if (residentHistory.get().getEndDate().after(date)) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("", "OK", true)
+                );
 
+            }
         }
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("", "OK", false)
