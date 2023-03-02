@@ -52,20 +52,21 @@ public class FacilityController {
 
     @PostMapping("")
     ResponseEntity<ResponseObject> insert(@RequestBody Facility newFacility){
-        facilityDetailRepository.save(newFacility.getFacilityDetail());
-        Facility facility = facilityRepository.save(newFacility);
-        FacilityHistory facilityHistory = FacilityHistory.builder()
-                .facility(facility)
-                .slot(facility.getSlot())
-                .room(facility.getRoom())
-                .dorm(facility.getDorm())
-                .branch(facility.getBranch())
-                .changeDate(new Date())
-                .build();
-        facilityHistoryRepository.save(facilityHistory);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Insert successfully", facility)
-        );
+            facilityDetailRepository.save(newFacility.getFacilityDetail());
+            Facility facility = facilityRepository.save(newFacility);
+            FacilityHistory facilityHistory = FacilityHistory.builder()
+                    .facility(facility)
+                    .slot(facility.getSlot())
+                    .room(facility.getRoom())
+                    .dorm(facility.getDorm())
+                    .branch(facility.getBranch())
+                    .startDate(new Date())
+                    .build();
+            facilityHistoryRepository.save(facilityHistory);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Insert successfully", facility)
+            );
+
     }
 
     @PutMapping("/{id}")
@@ -103,7 +104,7 @@ public class FacilityController {
                     .room(updateFacility.getRoom())
                     .dorm(updateFacility.getDorm())
                     .branch(updateFacility.getBranch())
-                    .changeDate(new Date())
+                    .startDate(new Date())
                     .build();
             facilityHistoryRepository.save(facilityHistory);
             return ResponseEntity.status(HttpStatus.OK).body(
