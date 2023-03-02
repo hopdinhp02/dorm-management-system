@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.ResidentHistory;
 import us.thedorm.models.ResponseObject;
+import us.thedorm.models.UserInfo;
 import us.thedorm.repositories.ResidentHistoryRepository;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,4 +90,59 @@ public class ResidentHistoryController {
                 new ResponseObject("failed", "", "")
         );
     }
+
+    @PostMapping("/guard/check-in")
+    ResponseEntity<ResponseObject> checkIn(@RequestBody UserInfo resident) {
+
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(resident.getId());
+        if (residentHistory.isPresent()) {
+            residentHistory.get().setCheckinDate(new Date());
+            residentHistoryRepository.save(residentHistory.get());
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "checked", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", "")
+        );
+    }
+
+    @PostMapping("/guard/check-out")
+    ResponseEntity<ResponseObject> checkOut(@RequestBody UserInfo resident) {
+
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(resident.getId());
+        if (residentHistory.isPresent()) {
+            residentHistory.get().setCheckoutDate(new Date());
+            residentHistoryRepository.save(residentHistory.get());
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "checked", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", "")
+        );
+    }
+
+    @GetMapping("/guard/check-in/slots/{id}")
+    ResponseEntity<ResponseObject> ViewNotCheckInYetBySlot(@PathVariable Long id) {
+
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findBySlot_IdAAndCheckinDateIsNull(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", residentHistories)
+        );
+    }
+
+    @GetMapping("/guard/check-out/slots/{id}")
+    ResponseEntity<ResponseObject> ViewNotCheckOutYetBySlot(@PathVariable Long id) {
+
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findBySlot_IdAndCheckoutDateIsNull(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", residentHistories)
+        );
+    }
+
+
+
 }

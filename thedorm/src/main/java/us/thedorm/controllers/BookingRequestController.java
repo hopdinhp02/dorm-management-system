@@ -178,37 +178,7 @@ public class BookingRequestController {
         return historyBookingRequest;
     }
 
-    @GetMapping("/guard/check-in")
-    ResponseEntity<ResponseObject> checkIn(@RequestBody UserInfo resident) {
 
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(resident.getId());
-        if (residentHistory.isPresent()) {
-            residentHistory.get().setCheckinDate(new Date());
-            residentHistoryRepository.save(residentHistory.get());
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("", "checked", "")
-            );
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "", "")
-        );
-    }
-
-    @GetMapping("/guard/check-out")
-    ResponseEntity<ResponseObject> checkOut(@RequestBody UserInfo resident) {
-
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(resident.getId());
-        if (residentHistory.isPresent()) {
-            residentHistory.get().setCheckoutDate(new Date());
-            residentHistoryRepository.save(residentHistory.get());
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("", "checked", "")
-            );
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "", "")
-        );
-    }
 
 
 //    @GetMapping("/keep-booking")
