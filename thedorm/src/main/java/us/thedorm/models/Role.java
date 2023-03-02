@@ -17,6 +17,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String name;
     @OneToMany(mappedBy = "role")
     @JsonIgnore
     private Collection<UserRole> userRoles;

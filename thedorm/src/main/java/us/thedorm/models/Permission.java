@@ -20,4 +20,6 @@ public class Permission {
     @OneToMany(mappedBy = "permission")
     @JsonIgnore
     private Collection<RolePermission> rolePermissions;
+    private String title;
+    private String name;
 }

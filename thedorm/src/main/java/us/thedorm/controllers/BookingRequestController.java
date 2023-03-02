@@ -35,6 +35,9 @@ public class BookingRequestController {
     private SlotRepository slotRepository;
     @Autowired
     private BookingScheduleRepository bookingScheduleRepository;
+    @Autowired
+    private AuthRepository authRepository;
+
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllBookingRequests() {
@@ -64,37 +67,43 @@ public class BookingRequestController {
     ResponseEntity<?> insertBookingRequest(@RequestBody BookingRequest newBookingRequest) {
 
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        LocalDate firstDateOfNextMonth = LocalDate.now().plusMonths(1).withDayOfMonth(1);
-        Date startDate = Date.from(firstDateOfNextMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Instant lastDateOfNextMonth = firstDateOfNextMonth.plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant().minusMillis(1);
-        Date endDate = Date.from(lastDateOfNextMonth);
-        newBookingRequest.setStartDate(startDate);
-        newBookingRequest.setEndDate(endDate);
-        newBookingRequest.setCreatedDate(new Date());
-        newBookingRequest.setStatus(BookingRequest.Status.Processing);
+        int numInsert = authRepository.getNumberOfPermission(user.getId(),"BOOKING","INSERT");
+                if(numInsert >=1){
+                    LocalDate firstDateOfNextMonth = LocalDate.now().plusMonths(1).withDayOfMonth(1);
+                    Date startDate = Date.from(firstDateOfNextMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    Instant lastDateOfNextMonth = firstDateOfNextMonth.plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant().minusMillis(1);
+                    Date endDate = Date.from(lastDateOfNextMonth);
+                    newBookingRequest.setStartDate(startDate);
+                    newBookingRequest.setEndDate(endDate);
+                    newBookingRequest.setCreatedDate(new Date());
+                    newBookingRequest.setStatus(BookingRequest.Status.Processing);
 
 
-        Optional<Slot> bookslot = slotRepository.findById(newBookingRequest.getSlot().getId());
+                    Optional<Slot> bookslot = slotRepository.findById(newBookingRequest.getSlot().getId());
 
 
-        if (bookslot.isPresent()) {
-            if (bookslot.get().getStatus() == Slot.Status.Available) {
-                bookslot.get().setStatus(Slot.Status.NotAvailable);
-                slotRepository.save(bookslot.get());
-                int cost = bookslot.get().getRoom().getBasePrice().getSlotPrice();
-                user.setBalance(user.getBalance() - cost);
-                userInfoRepository.save(user);
-            } else {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("OK", "This slot is not available", ""));
-            }
-        }
+                    if (bookslot.isPresent()) {
+                        if (bookslot.get().getStatus() == Slot.Status.Available) {
+                            bookslot.get().setStatus(Slot.Status.NotAvailable);
+                            slotRepository.save(bookslot.get());
+                            int cost = bookslot.get().getRoom().getBasePrice().getSlotPrice();
+                            user.setBalance(user.getBalance() - cost);
+                            userInfoRepository.save(user);
+                        } else {
+                            return ResponseEntity.status(HttpStatus.OK).body(
+                                    new ResponseObject("OK", "This slot is not available", ""));
+                        }
+                    }
 
 
-        newBookingRequest.setUserInfo(user);
+                    newBookingRequest.setUserInfo(user);
+                    return ResponseEntity.status(HttpStatus.OK).body(
+                            new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
+                    );
+                }
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
-        );
+                new ResponseObject("OK", "This slot is not available", ""));
+
     }
 
 
