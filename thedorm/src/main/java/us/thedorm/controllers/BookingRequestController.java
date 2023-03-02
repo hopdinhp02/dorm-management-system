@@ -153,9 +153,15 @@ public class BookingRequestController {
         Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(), BookingRequest.Status.Decline);
 
         if (foundBookingRequest.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("", "Booked", true)
-            );
+            LocalDate firstDateOfNextMonth = LocalDate.now().plusMonths(1).withDayOfMonth(1);
+            Date startDate = Date.from(firstDateOfNextMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Instant lastDateOfNextMonth = firstDateOfNextMonth.plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant().minusMillis(1);
+            Date endDate = Date.from(lastDateOfNextMonth);
+            if(!foundBookingRequest.get().getStartDate().equals(startDate) && !foundBookingRequest.get().getEndDate().equals(endDate) ){
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("", "Booked", true)
+                );
+            }
         }
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Not Book", false)
