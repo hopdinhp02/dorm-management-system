@@ -226,7 +226,7 @@ public class FacilityController {
         );
     }
 
-    @GetMapping("/falicility-histories")
+    @GetMapping("/facility-histories")
     ResponseEntity<ResponseObject> getAllHistory() {
         List<FacilityHistory> founds = facilityHistoryRepository.findAll();
         if (founds.size() == 0) {
@@ -240,7 +240,7 @@ public class FacilityController {
 
     }
 
-    @GetMapping("/{id}/falicility-histories")
+    @GetMapping("/{id}/facility-histories")
     ResponseEntity<ResponseObject> getAllHistory(@PathVariable Long id) {
         Optional<Facility> found = facilityRepository.findById(id);
         return found.isPresent() ? ResponseEntity.status(HttpStatus.OK).body(
@@ -251,5 +251,32 @@ public class FacilityController {
 
     }
 
+    @GetMapping("/slots/{id}")
+    ResponseEntity<ResponseObject> getFacilityBySlot(@PathVariable Long id) {
+        List<Facility> founds = facilityRepository.findBySlot_Id(id);
+        if (founds.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", founds)
+        );
+
+    }
+
+    @GetMapping("/rooms/{id}")
+    ResponseEntity<ResponseObject> getFacilityByRoom(@PathVariable Long id) {
+        List<Facility> founds = facilityRepository.findByRoom_Id(id);
+        if (founds.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", founds)
+        );
+
+    }
 
 }
