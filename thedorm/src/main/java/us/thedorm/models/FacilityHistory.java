@@ -39,6 +39,9 @@ public class FacilityHistory {
     @JoinColumn(name = "dorm_id")
     private Dorm dorm;
 
-    @Column(name = "change_date")
-    private Date changeDate;
+    @Column(name = "start_date")
+    private Date startDate;
+
+    @Column(name = "end_date")
+    private Date endDate;
 }

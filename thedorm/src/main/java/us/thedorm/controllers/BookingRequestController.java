@@ -162,9 +162,15 @@ public class BookingRequestController {
         Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(), BookingRequest.Status.Decline);
 
         if (foundBookingRequest.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("", "Booked", true)
-            );
+            LocalDate firstDateOfNextMonth = LocalDate.now().plusMonths(1).withDayOfMonth(1);
+            Date startDate = Date.from(firstDateOfNextMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Instant lastDateOfNextMonth = firstDateOfNextMonth.plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant().minusMillis(1);
+            Date endDate = Date.from(lastDateOfNextMonth);
+            if(!foundBookingRequest.get().getStartDate().equals(startDate) && !foundBookingRequest.get().getEndDate().equals(endDate) ){
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("", "Booked", true)
+                );
+            }
         }
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Not Book", false)
@@ -181,37 +187,7 @@ public class BookingRequestController {
         return historyBookingRequest;
     }
 
-    @GetMapping("/guard/check-in")
-    ResponseEntity<ResponseObject> checkIn(@RequestBody UserInfo resident) {
 
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(resident.getId());
-        if (residentHistory.isPresent()) {
-            residentHistory.get().setCheckinDate(new Date());
-            residentHistoryRepository.save(residentHistory.get());
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("", "checked", "")
-            );
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "", "")
-        );
-    }
-
-    @GetMapping("/guard/check-out")
-    ResponseEntity<ResponseObject> checkOut(@RequestBody UserInfo resident) {
-
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(resident.getId());
-        if (residentHistory.isPresent()) {
-            residentHistory.get().setCheckoutDate(new Date());
-            residentHistoryRepository.save(residentHistory.get());
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("", "checked", "")
-            );
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "", "")
-        );
-    }
 
 
 //    @GetMapping("/keep-booking")
@@ -252,6 +228,7 @@ public class BookingRequestController {
         if (bookingSchedule.isPresent()) {
             if (date.after(bookingSchedule.get().getNewStartDate()) && date
                     .before(bookingSchedule.get().getNewEndDate())) {
+
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
                 );
@@ -287,7 +264,7 @@ public class BookingRequestController {
     @GetMapping("/check-living")
     ResponseEntity<ResponseObject> checkLiving() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findByUserInfo_IdOrderByEndDate(user.getId());
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
 
 //        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.
 //                findBookingScheduleByBranch_Id(residentHistory.get().getSlot().getRoom().getDorm().getBranch().getId());
@@ -310,14 +287,14 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> getOldSlot() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findByUserInfo_IdOrderByEndDate(user.getId());
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
 
 //       residentHistory.get().getSlot().setStatus(Slot.Status.Available);
 
         return residentHistory.map(history -> ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("", "OK", history.getSlot())
         )).orElseGet(() -> ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Not Ok", "")
+                new ResponseObject("OK", "Not Ok", "false")
         ));
 
     }
