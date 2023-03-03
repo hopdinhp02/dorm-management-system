@@ -28,7 +28,7 @@ public class BookingService {
           .userInfo(UserInfo.builder().id(bookingRequest.getUserInfo().getId()).build())
           .type(Billing.Type.slot)
           .cost(bookingRequest.getSlot().getRoom().getBasePrice().getSlotPrice())
-          .status(Billing.Status.Unpaid)
+          .status(Billing.Status.Paid)
           .createdDate(new Date())
           .build();
   return billingRepository.save(newBilling);

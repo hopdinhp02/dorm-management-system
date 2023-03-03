@@ -23,6 +23,8 @@ public class BookingRequestController {
     @Autowired
     private UserInfoRepository userInfoRepository;
     @Autowired
+    private BillingRepository billingRepository;
+    @Autowired
     private HistoryBookingRequestRepository historyBookingRequestRepository;
 
     @Autowired
@@ -82,6 +84,8 @@ public class BookingRequestController {
                 int cost = bookslot.get().getRoom().getBasePrice().getSlotPrice();
                 user.setBalance(user.getBalance() - cost);
                 userInfoRepository.save(user);
+
+                bookingService.addBilling(newBookingRequest);
             } else {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("OK", "This slot is not available", ""));
@@ -99,18 +103,19 @@ public class BookingRequestController {
     @PutMapping("/{id}")
     ResponseEntity<ResponseObject> updateBookingRequest(@RequestBody BookingRequest newBookingRequest, @PathVariable Long id) {
 
-        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<UserInfo> user = userInfoRepository.findById(newBookingRequest.getUserInfo().getId());
+
 //        Optional<BookingRequest> bookingRequest = bookingRequestRepository.findById(id);
         BookingRequest updateBookingRequest = bookingRequestRepository.findById(id)
                 .map(booking_request -> {
-
-                    if (booking_request.getStatus().equals(BookingRequest.Status.Processing) && newBookingRequest.getStatus().equals(BookingRequest.Status.Paying)) {
-                        bookingService.addBilling(booking_request);
-                    } else if (booking_request.getStatus().equals(BookingRequest.Status.Paying) && newBookingRequest.getStatus().equals(BookingRequest.Status.Accept)) {
+                  if (newBookingRequest.getStatus().equals(BookingRequest.Status.Accept)) {
                         bookingService.addResidentHistory(booking_request);
                     } else if (newBookingRequest.getStatus().equals(BookingRequest.Status.Decline)) {
 
-                        user.setBalance(user.getBalance() + booking_request.getSlot().getRoom().getBasePrice().getSlotPrice());
+                      user.get().setBalance(user.get().getBalance() + booking_request.getSlot().getRoom().getBasePrice().getSlotPrice());
+                        booking_request.getSlot().setStatus(Slot.Status.NotAvailable);
+                        billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(user.get().getId(), Billing.Type.slot);
+
                     }
 
 
