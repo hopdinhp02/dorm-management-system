@@ -6,6 +6,7 @@ import us.thedorm.models.*;
 import us.thedorm.repositories.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,6 +70,17 @@ return null;
   return false;
  }
 
+
+// public boolean checkReset(){
+//  List<Slot> slots = slotRepository.findAll();
+//
+//       for (Slot slot : slots) {
+//          if(slot.getStatus().equals(Slot.Status.NotAvailable)){
+//           return false;
+//          }
+//   }
+//  return true;
+// }
 
 
 

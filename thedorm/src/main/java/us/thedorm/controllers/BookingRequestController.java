@@ -12,9 +12,7 @@ import us.thedorm.service.BookingService;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -239,11 +237,10 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> checkDayBooking(@RequestBody Branch branch) {
         Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
 
-          Date date = new Date();
+        Date date = new Date();
         if (bookingSchedule.isPresent()) {
             if (date.after(bookingSchedule.get().getNewStartDate()) && date
                     .before(bookingSchedule.get().getNewEndDate())) {
-
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
                 );
@@ -261,15 +258,15 @@ public class BookingRequestController {
 
         Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
         Date date = new Date();
-        if(bookingSchedule.isPresent()) {
+        if (bookingSchedule.isPresent()) {
             if (date.after(bookingSchedule.get().getKeepStartDate()) && date.before(bookingSchedule.get().getKeepEndDate())) {
 
-                List<Slot> slots = slotRepository.findAll();
-
-                for (Slot slot : slots) {
-                    slot.setStatus(Slot.Status.Available);
-                    slotRepository.save(slot);
-                }
+//                List<Slot> slots = slotRepository.findAll();
+//
+//                for (Slot slot : slots) {
+//                    slot.setStatus(Slot.Status.Available);
+//                    slotRepository.save(slot);
+//                }
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
                 );
@@ -293,7 +290,7 @@ public class BookingRequestController {
 //
 
         Date date = new Date();
-        if(residentHistory.isPresent()) {
+        if (residentHistory.isPresent()) {
             if (residentHistory.get().getEndDate().after(date)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
@@ -323,9 +320,49 @@ public class BookingRequestController {
 
     }
 
+    @GetMapping("/reset-slots")
+    ResponseEntity<ResponseObject> resetSlot(@RequestBody Branch branch) {
+
+        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
+
+        if(checkReset(bookingSchedule)) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Cant Reset", "")
+            );
+        }
+
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                List<Slot> slots = slotRepository.findAll();
+                for (Slot slot : slots) {
+                    slot.setStatus(Slot.Status.Available);
+                    slotRepository.save(slot);
+                }
+
+            }
+        };
+
+            timer.schedule(task, bookingSchedule.get().getKeepStartDate());
+            bookingSchedule.get().setReset(true);
+
+           bookingScheduleRepository.save(bookingSchedule.get());
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", "")
+        );
+
+    }
 
 
 
+    public boolean checkReset(Optional<BookingSchedule> bookingSchedule){
+        if(bookingSchedule.get().isReset()){
+            return true;
+        }
+        return false;
+    }
 
 }
 

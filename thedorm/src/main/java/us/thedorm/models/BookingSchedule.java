@@ -25,7 +25,9 @@ public class BookingSchedule {
     private Date keepEndDate;
     private Date newStartDate;
     private Date newEndDate;
+    private boolean isReset;
 
-
-
+    public void setReset(boolean reset) {
+        isReset = reset;
+    }
 }
