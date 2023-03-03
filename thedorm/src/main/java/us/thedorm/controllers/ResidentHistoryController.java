@@ -126,7 +126,7 @@ public class ResidentHistoryController {
     @GetMapping("/guard/check-in/slots/{id}")
     ResponseEntity<ResponseObject> ViewNotCheckInYetBySlot(@PathVariable Long id) {
 
-        List<ResidentHistory> residentHistories = residentHistoryRepository.findBySlot_IdAAndCheckinDateIsNull(id);
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findBySlot_IdAndCheckinDateIsNull(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "", residentHistories)
