@@ -103,7 +103,7 @@ public class BookingRequestController {
     @PutMapping("/{id}")
     ResponseEntity<ResponseObject> updateBookingRequest(@RequestBody BookingRequest newBookingRequest, @PathVariable Long id) {
 
-        Optional<UserInfo> user = userInfoRepository.findById(newBookingRequest.getUserInfo().getId());
+
 
 //        Optional<BookingRequest> bookingRequest = bookingRequestRepository.findById(id);
         BookingRequest updateBookingRequest = bookingRequestRepository.findById(id)
@@ -111,11 +111,17 @@ public class BookingRequestController {
                   if (newBookingRequest.getStatus().equals(BookingRequest.Status.Accept)) {
                         bookingService.addResidentHistory(booking_request);
                     } else if (newBookingRequest.getStatus().equals(BookingRequest.Status.Decline)) {
-
+                      Optional<UserInfo> user = userInfoRepository.findById(booking_request.getUserInfo().getId());
                       user.get().setBalance(user.get().getBalance() + booking_request.getSlot().getRoom().getBasePrice().getSlotPrice());
-                        booking_request.getSlot().setStatus(Slot.Status.NotAvailable);
-                        billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(user.get().getId(), Billing.Type.slot);
 
+                      Optional<Slot> slot = slotRepository.findById(booking_request.getSlot().getId());
+                       slot.get().setStatus(Slot.Status.Available);
+                       slotRepository.save(slot.get());
+
+                      Optional<Billing> billing = billingRepository.
+                              findTopByUserInfo_IdAndTypeOrderByIdDesc(booking_request.getUserInfo().getId(), Billing.Type.slot);
+                      billing.get().setStatus(Billing.Status.Refund);
+                      billingRepository.save(billing.get());
                     }
 
 
