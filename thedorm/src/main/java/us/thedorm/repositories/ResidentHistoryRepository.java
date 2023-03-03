@@ -26,4 +26,6 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
     List<ResidentHistory> findBySlot_IdAndCheckinDateIsNull(Long slotId);
 
     List<ResidentHistory> findBySlot_IdAndCheckoutDateIsNull(Long slotId);
+    @Query(value = "select top 1 * from resident_history where resident_id = :resident_id  and (GETDATE() between start_date and end_date)", nativeQuery = true)
+    Optional<ResidentHistory> findCurrentSlotOfResident(@Param("resident_id") long residentId);
 }

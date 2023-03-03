@@ -3,11 +3,13 @@ package us.thedorm.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.ResidentHistory;
 import us.thedorm.models.ResponseObject;
 import us.thedorm.models.UserInfo;
 import us.thedorm.repositories.ResidentHistoryRepository;
+import us.thedorm.repositories.UserInfoRepository;
 
 
 import java.util.Date;
@@ -20,6 +22,8 @@ import java.util.Optional;
 public class ResidentHistoryController {
     @Autowired
     ResidentHistoryRepository residentHistoryRepository;
+    @Autowired
+    UserInfoRepository userInfoRepository;
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAll() {
@@ -66,7 +70,7 @@ public class ResidentHistoryController {
                     return residentHistoryRepository.save(history);
 
                 }).orElseGet(() -> null);
-        if(updateHistory != null){
+        if (updateHistory != null) {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "Insert Product successfully", updateHistory)
             );
@@ -115,11 +119,11 @@ public class ResidentHistoryController {
             residentHistory.get().setCheckoutDate(new Date());
             residentHistoryRepository.save(residentHistory.get());
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("", "checked", "")
+                    new ResponseObject("Ok", "checked", "")
             );
         }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "", "")
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("Fail", "Not Found", "")
         );
     }
 
@@ -143,6 +147,20 @@ public class ResidentHistoryController {
         );
     }
 
+    @GetMapping("/residents/current-slot")
+    ResponseEntity<ResponseObject> getCurrentSlotOfResident() {
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findCurrentSlotOfResident(user.getId());
+        if(residentHistory.isPresent()){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "", residentHistory)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("Fail", "Not Found", "")
+        );
+
+    }
 
 
 }
