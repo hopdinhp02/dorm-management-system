@@ -32,12 +32,14 @@ public class FacilityDetail {
     private long id;
     private String name;
     private String provider;
-    private Date procudingDate;
+    private Date producingDate;
     private Date expirationDate;
     private int price;
     private int value;
     private String codeProduct;
+    @Enumerated(EnumType.STRING)
    private Type type;
+    @Enumerated(EnumType.STRING)
     private Status status;
     @OneToMany(mappedBy = "facilityDetail",cascade = CascadeType.ALL)
     @JsonIgnore

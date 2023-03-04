@@ -27,10 +27,11 @@ public class FacilityController {
     private FacilityHistoryRepository facilityHistoryRepository;
     @Autowired
     private MaintenanceRepository maintenanceRepository;
+
     @GetMapping("")
     ResponseEntity<ResponseObject> getAll() {
         List<Facility> founds = facilityRepository.findAll();
-        if(founds.size() == 0){
+        if (founds.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("failed", "", "")
             );
@@ -40,6 +41,7 @@ public class FacilityController {
         );
 
     }
+
     @GetMapping("/{id}")
     ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
         Optional<Facility> found = facilityRepository.findById(id);
@@ -51,28 +53,61 @@ public class FacilityController {
     }
 
     @PostMapping("")
-    ResponseEntity<ResponseObject> insert(@RequestBody Facility newFacility){
-        facilityDetailRepository.save(newFacility.getFacilityDetail());
-        Facility facility = facilityRepository.save(newFacility);
-        FacilityHistory facilityHistory = FacilityHistory.builder()
-                .facility(facility)
-                .slot(facility.getSlot())
-                .room(facility.getRoom())
-                .dorm(facility.getDorm())
-                .branch(facility.getBranch())
-                .changeDate(new Date())
-                .build();
-        facilityHistoryRepository.save(facilityHistory);
+    ResponseEntity<ResponseObject> insert(@RequestBody Facility newFacility, @RequestParam(name = "quantity", required = false) String quantityRaw) {
+        int quantity;
+        if (quantityRaw == null) {
+            quantity = 1;
+        } else {
+            try {
+                quantity = Integer.parseInt(quantityRaw);
+            } catch (NumberFormatException ex) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new ResponseObject("false", "quantity is a number!", ""
+                        ));
+            }
+        }
+
+        FacilityDetail facilityDetail = newFacility.getFacilityDetail();
+        for (int i = 0; i < quantity; i++) {
+            FacilityDetail newFD = FacilityDetail.builder()
+                    .name(facilityDetail.getName())
+                    .provider(facilityDetail.getProvider())
+                    .producingDate(facilityDetail.getProducingDate())
+                    .expirationDate(facilityDetail.getExpirationDate())
+                    .price(facilityDetail.getPrice())
+                    .value(facilityDetail.getValue())
+                    .codeProduct(facilityDetail.getCodeProduct())
+                    .type(facilityDetail.getType())
+                    .status(FacilityDetail.Status.good)
+                    .build();
+
+            facilityDetailRepository.save(newFD);
+            Facility facility = Facility.builder()
+                    .facilityDetail(newFD)
+                    .build();
+            facilityRepository.save(facility);
+            FacilityHistory facilityHistory = FacilityHistory.builder()
+                    .facility(facility)
+                    .slot(facility.getSlot())
+                    .room(facility.getRoom())
+                    .dorm(facility.getDorm())
+                    .branch(facility.getBranch())
+                    .startDate(new Date())
+                    .build();
+            facilityHistoryRepository.save(facilityHistory);
+
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Insert successfully", facility)
+                new ResponseObject("OK", "Insert successfully", "")
         );
+
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<ResponseObject> updateLocation(@RequestBody Facility newFacility, @PathVariable Long id){
+    ResponseEntity<ResponseObject> updateLocation(@RequestBody Facility newFacility, @PathVariable Long id) {
         Facility updateFacility = facilityRepository.findById(id)
                 .map(facility -> {
-                    if(newFacility.getSlot() != null){
+                    if (newFacility.getSlot() != null) {
                         facility.setSlot(newFacility.getSlot());
                         facility.setRoom(null);
                         facility.setDorm(null);
@@ -95,15 +130,15 @@ public class FacilityController {
                     }
                     return facilityRepository.save(facility);
 
-                }).orElseGet(()-> null);
-        if(updateFacility !=null){
+                }).orElseGet(() -> null);
+        if (updateFacility != null) {
             FacilityHistory facilityHistory = FacilityHistory.builder()
                     .facility(updateFacility)
                     .slot(updateFacility.getSlot())
                     .room(updateFacility.getRoom())
                     .dorm(updateFacility.getDorm())
                     .branch(updateFacility.getBranch())
-                    .changeDate(new Date())
+                    .startDate(new Date())
                     .build();
             facilityHistoryRepository.save(facilityHistory);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -116,9 +151,9 @@ public class FacilityController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<ResponseObject> delete(@PathVariable Long id){
+    ResponseEntity<ResponseObject> delete(@PathVariable Long id) {
         boolean exists = facilityRepository.existsById(id);
-        if(exists){
+        if (exists) {
             facilityRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "", "")
@@ -128,15 +163,16 @@ public class FacilityController {
                 new ResponseObject("failed", "", "")
         );
     }
+
     @PutMapping("/{id}/facility-detail")
-    ResponseEntity<ResponseObject> updateFacilityDetail(@RequestBody Facility newFacility, @PathVariable Long id){
+    ResponseEntity<ResponseObject> updateFacilityDetail(@RequestBody Facility newFacility, @PathVariable Long id) {
         Facility updateFacilityDetail = facilityRepository.findById(id)
                 .map(facility -> {
                     facility.setFacilityDetail(newFacility.getFacilityDetail());
                     return facilityRepository.save(facility);
 
-                }).orElseGet(()-> null);
-        if(updateFacilityDetail !=null){
+                }).orElseGet(() -> null);
+        if (updateFacilityDetail != null) {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "Update successfully", updateFacilityDetail)
             );
@@ -149,7 +185,7 @@ public class FacilityController {
     @GetMapping("/{id}/facility-detail/maintenances")
     ResponseEntity<ResponseObject> getAllMaintenancesByFacilityId(@PathVariable Long id) {
         Optional<Facility> facility = facilityRepository.findById(id);
-        if(facility.isPresent()){
+        if (facility.isPresent()) {
             List<Maintenance> maintenances = (List<Maintenance>) facility.get().getFacilityDetail().getMaintenances();
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "", maintenances)
@@ -163,7 +199,7 @@ public class FacilityController {
     @GetMapping("/facility-detail/maintenances")
     ResponseEntity<ResponseObject> getAllMaintenances(@PathVariable Long id) {
         List<Maintenance> founds = maintenanceRepository.findAll();
-        if(founds.size() == 0){
+        if (founds.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("failed", "", "")
             );
@@ -172,14 +208,15 @@ public class FacilityController {
                 new ResponseObject("OK", "", founds)
         );
     }
+
     @PostMapping("/{id}/facility-detail/maintenances")
-    ResponseEntity<ResponseObject> maintenance(@RequestBody Maintenance maintenance, @PathVariable Long id){
+    ResponseEntity<ResponseObject> maintenance(@RequestBody Maintenance maintenance, @PathVariable Long id) {
         Facility updateFacilityDetail = facilityRepository.findById(id)
                 .map(facility -> {
                     facility.getFacilityDetail().getMaintenances().add(maintenance);
                     return facilityRepository.save(facility);
-                }).orElseGet(()-> null);
-        if(updateFacilityDetail !=null){
+                }).orElseGet(() -> null);
+        if (updateFacilityDetail != null) {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "Update successfully", maintenance)
             );
@@ -188,10 +225,11 @@ public class FacilityController {
                 new ResponseObject("failed", "", "")
         );
     }
-    @GetMapping("/falicility-histories")
+
+    @GetMapping("/facility-histories")
     ResponseEntity<ResponseObject> getAllHistory() {
         List<FacilityHistory> founds = facilityHistoryRepository.findAll();
-        if(founds.size() == 0){
+        if (founds.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("failed", "", "")
             );
@@ -202,7 +240,7 @@ public class FacilityController {
 
     }
 
-    @GetMapping("/{id}/falicility-histories")
+    @GetMapping("/{id}/facility-histories")
     ResponseEntity<ResponseObject> getAllHistory(@PathVariable Long id) {
         Optional<Facility> found = facilityRepository.findById(id);
         return found.isPresent() ? ResponseEntity.status(HttpStatus.OK).body(
@@ -213,11 +251,32 @@ public class FacilityController {
 
     }
 
+    @GetMapping("/slots/{id}")
+    ResponseEntity<ResponseObject> getFacilityBySlot(@PathVariable Long id) {
+        List<Facility> founds = facilityRepository.findBySlot_Id(id);
+        if (founds.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", founds)
+        );
 
+    }
 
+    @GetMapping("/rooms/{id}")
+    ResponseEntity<ResponseObject> getFacilityByRoom(@PathVariable Long id) {
+        List<Facility> founds = facilityRepository.findByRoom_Id(id);
+        if (founds.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", founds)
+        );
 
-
-
-
+    }
 
 }
