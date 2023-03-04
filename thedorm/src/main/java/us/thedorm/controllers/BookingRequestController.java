@@ -64,18 +64,15 @@ public class BookingRequestController {
     ResponseEntity<?> insertBookingRequest(@RequestBody BookingRequest newBookingRequest) {
 
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        LocalDate firstDateOfNextMonth = LocalDate.now().plusMonths(1).withDayOfMonth(1);
-        Date startDate = Date.from(firstDateOfNextMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Instant lastDateOfNextMonth = firstDateOfNextMonth.plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant().minusMillis(1);
-        Date endDate = Date.from(lastDateOfNextMonth);
-        newBookingRequest.setStartDate(startDate);
-        newBookingRequest.setEndDate(endDate);
+      Optional<BookingSchedule> bookingSchedule =  bookingScheduleRepository.findBookingScheduleByBranch_Id(newBookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
+        newBookingRequest.setStartDate(bookingSchedule.get().getStartDate());
+        newBookingRequest.setEndDate(bookingSchedule.get().getEndDate());
         newBookingRequest.setCreatedDate(new Date());
         newBookingRequest.setStatus(BookingRequest.Status.Processing);
 
 
         Optional<Slot> bookslot = slotRepository.findById(newBookingRequest.getSlot().getId());
-
+        newBookingRequest.setUserInfo(user);
 
         if (bookslot.isPresent()) {
             if (bookslot.get().getStatus() == Slot.Status.Available) {
@@ -93,7 +90,7 @@ public class BookingRequestController {
         }
 
 
-        newBookingRequest.setUserInfo(user);
+
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
         );
@@ -108,20 +105,27 @@ public class BookingRequestController {
 //        Optional<BookingRequest> bookingRequest = bookingRequestRepository.findById(id);
         BookingRequest updateBookingRequest = bookingRequestRepository.findById(id)
                 .map(booking_request -> {
-                  if (newBookingRequest.getStatus().equals(BookingRequest.Status.Accept)) {
-                        bookingService.addResidentHistory(booking_request);
-                    } else if (newBookingRequest.getStatus().equals(BookingRequest.Status.Decline)) {
-                      Optional<UserInfo> user = userInfoRepository.findById(booking_request.getUserInfo().getId());
-                      user.get().setBalance(user.get().getBalance() + booking_request.getSlot().getRoom().getBasePrice().getSlotPrice());
+                    Optional<UserInfo> user = userInfoRepository.findById(booking_request.getUserInfo().getId());
 
+                  if (newBookingRequest.getStatus().equals(BookingRequest.Status.Accept)) {
+                      Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.get().getId());
+                      if(booking_request.getSlot().getId() == residentHistory.get().getSlot().getId()){
+                          bookingService.addResidentHistory(booking_request).setCheckinDate(residentHistory.get().getCheckinDate());
+                      }
+
+                    } else if (newBookingRequest.getStatus().equals(BookingRequest.Status.Decline)) {
+                      // refund balance
+                      user.get().setBalance(user.get().getBalance() + booking_request.getSlot().getRoom().getBasePrice().getSlotPrice());
+                    //update status slot
                       Optional<Slot> slot = slotRepository.findById(booking_request.getSlot().getId());
                        slot.get().setStatus(Slot.Status.Available);
                        slotRepository.save(slot.get());
-
+                     // update billing
                       Optional<Billing> billing = billingRepository.
                               findTopByUserInfo_IdAndTypeOrderByIdDesc(booking_request.getUserInfo().getId(), Billing.Type.slot);
                       billing.get().setStatus(Billing.Status.Refund);
                       billingRepository.save(billing.get());
+
                     }
 
 

@@ -25,6 +25,11 @@ public class BookingSchedule {
     private Date keepEndDate;
     private Date newStartDate;
     private Date newEndDate;
+
+    @Column(name = "start_date")
+    private Date startDate;
+    @Column(name = "end_date")
+    private Date endDate;
     private boolean isReset;
 
     public void setReset(boolean reset) {
