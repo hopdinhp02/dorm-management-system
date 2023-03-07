@@ -211,7 +211,7 @@ public class BookingRequestController {
 //    }
 
 
-    @GetMapping("/check-day-booking")
+    @PostMapping("/check-day-booking")
     ResponseEntity<ResponseObject> checkDayBooking(@RequestBody Branch branch) {
         Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
 
@@ -232,7 +232,7 @@ public class BookingRequestController {
     }
 
 
-    @GetMapping("/check-day-keep")
+    @PostMapping("/check-day-keep")
     ResponseEntity<ResponseObject> checkDayKeep(@RequestBody Branch branch) {
 
         Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
