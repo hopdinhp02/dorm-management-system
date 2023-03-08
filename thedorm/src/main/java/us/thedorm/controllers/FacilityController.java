@@ -165,10 +165,10 @@ public class FacilityController {
     }
 
     @PutMapping("/{id}/facility-detail")
-    ResponseEntity<ResponseObject> updateFacilityDetail(@RequestBody Facility newFacility, @PathVariable Long id) {
+    ResponseEntity<ResponseObject> updateFacilityDetailStatus(@RequestBody Facility newFacility, @PathVariable Long id) {
         Facility updateFacilityDetail = facilityRepository.findById(id)
                 .map(facility -> {
-                    facility.setFacilityDetail(newFacility.getFacilityDetail());
+                    facility.getFacilityDetail().setStatus(newFacility.getFacilityDetail().getStatus());
                     return facilityRepository.save(facility);
 
                 }).orElseGet(() -> null);

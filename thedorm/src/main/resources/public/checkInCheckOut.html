@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/elegant-icons.css">
+  <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+    CheckIn/CheckOut <br>
+    <select id="checkInCheckOut"  onchange="load()">
+        <option value="" disabled selected>Chọn một lựa chọn</option>
+        <option value="1" >Check In</option>
+        <option value="2" >Check Out</option>
+    </select>
+    <div id="checkIn-Out-form">
+        <!-- <form>
+          Branch: <br><select class="SBB-input" id="branchs" onchange="loaddorm()">
+            <option value="" disabled selected>Chọn một lựa chọn</option>
+          </select><br>
+          Dorm: <br><select class="SBB-input" id="dorms" onchange="loadrooms()">
+            <option value="" disabled selected>Chọn một lựa chọn</option>
+          </select>
+          <br>
+          Room:<br> <select class="SBB-input" id="rooms" onchange="loadslots()"></select>
+          <br>
+          slot: <br><select class="SBB-input" id="slots" onchange="">
+            <div id="op"></div>
+          </select><br>
+        </form><br> -->
+      </div>
+      <button class="btn btn-primary" type="" onclick="checkInCheckOut()">Check</button>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Email</th>
+            <th>Phone</th>
+            
+        </thead>
+        <tbody id="checkInCheckOut2">
+          <tr>
+            <th scope="row"></th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    
+        </tbody>
+    
+      </table><br>
+</body>
+<script src="js/checkInCheckOut.js"></script>
+</html>
