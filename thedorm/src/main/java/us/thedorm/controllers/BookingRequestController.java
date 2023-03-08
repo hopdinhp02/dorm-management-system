@@ -61,39 +61,11 @@ public class BookingRequestController {
     }
 
     @PostMapping("")
-    ResponseEntity<?> insertBookingRequest(@RequestBody BookingRequest newBookingRequest) {
+    ResponseEntity<ResponseObject> insertBookingRequest(@RequestBody BookingRequest newBookingRequest) {
 
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-      Optional<BookingSchedule> bookingSchedule =  bookingScheduleRepository.findBookingScheduleByBranch_Id(newBookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
-        newBookingRequest.setStartDate(bookingSchedule.get().getStartDate());
-        newBookingRequest.setEndDate(bookingSchedule.get().getEndDate());
-        newBookingRequest.setCreatedDate(new Date());
-        newBookingRequest.setStatus(BookingRequest.Status.Processing);
+     return bookingService.checkBooking(newBookingRequest,user);
 
-
-        Optional<Slot> bookslot = slotRepository.findById(newBookingRequest.getSlot().getId());
-        newBookingRequest.setUserInfo(user);
-
-        if (bookslot.isPresent()) {
-            if (bookslot.get().getStatus() == Slot.Status.Available) {
-                bookslot.get().setStatus(Slot.Status.NotAvailable);
-                slotRepository.save(bookslot.get());
-                int cost = bookslot.get().getRoom().getBasePrice().getSlotPrice();
-                user.setBalance(user.getBalance() - cost);
-                userInfoRepository.save(user);
-
-                bookingService.addBilling(newBookingRequest);
-            } else {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("OK", "This slot is not available", ""));
-            }
-        }
-
-
-
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
-        );
     }
 
 
@@ -101,43 +73,16 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> updateBookingRequest(@RequestBody BookingRequest newBookingRequest, @PathVariable Long id) {
 
 
-
-//        Optional<BookingRequest> bookingRequest = bookingRequestRepository.findById(id);
         BookingRequest updateBookingRequest = bookingRequestRepository.findById(id)
                 .map(booking_request -> {
-                    Optional<UserInfo> user = userInfoRepository.findById(booking_request.getUserInfo().getId());
-
-                  if (newBookingRequest.getStatus().equals(BookingRequest.Status.Accept)) {
-                      Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.get().getId());
-                      if(booking_request.getSlot().getId() == residentHistory.get().getSlot().getId()){
-                          bookingService.addResidentHistory(booking_request).setCheckinDate(residentHistory.get().getCheckinDate());
-                      }
-
-                    } else if (newBookingRequest.getStatus().equals(BookingRequest.Status.Decline)) {
-                      // refund balance
-                      user.get().setBalance(user.get().getBalance() + booking_request.getSlot().getRoom().getBasePrice().getSlotPrice());
-                    //update status slot
-                      Optional<Slot> slot = slotRepository.findById(booking_request.getSlot().getId());
-                       slot.get().setStatus(Slot.Status.Available);
-                       slotRepository.save(slot.get());
-                     // update billing
-                      Optional<Billing> billing = billingRepository.
-                              findTopByUserInfo_IdAndTypeOrderByIdDesc(booking_request.getUserInfo().getId(), Billing.Type.slot);
-                      billing.get().setStatus(Billing.Status.Refund);
-                      billingRepository.save(billing.get());
-
-                    }
-
-
-                    booking_request.setStatus(newBookingRequest.getStatus());
-
+                 bookingService.updateBookingRequest(newBookingRequest,booking_request);
                     return bookingRequestRepository.save(booking_request);
                 }).orElseGet(() -> null);
 
         if (updateBookingRequest != null) {
-//            historyBookingRequestRepository.save(recordChangeInBooking(updateBookingRequest));
+
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("OK", "Insert Product successfully", updateBookingRequest)
+                    new ResponseObject("OK", "Update Product successfully", updateBookingRequest)
             );
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -164,17 +109,11 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> checkUserIdInBookingRequest() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(), BookingRequest.Status.Decline);
-
-        if (foundBookingRequest.isPresent()) {
-            LocalDate firstDateOfNextMonth = LocalDate.now().plusMonths(1).withDayOfMonth(1);
-            Date startDate = Date.from(firstDateOfNextMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            Instant lastDateOfNextMonth = firstDateOfNextMonth.plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant().minusMillis(1);
-            Date endDate = Date.from(lastDateOfNextMonth);
-            if(!foundBookingRequest.get().getStartDate().equals(startDate) && !foundBookingRequest.get().getEndDate().equals(endDate) ){
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("", "Booked", true)
-                );
-            }
+        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(foundBookingRequest.get().getSlot().getRoom().getDorm().getBranch().getId());
+        if (foundBookingRequest.get().getStartDate().equals(bookingSchedule.get().getStartDate()) && foundBookingRequest.get().getEndDate().equals(bookingSchedule.get().getEndDate())){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "Booked", true)
+            );
         }
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Not Book", false)
@@ -192,36 +131,6 @@ public class BookingRequestController {
     }
 
 
-
-
-//    @GetMapping("/keep-booking")
-//    ResponseEntity<ResponseObject> KeepBooking(@RequestBody BookingRequest newBookingRequest) {
-//
-//        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//
-//        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
-//
-//
-//        if (residentHistory.isPresent()) {
-//            Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.
-//                    findBookingScheduleByBranch_Id(residentHistory.get().getSlot().getRoom().getDorm().getBranch().getId());
-//
-//            if (bookingSchedule.isPresent()) {
-//                if (bookingSchedule.get().getKeepStartDate().before(residentHistory.get().getEndDate())) {
-//                    insertBookingRequest(newBookingRequest);
-//
-//                }
-//
-//            }
-//            return ResponseEntity.status(HttpStatus.OK).body(
-//                    new ResponseObject("", "Ok", ""));
-//
-//        }
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                new ResponseObject("", "Not Ok", "")
-//        );
-//
-//    }
 
 
     @GetMapping("/check-day-booking")
@@ -252,12 +161,6 @@ public class BookingRequestController {
         if (bookingSchedule.isPresent()) {
             if (date.after(bookingSchedule.get().getKeepStartDate()) && date.before(bookingSchedule.get().getKeepEndDate())) {
 
-//                List<Slot> slots = slotRepository.findAll();
-//
-//                for (Slot slot : slots) {
-//                    slot.setStatus(Slot.Status.Available);
-//                    slotRepository.save(slot);
-//                }
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
                 );
@@ -275,10 +178,6 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> checkLiving() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
-
-//        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.
-//                findBookingScheduleByBranch_Id(residentHistory.get().getSlot().getRoom().getDorm().getBranch().getId());
-//
 
         Date date = new Date();
         if (residentHistory.isPresent()) {
@@ -300,8 +199,6 @@ public class BookingRequestController {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
-
-//       residentHistory.get().getSlot().setStatus(Slot.Status.Available);
 
         return residentHistory.map(history -> ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("", "OK", history.getSlot())
