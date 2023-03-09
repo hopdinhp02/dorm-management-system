@@ -68,15 +68,15 @@ public class BookingService {
         Optional<Slot> slot = slotRepository.findById(booking_request.getSlot().getId());
         Optional<Billing> billing = billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(booking_request.getUserInfo().getId(), Billing.Type.slot);
 
-        if (newBookingRequest.getStatus().equals(BookingRequest.Status.Accept)) {
+        if (booking_request.getStatus().equals(BookingRequest.Status.Processing) && newBookingRequest.getStatus().equals(BookingRequest.Status.Accept)) {
 
             if (booking_request.getSlot().getId() == residentHistory.get().getSlot().getId()) {
                 addResidentHistory(booking_request).setCheckinDate(residentHistory.get().getCheckinDate());
-            }else{
+            } else {
                 addResidentHistory(booking_request);
             }
 
-        } else if ( newBookingRequest.getStatus().equals(BookingRequest.Status.Decline)) {
+        } else if (booking_request.getStatus().equals(BookingRequest.Status.Processing) && newBookingRequest.getStatus().equals(BookingRequest.Status.Decline)) {
             user.get().setBalance(user.get().getBalance() + booking_request.getSlot().getRoom().getBasePrice().getSlotPrice());
             slot.get().setStatus(Slot.Status.Available);
             slotRepository.save(slot.get());
@@ -90,105 +90,47 @@ public class BookingService {
     }
 
 
-   public ResponseEntity<ResponseObject> checkBooking(BookingRequest newBookingRequest,UserInfo user) {
+    public ResponseEntity<ResponseObject> checkBooking(BookingRequest newBookingRequest, UserInfo user) {
 
 
-       Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(newBookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
-       newBookingRequest.setUserInfo(user);
-       newBookingRequest.setStartDate(bookingSchedule.get().getStartDate());
-       newBookingRequest.setEndDate(bookingSchedule.get().getEndDate());
-       newBookingRequest.setCreatedDate(new Date());
-       newBookingRequest.setStatus(BookingRequest.Status.Processing);
+        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(newBookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
+        newBookingRequest.setUserInfo(user);
+        newBookingRequest.setStartDate(bookingSchedule.get().getStartDate());
+        newBookingRequest.setEndDate(bookingSchedule.get().getEndDate());
+        newBookingRequest.setCreatedDate(new Date());
+        newBookingRequest.setStatus(BookingRequest.Status.Processing);
 
-       Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(), BookingRequest.Status.Decline);
-
-
-       if (foundBookingRequest.get().getStartDate().equals(bookingSchedule.get().getStartDate()) && foundBookingRequest.get().getEndDate().equals(bookingSchedule.get().getEndDate())) {
-           return ResponseEntity.status(HttpStatus.OK).body(
-                   new ResponseObject("", "You had book in this semester", "")
-           );
-       }
-
-       Optional<Slot> bookslot = slotRepository.findById(newBookingRequest.getSlot().getId());
+        Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(), BookingRequest.Status.Decline);
 
 
-       if (bookslot.isPresent()) {
-           if (bookslot.get().getStatus() == Slot.Status.Available) {
-               bookslot.get().setStatus(Slot.Status.NotAvailable);
-               slotRepository.save(bookslot.get());
-               int cost = bookslot.get().getRoom().getBasePrice().getSlotPrice();
-               user.setBalance(user.getBalance() - cost);
-               userInfoRepository.save(user);
-               addBilling(newBookingRequest);
+        if (foundBookingRequest.get().getStartDate().equals(bookingSchedule.get().getStartDate()) && foundBookingRequest.get().getEndDate().equals(bookingSchedule.get().getEndDate())) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "You had book in this semester", "")
+            );
+        }
 
-           } else {
-               return ResponseEntity.status(HttpStatus.OK).body(
-                       new ResponseObject("OK", "Slot is not available", "")
-               );
-           }
-       }
+        Optional<Slot> bookslot = slotRepository.findById(newBookingRequest.getSlot().getId());
 
+        if (bookslot.isPresent()) {
+            if (bookslot.get().getStatus() == Slot.Status.Available) {
+                bookslot.get().setStatus(Slot.Status.NotAvailable);
+                slotRepository.save(bookslot.get());
+                int cost = bookslot.get().getRoom().getBasePrice().getSlotPrice();
+                user.setBalance(user.getBalance() - cost);
+                userInfoRepository.save(user);
+                addBilling(newBookingRequest);
 
-       return ResponseEntity.status(HttpStatus.OK).body(
-               new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
-       );
-   }
-
-
-
-
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("OK", "Slot is not available", "")
+                );
+            }
+        }
 
 
-
-// public boolean checkIsBook(UserInfo userInfo,Optional<BookingRequest> bookingRequest,Optional<BookingSchedule> bookingSchedule) {
-//
-//     if (bookingRequest.get().getStartDate().equals(bookingSchedule.get().getStartDate())) {
-//         bookingSchedule.get();
-//         bookingSchedule.get();
-//         return true;
-//     }
-//   return  false;
-// }
-
-
-// public boolean checkReset(){
-//  List<Slot> slots = slotRepository.findAll();
-//
-//       for (Slot slot : slots) {
-//          if(slot.getStatus().equals(Slot.Status.NotAvailable)){
-//           return false;
-//          }
-//   }
-//  return true;
-// }
-
-
-
-
-// public ResidentHistory updateBalance(BookingRequest bookingRequest){
-//  Long userId = bookingRequest.getUserInfo().getId();
-//  Optional<Billing> bill = billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(userId,Billing.Type.slot);
-//  if(bill.isPresent()){
-//   bill.get().setStatus(Billing.Status.Refund);
-//   bill.get().setRefundDate(new Date());
-//   billingRepository.save(bill.get());
-//   ResidentHistory newResidentHistory = ResidentHistory
-//           .builder()
-//           .userInfo(UserInfo.builder().id(userId).balance())
-//  }
- }
-
-
-// public BookingRequest checkBookingRequest(UserInfo userInfo){
-//         BookingRequest bookingRequest = (BookingRequest) bookingRequestRepository.getBookingRequestByUserInfoId(userInfo.getId());
-//
-//  if(bookingRequest!= null){
-//   bookingRequest.setStatus(StatusBookingRequest.Decline);
-//  }
-//
-//  return bookingRequestRepository.save(bookingRequest);
-//
-// }
-
-
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
+        );
+    }
+}
 

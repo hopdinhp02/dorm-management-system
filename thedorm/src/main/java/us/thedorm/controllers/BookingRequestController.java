@@ -228,13 +228,12 @@ public class BookingRequestController {
                     slot.setStatus(Slot.Status.Available);
                     slotRepository.save(slot);
                 }
+                bookingSchedule.get().setReset(true);
 
             }
         };
 
             timer.schedule(task, bookingSchedule.get().getKeepStartDate());
-            bookingSchedule.get().setReset(true);
-
            bookingScheduleRepository.save(bookingSchedule.get());
 
         return ResponseEntity.status(HttpStatus.OK).body(
