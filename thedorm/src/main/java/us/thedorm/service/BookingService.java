@@ -69,9 +69,11 @@ public class BookingService {
         Optional<Billing> billing = billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(booking_request.getUserInfo().getId(), Billing.Type.slot);
 
         if (newBookingRequest.getStatus().equals(BookingRequest.Status.Accept)) {
-            addResidentHistory(booking_request);
+
             if (booking_request.getSlot().getId() == residentHistory.get().getSlot().getId()) {
                 addResidentHistory(booking_request).setCheckinDate(residentHistory.get().getCheckinDate());
+            }else{
+                addResidentHistory(booking_request);
             }
 
         } else if ( newBookingRequest.getStatus().equals(BookingRequest.Status.Decline)) {
