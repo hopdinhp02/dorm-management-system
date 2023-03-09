@@ -39,17 +39,17 @@ function checkUserIsBook() {
             } else {
                 bookingForm.innerHTML = `<form>
  
-                Branch: <select id="branchs" onchange="loaddorm()">
+                Branch: <br><select id="branchs" class="SBB-input" onchange="loaddorm()">
                   <option value="" disabled selected>Chọn một lựa chọn</option>
                 </select><br>
-                Dorm: <select id="dorms" onchange="loadrooms()">
+                Dorm: <br><select id="dorms" class="SBB-input" onchange="loadrooms()">
                   <option value="" disabled selected>Chọn một lựa chọn</option>
             
                 </select>
                 <br>
-                Room: <select id="rooms" onchange="loadslots()"></select>
+                Room: <br><select id="rooms" class="SBB-input" onchange="loadslots()"></select>
                 <br>
-                slot: <select id="slots"></select><br>
+                slot: <br><select class="SBB-input" id="slots"></select><br>
                 Note: <input type="text" id="Note"><br>
               </form><br>
               <button class="btn btn-primary" type="submit" onclick="addBookingRequests()">Add</button>`;
@@ -62,6 +62,7 @@ function checkUserIsBook() {
             console.error('Error:', error);
         });
 }
+
 function loadBooking() {
     let url = "http://localhost:8081/api/v1/booking-requests";
     let bookingTable = document.getElementById("booking");
@@ -296,8 +297,11 @@ function addBookingRequests() {
 
             console.log(data);
         })
+        .then(checkUserIsBook)
         .then(loadBooking)
         .catch(error => {
             console.error('Error:', error);
         });
 }
+
+

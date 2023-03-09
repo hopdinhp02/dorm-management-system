@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     checkJwtExpiration(localStorage.getItem("jwt"))
     loadbranch()
+    checkUserIsBook()
 });
 
 setInterval(function () {
@@ -20,6 +21,8 @@ function checkJwtExpiration(token) {
         console.log('Token is still valid');
     }
 }
+
+
 
 function loadbranch() {
     let branchDropDown = document.getElementById("branchs");
@@ -147,13 +150,42 @@ function loadslots() {
         });
 }
 
+function checkUserIsBook() {
+    let url = "http://localhost:8081/api/v1/booking-requests/userInfo/is-booked";
+    let text = document.getElementById("check");
+    let bookingForm = ``;
+    
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+        }
+    })
+        .then(response => response.json())
+        .then(dataJson => {
+            console.log(dataJson);
+            if (dataJson.data == true) {
+                bookingForm = "<h3  style='color: red;'>You have booked</h3>";
+                text.innerHTML = bookingRequest
+
+            } 
+
+        })
+     
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+
 function checkDayKeep() {
     let url = "http://localhost:8081/api/v1/booking-requests/check-day-keep";
     let text = document.getElementById("check");
     let bookingRequest = ``;
     let branchId = document.getElementById("branchs").value
-    let dorm = document.getElementById("dorm")
     let dormRequest = ``;
+    let dorm = document.getElementById("dorm")
 
     jsonData = { id: branchId };
     fetch(url, {
@@ -168,11 +200,11 @@ function checkDayKeep() {
         .then(dataJson => {
             console.log(dataJson);
             if (dataJson.data == true) {
-                bookingRequest = `<h1>Keeping Day</h1>`
+                bookingRequest = `<h1>Keeping Date</h1>`
                 text.innerHTML = bookingRequest
-    
-                
                 checkliving();
+                dormRequest =``;
+                dorm.innerHTML = dormRequest; 
                  
 
             } else {
@@ -232,7 +264,7 @@ function checkDayBooking() {
         .then(response => response.json())
         .then(dataJson => {
             if (dataJson.data == true) {
-                bookingRequest = `<h1>Booking Day</h1>`
+                bookingRequest = `<h1>Booking Date</h1>`
                 text.innerHTML = bookingRequest
                 dormRequest = `Dorm: <br><select class="SBB-input" id="dorms" onchange="loadrooms()">
                 <option value="" disabled selected>Chọn một lựa chọn</option>
@@ -278,6 +310,9 @@ function checkliving() {
         .then(dataJson => {
             if (dataJson.data == true) {
                 getOldSlot();
+            }else{
+                bookingRequest = `<h1>You don't have room</h1>`
+                text.innerHTML = bookingRequest
             }
         })
         .catch(error => {
@@ -304,6 +339,9 @@ function getOldSlot() {
         .then(dataJson => {
             console.log(dataJson);
             data = dataJson.data 
+            console.log(data.room.dorm.branch.id == branchId);
+console.log(branchId);
+console.log(data.room.dorm.branch.id);
                 if (data.room.dorm.branch.id == branchId) {
                     dormRequest = `Dorm: <br><select class="SBB-input" id="dorms" onchange="">
                     <option value="${data.room.dorm.id}" disabled selected>${data.room.dorm.name}</option>

@@ -131,6 +131,10 @@ public class FacilityController {
                     return facilityRepository.save(facility);
 
                 }).orElseGet(() -> null);
+        Optional<FacilityHistory> oldFH = facilityHistoryRepository.findTopByFacility_IdOrderByIdDesc(id);
+        if(oldFH.isPresent()){
+            oldFH.get().setEndDate(new Date());
+        }
         if (updateFacility != null) {
             FacilityHistory facilityHistory = FacilityHistory.builder()
                     .facility(updateFacility)
@@ -165,10 +169,10 @@ public class FacilityController {
     }
 
     @PutMapping("/{id}/facility-detail")
-    ResponseEntity<ResponseObject> updateFacilityDetail(@RequestBody Facility newFacility, @PathVariable Long id) {
+    ResponseEntity<ResponseObject> updateFacilityDetailStatus(@RequestBody Facility newFacility, @PathVariable Long id) {
         Facility updateFacilityDetail = facilityRepository.findById(id)
                 .map(facility -> {
-                    facility.setFacilityDetail(newFacility.getFacilityDetail());
+                    facility.getFacilityDetail().setStatus(newFacility.getFacilityDetail().getStatus());
                     return facilityRepository.save(facility);
 
                 }).orElseGet(() -> null);
@@ -278,5 +282,47 @@ public class FacilityController {
         );
 
     }
+
+    @GetMapping("/dorms/{id}")
+    ResponseEntity<ResponseObject> getFacilityByDorm(@PathVariable Long id) {
+        List<Facility> founds = facilityRepository.findByDorm_Id(id);
+        if (founds.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", founds)
+        );
+
+    }
+
+    @GetMapping("/branchs/{id}")
+    ResponseEntity<ResponseObject> getFacilityBy(@PathVariable Long id) {
+        List<Facility> founds = facilityRepository.findByBranch_Id(id);
+        if (founds.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", founds)
+        );
+    }
+
+    @GetMapping("not-assign")
+    ResponseEntity<ResponseObject> getNotAssignFacility() {
+        List<Facility> founds = facilityRepository.findNotAssignFacility();
+        if (founds.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", founds)
+        );
+    }
+
+
 
 }
