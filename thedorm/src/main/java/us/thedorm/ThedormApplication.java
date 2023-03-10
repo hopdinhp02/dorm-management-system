@@ -16,10 +16,7 @@ public class ThedormApplication {
 
 	public static void main(String[] args) {
 
-
 		SpringApplication.run(ThedormApplication.class, args);
-		Date date = new Date();
-		System.out.println(date);
 	}
 
 

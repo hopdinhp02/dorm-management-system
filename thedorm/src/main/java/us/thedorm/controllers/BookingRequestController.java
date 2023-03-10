@@ -132,68 +132,6 @@ public class BookingRequestController {
 
 
 
-
-    @GetMapping("/check-day-booking")
-    ResponseEntity<ResponseObject> checkDayBooking(@RequestBody Branch branch) {
-        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
-
-        Date date = new Date();
-        if (bookingSchedule.isPresent()) {
-            if (date.after(bookingSchedule.get().getNewStartDate()) && date
-                    .before(bookingSchedule.get().getNewEndDate())) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("", "OK", true)
-                );
-            }
-
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Not Valid", false)
-        );
-    }
-
-
-    @GetMapping("/check-day-keep")
-    ResponseEntity<ResponseObject> checkDayKeep(@RequestBody Branch branch) {
-
-        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
-        Date date = new Date();
-        if (bookingSchedule.isPresent()) {
-            if (date.after(bookingSchedule.get().getKeepStartDate()) && date.before(bookingSchedule.get().getKeepEndDate())) {
-
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("", "OK", true)
-                );
-            }
-
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Not Valid", false)
-        );
-
-    }
-
-    @GetMapping("/check-living")
-    ResponseEntity<ResponseObject> checkLiving() {
-        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
-
-        Date date = new Date();
-        if (residentHistory.isPresent()) {
-            if (residentHistory.get().getEndDate().after(date)) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("", "OK", true)
-                );
-
-            }
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("", "OK", false)
-        );
-    }
-
-
     @GetMapping("/get-old-slot")
     ResponseEntity<ResponseObject> getOldSlot() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -208,48 +146,6 @@ public class BookingRequestController {
 
     }
 
-    @GetMapping("/reset-slots")
-    ResponseEntity<ResponseObject> resetSlot(@RequestBody Branch branch) {
-
-        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
-
-        if(checkReset(bookingSchedule)) {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("OK", "Cant Reset", "")
-            );
-        }
-
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                List<Slot> slots = slotRepository.findAll();
-                for (Slot slot : slots) {
-                    slot.setStatus(Slot.Status.Available);
-                    slotRepository.save(slot);
-                }
-                bookingSchedule.get().setReset(true);
-                bookingScheduleRepository.save(bookingSchedule.get());
-            }
-        };
-//                bookingSchedule.get().setReset(true);
-//                bookingScheduleRepository.save(bookingSchedule.get());
-            timer.schedule(task, bookingSchedule.get().getKeepStartDate());
-
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "", "")
-        );
-
-    }
-
-
-
-    public boolean checkReset(Optional<BookingSchedule> bookingSchedule){
-        if(bookingSchedule.get().isReset()){
-            return true;
-        }
-        return false;
-    }
 
 }
 
