@@ -13,31 +13,38 @@
     <div class="container-fluid">
         <form>
             Chart by Month-Year:
-            <input type="month" id="month" name="date">
-            <input type="button" onclick="genChart()" value="Show">
+            <!-- <input type="month" id="month" name="date"> -->
+            <input id="year" type="number" min="1900" max="2099" step="1"/>
+            <input type="button" onclick="genLineChart()" value="Show">
         </form>
         <div class='row'>
    
             
-            <div class="col-6">
+            <!-- <div class="col-6">
                 <canvas id="monthLineChart"></canvas>
+            </div> -->
+            <!-- <div class="col-6">
+                <canvas id="yearLineChart"></canvas>
+            </div> -->
+            <div class="col-6">
+                <canvas id="yearBarChart"></canvas>
             </div>
             <div class="col-6">
-                <canvas id="yearLineChart"></canvas>
+                <canvas id="yearPieChart"></canvas>
             </div>
             
             
         </div>
         <hr>
         <hr>
-        <div class='row'>
+        <!-- <div class='row'>
             <div class="col-6">
                 <canvas id="monthDoughnutChart" ></canvas>
             </div>
             <div class="col-6">
                 <canvas id="yearPolarAreaChart" ></canvas>
             </div>
-        </div>
+        </div> -->
         
     </div>
     

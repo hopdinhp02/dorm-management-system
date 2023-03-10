@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping(path = "/api/v1/billings")
+@RequestMapping(path = "/api/v1/maintenance")
 public class MaintenanceController {
     @Autowired
     public MaintenanceRepository maintenanceRepository;

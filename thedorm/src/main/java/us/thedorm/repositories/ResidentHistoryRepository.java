@@ -14,6 +14,7 @@ import java.util.Optional;
 
 public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory,Long> {
     Optional<ResidentHistory> findTopByUserInfo_IdOrderByIdDesc(long id);
+
     Optional<ResidentHistory> findByUserInfo_IdOrderByEndDate(long id);
     // all nhiều tháng
     @Query(value = "select reh.* from resident_history as reh inner join slot on reh.slot_id = slot.id " +
@@ -26,5 +27,6 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
             "inner join room on slot.room_id = room.id " +
             "where  room_id=?  and (? BETWEEN reh.start_date And reh.end_date)",nativeQuery = true)
     List<ResidentHistory> findResidentsByRoomIdInMonth(Long roomid , LocalDate month_pay );
+
 
 }

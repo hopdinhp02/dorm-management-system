@@ -3,11 +3,13 @@ package us.thedorm.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.ResidentHistory;
 import us.thedorm.models.ResponseObject;
 import us.thedorm.models.UserInfo;
 import us.thedorm.repositories.ResidentHistoryRepository;
+import us.thedorm.repositories.UserInfoRepository;
 
 
 import java.util.List;
@@ -19,6 +21,8 @@ import java.util.Optional;
 public class ResidentHistoryController {
     @Autowired
     ResidentHistoryRepository residentHistoryRepository;
+    @Autowired
+    UserInfoRepository userInfoRepository;
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAll() {
@@ -65,7 +69,7 @@ public class ResidentHistoryController {
                     return residentHistoryRepository.save(history);
 
                 }).orElseGet(() -> null);
-        if(updateHistory != null){
+        if (updateHistory != null) {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "Insert Product successfully", updateHistory)
             );
@@ -94,6 +98,7 @@ public class ResidentHistoryController {
     public ResponseEntity<ResponseObject> AllResidentsByRoomId(@PathVariable Long roomid,@PathVariable Long ewuId) {
         List<ResidentHistory> ListResidents = residentHistoryRepository.findResidentsByRoomId(roomid, ewuId);
 
+
         if (ListResidents.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("failed", "", "")
@@ -103,4 +108,5 @@ public class ResidentHistoryController {
                 new ResponseObject("OK", " List Residents By RoomId", ListResidents)
         );
     }
+
 }

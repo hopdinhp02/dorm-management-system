@@ -2,8 +2,8 @@
 loadDorm();
 
 
-let dormTable = document.getElementById("dorms");
 function loadDorm() {
+let dormTable = document.getElementById("dorms");
     let url = "http://localhost:8081/api/v1/dorms";
     let dorm = ``;
     fetch(url)
