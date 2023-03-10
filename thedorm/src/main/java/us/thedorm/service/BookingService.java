@@ -20,6 +20,8 @@ public class BookingService {
  private BookingRequestRepository bookingRequestRepository;
  @Autowired
  private SlotRepository slotRepository;
+ @Autowired
+ private ElectricWaterUsageRepo electricWaterUsageRepo;
 
  public Billing addBilling(BookingRequest bookingRequest){
   Billing newBilling = Billing
@@ -32,6 +34,18 @@ public class BookingService {
           .build();
   return billingRepository.save(newBilling);
  }
+// public Billing AddElectricIntoBilling( ElectricWaterUsage electricWaterUsage ){
+//  Billing newBilling = Billing
+//          .builder()
+//          .userInfo(UserInfo.builder().id(electricWaterUsage.getRoom().getSlots().)
+//  .type(Billing.Type.Electric)
+//          .cost(residentHistory.getSlot().getRoom().getBasePrice().getElectricPrice()*ElectricWaterUsage)
+//          .status(Billing.Status.Unpaid)
+//          .createdDate(new Date())
+//          .build();
+//  return billingRepository.save(newBilling);
+//
+// }
 
  public ResidentHistory addResidentHistory(BookingRequest bookingRequest){
 
