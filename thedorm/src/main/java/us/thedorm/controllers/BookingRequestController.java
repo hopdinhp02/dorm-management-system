@@ -229,12 +229,12 @@ public class BookingRequestController {
                     slotRepository.save(slot);
                 }
                 bookingSchedule.get().setReset(true);
-
+                bookingScheduleRepository.save(bookingSchedule.get());
             }
         };
-
+//                bookingSchedule.get().setReset(true);
+//                bookingScheduleRepository.save(bookingSchedule.get());
             timer.schedule(task, bookingSchedule.get().getKeepStartDate());
-           bookingScheduleRepository.save(bookingSchedule.get());
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "", "")
