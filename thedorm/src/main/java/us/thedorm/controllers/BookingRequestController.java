@@ -35,6 +35,9 @@ public class BookingRequestController {
     private SlotRepository slotRepository;
     @Autowired
     private BookingScheduleRepository bookingScheduleRepository;
+    @Autowired
+    private AuthRepository authRepository;
+
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllBookingRequests() {
@@ -64,8 +67,8 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> insertBookingRequest(@RequestBody BookingRequest newBookingRequest) {
 
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-     return bookingService.checkBooking(newBookingRequest,user);
 
+     return bookingService.checkBooking(newBookingRequest,user);
     }
 
 

@@ -6,5 +6,6 @@ import us.thedorm.models.Room;
 import java.util.List;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
+    List<Room> findRoomsById(Long roomId);
     List<Room> getRoomsByDorm_Id(Long dormId);
 }
