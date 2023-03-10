@@ -132,19 +132,7 @@ public class BookingRequestController {
 
 
 
-    @GetMapping("/get-old-slot")
-    ResponseEntity<ResponseObject> getOldSlot() {
-        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
-
-        return residentHistory.map(history -> ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("", "OK", history.getSlot())
-        )).orElseGet(() -> ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Not Ok", "false")
-        ));
-
-    }
 
 
 }
