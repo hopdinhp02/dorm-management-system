@@ -4,8 +4,10 @@ package us.thedorm.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
+import us.thedorm.repositories.ResidentHistoryRepository;
 import us.thedorm.repositories.SlotRepository;
 
 import java.util.List;
@@ -17,7 +19,8 @@ import java.util.Optional;
 public class SlotController {
     @Autowired
     private SlotRepository slotRepository;
-
+    @Autowired
+    private ResidentHistoryRepository residentHistoryRepository;
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllslots() {
         List<Slot> foundSlots = slotRepository.findAll();
@@ -97,5 +100,19 @@ public class SlotController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("failed", "", "")
         );
+    }
+
+    @GetMapping("/get-old-slot")
+    ResponseEntity<ResponseObject> getOldSlot() {
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
+
+        return residentHistory.map(history -> ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("", "OK", history.getSlot())
+        )).orElseGet(() -> ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "Not Ok", "false")
+        ));
+
     }
 }

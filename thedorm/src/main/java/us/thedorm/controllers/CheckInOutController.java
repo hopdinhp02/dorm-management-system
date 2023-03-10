@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
 import us.thedorm.repositories.CheckInOutRepository;
+import us.thedorm.repositories.ResidentHistoryRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/api/v1/check")
 public class CheckInOutController {
-
+    @Autowired
+    ResidentHistoryRepository residentHistoryRepository;
     @Autowired
     private CheckInOutRepository checkInOutRepository;
     @GetMapping("")
@@ -88,8 +90,23 @@ public class CheckInOutController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("failed", "", "")
         );
+
     }
 
 
+//    @PostMapping("/check-in")
+//    ResponseEntity<ResponseObject> checkIsCheckIn(@RequestBody UserInfo user) {
+//        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
+//
+//        if (residentHistory.get().getCheckinDate() == null) {
+//            return ResponseEntity.status(HttpStatus.OK).body(
+//                    new ResponseObject("OK", "", false)
+//            );
+//        }
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+//                new ResponseObject("failed", "", true)
+//        );
+//
+//    }
 
 }
