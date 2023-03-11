@@ -92,27 +92,27 @@ public class BookingService {
 
 
     public ResponseEntity<ResponseObject> checkBooking(BookingRequest newBookingRequest, UserInfo user) {
-
-
-        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(newBookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
-        newBookingRequest.setUserInfo(user);
-        newBookingRequest.setStartDate(bookingSchedule.get().getStartDate());
-        newBookingRequest.setEndDate(bookingSchedule.get().getEndDate());
-        newBookingRequest.setCreatedDate(new Date());
-        newBookingRequest.setStatus(BookingRequest.Status.Processing);
-
-        Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(), BookingRequest.Status.Decline);
-
-
-        if (foundBookingRequest.get().getStartDate().equals(bookingSchedule.get().getStartDate()) && foundBookingRequest.get().getEndDate().equals(bookingSchedule.get().getEndDate())) {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("", "You had book in this semester", "")
-            );
-        }
-
         Optional<Slot> bookslot = slotRepository.findById(newBookingRequest.getSlot().getId());
-
         if (bookslot.isPresent()) {
+            newBookingRequest.setSlot(bookslot.get());
+            Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(newBookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
+
+            newBookingRequest.setUserInfo(user);
+            newBookingRequest.setStartDate(bookingSchedule.get().getStartDate());
+            newBookingRequest.setEndDate(bookingSchedule.get().getEndDate());
+            newBookingRequest.setCreatedDate(new Date());
+            newBookingRequest.setStatus(BookingRequest.Status.Processing);
+
+            Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(), BookingRequest.Status.Decline);
+
+
+            if (foundBookingRequest.isPresent() && foundBookingRequest.get().getStartDate().equals(bookingSchedule.get().getStartDate()) && foundBookingRequest.get().getEndDate().equals(bookingSchedule.get().getEndDate())) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("", "You had book in this semester", "")
+                );
+            }
+
+
             if (bookslot.get().getStatus() == Slot.Status.Available) {
                 bookslot.get().setStatus(Slot.Status.NotAvailable);
                 slotRepository.save(bookslot.get());

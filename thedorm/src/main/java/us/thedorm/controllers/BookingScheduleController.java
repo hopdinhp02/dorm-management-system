@@ -142,24 +142,7 @@ public class BookingScheduleController {
 
     }
 
-    @GetMapping("/check-living")
-    ResponseEntity<ResponseObject> checkLiving() {
-        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
 
-        Date date = new Date();
-        if (residentHistory.isPresent()) {
-            if (residentHistory.get().getEndDate().after(date)) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("", "OK", true)
-                );
-
-            }
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("", "OK", false)
-        );
-    }
 
     @PostMapping("/reset-slots")
     ResponseEntity<ResponseObject> resetSlot(@RequestBody Branch branch) {
