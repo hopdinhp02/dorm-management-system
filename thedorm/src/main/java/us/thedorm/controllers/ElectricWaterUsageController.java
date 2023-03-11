@@ -129,14 +129,8 @@ public class ElectricWaterUsageController {
                 electricWaterUsage.setElectricUsage(electricWaterUsage.getElectricEnd()-electricWaterUsage.getElectricStart());
                 electricWaterUsage.setWaterUsage(electricWaterUsage.getWaterEnd()- electricWaterUsage.getWaterStart());
                 electricWaterUsageRepo.save(electricWaterUsage);
+        LocalDate monthPay = electricWaterUsage.getMonthPay();
 
-
-        // Update electric and water usage
-
-        // parse string input into Date type
-LocalDate monthPay = electricWaterUsage.getMonthPay();
-
-//     Date month_pay = existingElectricWaterUsage.getMonthpay();
         List<ResidentHistory> Lists = residentHistoryRepository.findResidentsByRoomIdInMonth(roomId,monthPay);
         for (ResidentHistory resident:Lists)
         {
@@ -144,7 +138,7 @@ LocalDate monthPay = electricWaterUsage.getMonthPay();
             Billing newElecBilling = Billing.builder()
                     .userInfo(UserInfo.builder().id(residentId).build())
                     .type(Billing.Type.Electric)
-                    .cost(electricWaterUsage.getElectricUsage()*3000)
+                    .cost((electricWaterUsage.getElectricUsage()*3000)/Lists.size())
                     .status(Billing.Status.Unpaid)
                     .createdDate(new Date())
                     .build();
@@ -153,7 +147,7 @@ LocalDate monthPay = electricWaterUsage.getMonthPay();
             Billing newWaterBilling = Billing.builder()
                     .userInfo(UserInfo.builder().id(residentId).build())
                     .type(Billing.Type.Water)
-                    .cost(electricWaterUsage.getWaterUsage()*5000)
+                    .cost((electricWaterUsage.getWaterUsage()*5000)/Lists.size())
                     .status(Billing.Status.Unpaid)
                     .createdDate(new Date())
                     .build();
@@ -188,9 +182,23 @@ LocalDate monthPay = electricWaterUsage.getMonthPay();
                     new ResponseObject("OK", "List Residents  of Room in month", ResidentsOfRoomInMonth)
             );
         }catch (NumberFormatException e){
-            return ResponseEntity.status(HttpStatus.OK).body(
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("Fail", "", ""));
         }
+    }
+    @GetMapping("/all-electric-water-usage-of-resident/{residentId}")
+    ResponseEntity<ResponseObject> GetListElectricWaterUsageOfResident(@PathVariable Long residentId)
+    {
+        List<ElectricWaterUsage> ListElectricWaterUsageOfResidentId = electricWaterUsageRepo.ListElecWaterOfResidenId(residentId);
+        if(ListElectricWaterUsageOfResidentId.size()==0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("Fail","",""));
+
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("failed", "", ListElectricWaterUsageOfResidentId)
+        );
+
     }
 
     }
