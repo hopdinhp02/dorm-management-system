@@ -10,6 +10,7 @@ import us.thedorm.models.Room;
 import us.thedorm.models.UserInfo;
 //import us.thedorm.models.Slot;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,5 +37,9 @@ public interface ElectricWaterUsageRepo extends JpaRepository<ElectricWaterUsage
             "inner join electric_water_usage as ewu on room.id = ewu.room_id \n" +
             "where  Month(ewu.month_pay) =? and YEAR(ewu.month_pay) =? and ewu.room_id =?  ",nativeQuery = true)
     List<ElectricWaterUsage> ListElecWaterOfRoomIdInMonth(int month,int year,Long roomId);
+    @Query(value = "select ewu.* from resident_history as reh inner join slot on reh.slot_id = slot.id \n" +
+            "            inner join room on slot.room_id = room.id inner join electric_water_usage as ewu on room.id = ewu.room_id\n" +
+            "            where resident_id=? and (ewu.created_date  BETWEEN reh.start_date and reh.end_date)",nativeQuery = true)
+    List<ElectricWaterUsage> ListElecWaterOfResidenId(Long RoomId) ;
 }
 
