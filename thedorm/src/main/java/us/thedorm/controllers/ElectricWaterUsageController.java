@@ -162,7 +162,7 @@ LocalDate monthPay = electricWaterUsage.getMonthPay();
 
 
 
-        return ResponseEntity.ok().build().badRequest().body(" ghi số điện nươc thành công!");
+        return ResponseEntity.ok().body(" ghi số điện nươc thành công!");
     }
     // toàn bộ record lương điện nước của 1 phòng được ghi lại
     @GetMapping("/{roomId}/view-electric-water-usage")
