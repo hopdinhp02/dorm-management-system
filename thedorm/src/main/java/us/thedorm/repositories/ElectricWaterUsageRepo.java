@@ -24,7 +24,7 @@ public interface ElectricWaterUsageRepo extends JpaRepository<ElectricWaterUsage
 
     @Query(value = "select ewu.* from resident_history as reh inner join slot on reh.slot_id = slot.id " +
             "inner join room on slot.room_id = room.id inner join electric_water_usage as ewu on room.id = ewu.room_id" +
-            " where  (ewu.created_date BETWEEN reh.start_date And reh.end_date) And resident_id=?",nativeQuery = true)
+            " where  (ewu.created_date BETWEEN reh.start_date And reh.end_date) And room.id=?",nativeQuery = true)
     List<ElectricWaterUsage> findElectricWaterUsagesByRoomId(Long room_id);
 
     @Query(value = "select ewu.*,reh.resident_id from resident_history as reh inner join slot on reh.slot_id = slot.id \n" +
@@ -40,6 +40,6 @@ public interface ElectricWaterUsageRepo extends JpaRepository<ElectricWaterUsage
     @Query(value = "select ewu.* from resident_history as reh inner join slot on reh.slot_id = slot.id \n" +
             "            inner join room on slot.room_id = room.id inner join electric_water_usage as ewu on room.id = ewu.room_id\n" +
             "            where resident_id=? and (ewu.created_date  BETWEEN reh.start_date and reh.end_date)",nativeQuery = true)
-    List<ElectricWaterUsage> ListElecWaterOfResidenId(Long RoomId) ;
+    List<ElectricWaterUsage> ListElecWaterOfResidenId(Long ResidentId) ;
 }
 
