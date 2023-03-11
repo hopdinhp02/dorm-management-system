@@ -167,7 +167,7 @@ public class ElectricWaterUsageController {
                     new ResponseObject("failed", "", ""));
         }
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", " List Resident By RoomId", ListElectricWaterUsage));
+                new ResponseObject("OK", " List Electric Usage  By RoomId", ListElectricWaterUsage));
     }
     //
     @GetMapping("/view-list-Elec-water-of-room/{roomid}/and-resident/{residentId}-in-month-by-bill/{ewuId}")
@@ -195,11 +195,28 @@ public class ElectricWaterUsageController {
                     new ResponseObject("Fail","",""));
 
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ResponseObject("failed", "", ListElectricWaterUsageOfResidentId)
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("Ok", "", ListElectricWaterUsageOfResidentId)
         );
 
     }
+    @GetMapping("/all-rooms-not-even-record-electric-water-usage-of-dorm/{dormId} ")
+    ResponseEntity<ResponseObject> GetListRoomNotEvenRecordElectricWaterUsageOfDorm(@PathVariable Long dormId,@RequestParam String month,@RequestParam String year)
+    {
+
+
+        List<Room> ListRoomNotEvenRecordElectricWaterUsageOfDorm = roomRepository.ListRoomNotEvenRecordElectricWaterUsageOfDormId(dormId,month,year);
+        if(ListRoomNotEvenRecordElectricWaterUsageOfDorm.size() == 0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+               new ResponseObject("Fail","","")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("Ok","",ListRoomNotEvenRecordElectricWaterUsageOfDorm)
+        );
+
+    }
+
 
     }
 
