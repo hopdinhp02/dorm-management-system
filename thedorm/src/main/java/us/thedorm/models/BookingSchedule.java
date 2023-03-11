@@ -31,7 +31,7 @@ public class BookingSchedule {
     @Column(name = "end_date")
     private Date endDate;
     private boolean isReset;
-
+    private boolean isActive;
     public void setReset(boolean reset) {
         isReset = reset;
     }
