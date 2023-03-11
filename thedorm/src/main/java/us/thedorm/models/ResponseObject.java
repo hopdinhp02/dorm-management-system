@@ -14,6 +14,7 @@ public class ResponseObject {
         this.data = data;
     }
 
+
     public String getStatus() {
         return status;
     }
