@@ -1,18 +1,20 @@
 package us.thedorm.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
-
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "dorm")
+
 public class Dorm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
