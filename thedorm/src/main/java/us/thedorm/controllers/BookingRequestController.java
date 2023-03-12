@@ -123,6 +123,57 @@ public class BookingRequestController {
         );
     }
 
+    @GetMapping("/check-living")
+    ResponseEntity<ResponseObject> checkLiving() {
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
+
+        Date date = new Date();
+        if (residentHistory.isPresent()) {
+            if (residentHistory.get().getEndDate().after(date)) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("", "OK", true)
+                );
+
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("", "OK", false)
+        );
+    }
+    @GetMapping("/check-living/branchs/{id}")
+    ResponseEntity<ResponseObject> checkLivingByBranch(@PathVariable Long branchId) {
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdAndSlot_Room_Dorm_Branch_IdOrderByIdDesc(user.getId(), branchId);
+
+        Date date = new Date();
+        if (residentHistory.isPresent()) {
+            if (residentHistory.get().getEndDate().after(date)) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("", "OK", true)
+                );
+
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("", "OK", false)
+        );
+    }
+    @GetMapping("/get-old-slot")
+    ResponseEntity<ResponseObject> getOldSlot() {
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
+
+//       residentHistory.get().getSlot().setStatus(Slot.Status.Available);
+
+        return residentHistory.map(history -> ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("", "OK", history.getSlot())
+        )).orElseGet(() -> ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "Not Ok", "false")
+        ));
+
+    }
     private HistoryBookingRequest recordChangeInBooking(BookingRequest booking) {
         HistoryBookingRequest historyBookingRequest = new HistoryBookingRequest();
         historyBookingRequest.setBookingRequest(booking);
