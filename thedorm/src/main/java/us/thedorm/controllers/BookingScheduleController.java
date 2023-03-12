@@ -50,7 +50,6 @@ public class BookingScheduleController {
     }
 
     @PostMapping("")
-
     ResponseEntity<ResponseObject> insertBookingSchedule(@RequestBody BookingSchedule newBookingSchedule) {
 
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -65,14 +64,14 @@ public class BookingScheduleController {
 
         BookingSchedule bookingSchedule = bookingScheduleRepository.findById(id)
                 .map(booking_Schedule -> {
-                    booking_Schedule.setBranch(newBookingSchedule.getBranch());
                     booking_Schedule.setKeepStartDate(newBookingSchedule.getKeepStartDate());
                     booking_Schedule.setKeepEndDate(newBookingSchedule.getKeepEndDate());
                     booking_Schedule.setNewStartDate(newBookingSchedule.getNewStartDate());
                     booking_Schedule.setNewEndDate(newBookingSchedule.getNewEndDate());
                     booking_Schedule.setStartDate(newBookingSchedule.getStartDate());
                     booking_Schedule.setEndDate(newBookingSchedule.getEndDate());
-
+                    booking_Schedule.setReset(false);
+                    booking_Schedule.setActive(false);
                     return bookingScheduleRepository.save(booking_Schedule);
                 }).orElseGet(() -> null);
         if(bookingSchedule != null){
@@ -146,7 +145,6 @@ public class BookingScheduleController {
 
     @PostMapping("/reset-slots")
     ResponseEntity<ResponseObject> resetSlot(@RequestBody Branch branch) {
-
         Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
 
         if(checkReset(bookingSchedule)) {
@@ -154,7 +152,6 @@ public class BookingScheduleController {
                     new ResponseObject("OK", "Cant Reset", "")
             );
         }
-
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -171,7 +168,8 @@ public class BookingScheduleController {
 //                bookingSchedule.get().setReset(true);
 //                bookingScheduleRepository.save(bookingSchedule.get());
         timer.schedule(task, bookingSchedule.get().getKeepStartDate());
-
+        bookingSchedule.get().setActive(true);
+        bookingScheduleRepository.save(bookingSchedule.get());
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "", "")
         );
