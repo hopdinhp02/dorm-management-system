@@ -176,7 +176,7 @@ public class BookingScheduleController {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                List<Slot> slots = slotRepository.findAll();
+                List<Slot> slots = slotRepository.findAllByRoom_Dorm_BranchId(bookingSchedule.get().getBranch().getId());
                 for (Slot slot : slots) {
                     slot.setStatus(Slot.Status.Available);
                     slotRepository.save(slot);

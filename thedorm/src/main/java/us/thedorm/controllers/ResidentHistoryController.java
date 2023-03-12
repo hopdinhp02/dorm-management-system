@@ -111,15 +111,36 @@ public class ResidentHistoryController {
         );
     }
 
+    @PostMapping("/is-check-in")
+    ResponseEntity<ResponseObject> checkIsCheckIn(@RequestBody UserInfo user) {
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
+
+        if (residentHistory.get().getCheckinDate() == null) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Failed", "", false)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("Ok", "", true)
+        );
+
+    }
+
+
     @PostMapping("/guard/check-out")
     ResponseEntity<ResponseObject> checkOut(@RequestBody UserInfo resident) {
 
         Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(resident.getId());
         if (residentHistory.isPresent()) {
-            residentHistory.get().setCheckoutDate(new Date());
-            residentHistoryRepository.save(residentHistory.get());
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("Ok", "checked", "")
+            if (checkIsCheckIn(resident).getBody().getData().equals(true)) {
+                residentHistory.get().setCheckoutDate(new Date());
+                residentHistoryRepository.save(residentHistory.get());
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("Ok", "checked", "")
+                );
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("Fail", "Resident do not check-in", "")
             );
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -151,7 +172,7 @@ public class ResidentHistoryController {
     ResponseEntity<ResponseObject> getCurrentSlotOfResident() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<ResidentHistory> residentHistory = residentHistoryRepository.findCurrentSlotOfResident(user.getId());
-        if(residentHistory.isPresent()){
+        if (residentHistory.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "", residentHistory)
             );
@@ -163,4 +184,65 @@ public class ResidentHistoryController {
     }
 
 
+    @GetMapping("/find/{name}")
+    ResponseEntity<ResponseObject> searchResidentByName(@PathVariable String name) {
+
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByName(name);
+
+        return  checkForSearch(residentHistories);
+    }
+
+    @GetMapping("/find/{name}/slot/{id}")
+    ResponseEntity<ResponseObject> searchByNameAndSlotId(@PathVariable String name, @PathVariable Long id) {
+
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndSlotId(name, id);
+      return checkForSearch(residentHistories);
+    }
+
+
+    @GetMapping("/find/{name}/room/{id}")
+    ResponseEntity<ResponseObject> searchByNameAndRoomId(@PathVariable String name, @PathVariable Long id) {
+
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndRoomId(name, id);
+
+       return checkForSearch(residentHistories);
+    }
+
+    @GetMapping("/find/{name}/dorm/{id}")
+    ResponseEntity<ResponseObject> searchByNameAndDormId(@PathVariable String name, @PathVariable Long id) {
+
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndDormId(name, id);
+
+    return  checkForSearch(residentHistories);
+    }
+
+
+    @GetMapping("/find/{name}/branch/{id}")
+    ResponseEntity<ResponseObject> searchByNameAndBranchId(@PathVariable String name, @PathVariable Long id) {
+
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndBranchId(name, id);
+
+        return  checkForSearch(residentHistories);
+    }
+
+
+    ResponseEntity<ResponseObject> checkForSearch(List<ResidentHistory> residentHistories) {
+
+        for (ResidentHistory item : residentHistories) {
+            if (item.getCheckinDate() == null || item.getCheckoutDate() != null) {
+                residentHistories.remove(item);
+            }
+
+            if (residentHistories.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("", "No found Resident", "")
+                );
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", residentHistories)
+        );
+    }
 }
+
+
