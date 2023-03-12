@@ -314,7 +314,7 @@ public class FacilityController {
     }
 
     @GetMapping("/branchs/{id}")
-    ResponseEntity<ResponseObject> getFacilityBy(@PathVariable Long id) {
+    ResponseEntity<ResponseObject> getFacilityByBranch(@PathVariable Long id) {
         List<Facility> founds = facilityRepository.findByBranch_Id(id);
         if (founds.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
