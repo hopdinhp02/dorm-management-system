@@ -154,6 +154,22 @@ public class FacilityController {
         );
     }
 
+    @PutMapping("/facility-detail/{id}")
+    ResponseEntity<ResponseObject> update(@RequestBody FacilityDetail newFacilityDetail, @PathVariable Long id) {
+        FacilityDetail updateFacilityDetail = facilityDetailRepository.findById(id).orElseGet(() -> null);
+
+        if (updateFacilityDetail != null) {
+            newFacilityDetail.setId(id);
+            updateFacilityDetail =  facilityDetailRepository.save(newFacilityDetail);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Update successfully", updateFacilityDetail)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("failed", "", "")
+        );
+    }
+
     @DeleteMapping("/{id}")
     ResponseEntity<ResponseObject> delete(@PathVariable Long id) {
         boolean exists = facilityRepository.existsById(id);
