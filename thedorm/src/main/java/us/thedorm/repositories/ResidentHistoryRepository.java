@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory,Long> {
     Optional<ResidentHistory> findTopByUserInfo_IdOrderByIdDesc(long id);
 
+    Optional<ResidentHistory> findTopByUserInfo_IdAndSlot_Room_Dorm_Branch_IdOrderByIdDesc(long userId, long brandId);
     Optional<ResidentHistory> findByUserInfo_IdOrderByEndDate(long id);
     // all nhiều tháng
     @Query(value = "select reh.* from resident_history as reh inner join slot on reh.slot_id = slot.id " +

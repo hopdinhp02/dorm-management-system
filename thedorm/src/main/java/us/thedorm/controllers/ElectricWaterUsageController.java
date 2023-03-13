@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
 import us.thedorm.repositories.*;
@@ -91,22 +92,20 @@ public class ElectricWaterUsageController {
                 ));
     }
 
-        @DeleteMapping("/{id}")
-        ResponseEntity<ResponseObject> delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    ResponseEntity<ResponseObject> delete(@PathVariable Long id) {
 
-            boolean exists = electricWaterUsageRepo.existsById(id);
-            if (exists) {
-                electricWaterUsageRepo.deleteById(id);
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("OK", "", "")
-                );
-            }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("failed", "", "")
+        boolean exists = electricWaterUsageRepo.existsById(id);
+        if (exists) {
+            electricWaterUsageRepo.deleteById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "", "")
             );
         }
+
     @PutMapping("/{roomId}/write-electric-water-usage")
     public ResponseEntity<ResponseObject> writeElectricWaterUsage(@PathVariable Long roomId, @RequestBody ElectricWaterUsage electricWaterUsage) throws ParseException {
+
 
         Room room = roomRepository.findById(roomId).orElse(null);
         if (room == null) {
@@ -123,6 +122,7 @@ public class ElectricWaterUsageController {
         int year = electricWaterUsage.getMonthPay().getYear();
 
         List<ElectricWaterUsage> ListElectric = electricWaterUsageRepo.ListElecWaterOfRoomIdInMonth(month,year,roomId);
+
                 if(ListElectric.size() != 0){
                     return ResponseEntity.status(HttpStatus.OK).body(
                             new ResponseObject("OK","đã ghi điện nước",ListElectric)
@@ -133,12 +133,13 @@ public class ElectricWaterUsageController {
                 electricWaterUsage.setElectricUsage(electricWaterUsage.getElectricEnd()-electricWaterUsage.getElectricStart());
                 electricWaterUsage.setWaterUsage(electricWaterUsage.getWaterEnd()- electricWaterUsage.getWaterStart());
                 electricWaterUsageRepo.save(electricWaterUsage);
+
         LocalDate monthPay = electricWaterUsage.getMonthPay();
 
         List<ResidentHistory> Lists = residentHistoryRepository.findResidentsByRoomIdInMonth(roomId,monthPay,monthPay,monthPay,monthPay,monthPay);
         for (ResidentHistory resident:Lists)
         {
-           Long residentId = resident.getUserInfo().getId();
+            Long residentId = resident.getUserInfo().getId();
             Billing newElecBilling = Billing.builder()
                     .userInfo(UserInfo.builder().id(residentId).build())
                     .type(Billing.Type.Electric)
@@ -158,12 +159,11 @@ public class ElectricWaterUsageController {
             billingRepository.save(newWaterBilling);
         }
 
-
-
        return ResponseEntity.status(HttpStatus.OK).body(
                new ResponseObject("OK","record electric water usage successfully! ",ListElectric)
 
        );
+
     }
     // toàn bộ record lương điện nước của 1 phòng được ghi lại
     @GetMapping("/{roomId}/view-electric-water-usage")
@@ -193,10 +193,11 @@ public class ElectricWaterUsageController {
                     new ResponseObject("Fail", "", ""));
         }
     }
-    @GetMapping("/all-electric-water-usage-of-resident/{residentId}")
-    ResponseEntity<ResponseObject> GetListElectricWaterUsageOfResident(@PathVariable Long residentId)
+    @GetMapping("/all-electric-water-usage-of-resident")
+    ResponseEntity<ResponseObject> GetListElectricWaterUsageOfResident()
     {
-        List<ElectricWaterUsage> ListElectricWaterUsageOfResidentId = electricWaterUsageRepo.ListElecWaterOfResidenId(residentId);
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<ElectricWaterUsage> ListElectricWaterUsageOfResidentId = electricWaterUsageRepo.ListElecWaterOfResidenId(user.getId());
         if(ListElectricWaterUsageOfResidentId.size()==0){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("Fail","",""));
@@ -207,7 +208,8 @@ public class ElectricWaterUsageController {
         );
 
     }
-    @GetMapping("/all-rooms-not-even-record-electric-water-usage-of-dorm/{dormId} ")
+    @GetMapping("/all-rooms-not-even-record-electric-water-usage-of-dorm/{dormId}")
+
     ResponseEntity<ResponseObject> GetListRoomNotEvenRecordElectricWaterUsageOfDorm(@PathVariable Long dormId,@RequestParam String month,@RequestParam String year)
     {
 
@@ -215,7 +217,7 @@ public class ElectricWaterUsageController {
         List<Room> ListRoomNotEvenRecordElectricWaterUsageOfDorm = roomRepository.ListRoomNotEvenRecordElectricWaterUsageOfDormId(dormId,month,year);
         if(ListRoomNotEvenRecordElectricWaterUsageOfDorm.size() == 0){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-               new ResponseObject("Fail","","")
+                    new ResponseObject("Fail","","")
             );
         }
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -225,7 +227,5 @@ public class ElectricWaterUsageController {
     }
 
 
-    }
-
-
+}
 
