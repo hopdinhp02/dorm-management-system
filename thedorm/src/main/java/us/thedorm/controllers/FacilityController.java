@@ -244,6 +244,7 @@ public class FacilityController {
     ResponseEntity<ResponseObject> maintenance(@RequestBody Maintenance maintenance, @PathVariable Long id) {
         Facility updateFacilityDetail = facilityRepository.findById(id)
                 .map(facility -> {
+                    maintenance.setFacilityDetail(facility.getFacilityDetail());
                     facility.getFacilityDetail().getMaintenances().add(maintenance);
                     return facilityRepository.save(facility);
                 }).orElseGet(() -> null);
