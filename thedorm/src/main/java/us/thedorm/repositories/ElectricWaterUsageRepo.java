@@ -37,9 +37,12 @@ public interface ElectricWaterUsageRepo extends JpaRepository<ElectricWaterUsage
             "inner join electric_water_usage as ewu on room.id = ewu.room_id \n" +
             "where  Month(ewu.month_pay) =? and YEAR(ewu.month_pay) =? and ewu.room_id =?  ",nativeQuery = true)
     List<ElectricWaterUsage> ListElecWaterOfRoomIdInMonth(int month,int year,Long roomId);
-    @Query(value = "select ewu.* from resident_history as reh inner join slot on reh.slot_id = slot.id \n" +
-            "            inner join room on slot.room_id = room.id inner join electric_water_usage as ewu on room.id = ewu.room_id\n" +
-            "            where resident_id=? and (ewu.created_date  BETWEEN reh.start_date and reh.end_date)",nativeQuery = true)
+    @Query(value = "select ewu.* from resident_history as reh inner join slot on reh.slot_id = slot.id  \n" +
+            "                       inner join room on slot.room_id = room.id inner join electric_water_usage as ewu on room.id = ewu.room_id\n" +
+            "                       where resident_id=? and (ewu.month_pay BETWEEN reh.start_date and reh.end_date) and reh.checkin_date IS NOT NULL\n" +
+            "            AND((ewu.month_pay >= reh.checkin_date AND DATEADD(month, DATEDIFF(month, 0, ewu.month_pay), 0) <= reh.end_date AND reh.checkout_date IS NULL)\n" +
+            "            OR(ewu.month_pay >= reh.checkin_date AND DATEADD(month, DATEDIFF(month, 0, ewu.month_pay), 0)<= reh.checkout_date AND reh.checkout_date IS NOT NULl\n" +
+            "            ))",nativeQuery = true)
     List<ElectricWaterUsage> ListElecWaterOfResidenId(Long ResidentId) ;
 }
 

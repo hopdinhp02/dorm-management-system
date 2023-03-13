@@ -25,10 +25,13 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
             "And ewu.room_id=? and ewu.id=?",nativeQuery = true)
     List<ResidentHistory> findResidentsByRoomId(Long roomid, Long id);
     //all 1 tháng
-    @Query(value = "select reh.* from resident_history as reh inner join slot on reh.slot_id = slot.id " +
-            "inner join room on slot.room_id = room.id " +
-            "where  room_id=?  and (? BETWEEN reh.start_date And reh.end_date)",nativeQuery = true)
-    List<ResidentHistory> findResidentsByRoomIdInMonth(Long roomid , LocalDate month_pay );
+    @Query(value = "select reh.* from resident_history as reh inner join slot on reh.slot_id = slot.id \n" +
+            "            inner join room on slot.room_id = room.id \n" +
+            "            where  room_id=?1 and (?2 BETWEEN reh.start_date and reh.end_date) and reh.checkin_date IS NOT NULL\n" +
+            "            AND((?3 >= reh.checkin_date AND DATEADD(month, DATEDIFF(month, 0, ?4), 0) <= reh.end_date AND reh.checkout_date IS NULL)\n" +
+            "            OR(?5 >= reh.checkin_date AND DATEADD(month, DATEDIFF(month, 0, ?6), 0)<= reh.checkout_date AND reh.checkout_date IS NOT NULl\n" +
+            "            ))",nativeQuery = true)
+    List<ResidentHistory> findResidentsByRoomIdInMonth(Long roomid , LocalDate month_pay1, LocalDate month_pay2,LocalDate month_pay3,LocalDate month_pay4,LocalDate month_pay5);
 
 
 ;

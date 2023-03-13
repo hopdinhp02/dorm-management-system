@@ -102,12 +102,10 @@ public class ElectricWaterUsageController {
                     new ResponseObject("OK", "", "")
             );
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ResponseObject("failed", "", "")
-        );
-    }
-    @PostMapping("/{roomId}/record-electric-water-usage")
-    public ResponseEntity<?> recordElectricWaterUsage(@PathVariable Long roomId, @RequestBody ElectricWaterUsage electricWaterUsage) throws ParseException {
+
+    @PutMapping("/{roomId}/write-electric-water-usage")
+    public ResponseEntity<ResponseObject> writeElectricWaterUsage(@PathVariable Long roomId, @RequestBody ElectricWaterUsage electricWaterUsage) throws ParseException {
+
 
         Room room = roomRepository.findById(roomId).orElse(null);
         if (room == null) {
@@ -116,23 +114,29 @@ public class ElectricWaterUsageController {
 
         List<Slot> slots = slotRepository.getSlotsByRoom_IdAndStatus(roomId, Slot.Status.NotAvailable);
         if (slots.isEmpty()) {
-            return ResponseEntity.badRequest().body("Không có người ở trong phòng");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("Fail","","")
+            );
         }
         int month = electricWaterUsage.getMonthPay().getMonthValue();
         int year = electricWaterUsage.getMonthPay().getYear();
 
         List<ElectricWaterUsage> ListElectric = electricWaterUsageRepo.ListElecWaterOfRoomIdInMonth(month,year,roomId);
-        if(ListElectric.size() != 0){
-            return ResponseEntity.badRequest().body("Đã ghi điện nước");
-        }
-        electricWaterUsage.setCreatedDate(new Date());
-        electricWaterUsage.setRoom(roomRepository.findById(roomId).orElse(null));
-        electricWaterUsage.setElectricUsage(electricWaterUsage.getElectricEnd()-electricWaterUsage.getElectricStart());
-        electricWaterUsage.setWaterUsage(electricWaterUsage.getWaterEnd()- electricWaterUsage.getWaterStart());
-        electricWaterUsageRepo.save(electricWaterUsage);
+
+                if(ListElectric.size() != 0){
+                    return ResponseEntity.status(HttpStatus.OK).body(
+                            new ResponseObject("OK","đã ghi điện nước",ListElectric)
+                    );
+                }
+                electricWaterUsage.setCreatedDate(new Date());
+                electricWaterUsage.setRoom(roomRepository.findById(roomId).orElse(null));
+                electricWaterUsage.setElectricUsage(electricWaterUsage.getElectricEnd()-electricWaterUsage.getElectricStart());
+                electricWaterUsage.setWaterUsage(electricWaterUsage.getWaterEnd()- electricWaterUsage.getWaterStart());
+                electricWaterUsageRepo.save(electricWaterUsage);
+
         LocalDate monthPay = electricWaterUsage.getMonthPay();
 
-        List<ResidentHistory> Lists = residentHistoryRepository.findResidentsByRoomIdInMonth(roomId,monthPay);
+        List<ResidentHistory> Lists = residentHistoryRepository.findResidentsByRoomIdInMonth(roomId,monthPay,monthPay,monthPay,monthPay,monthPay);
         for (ResidentHistory resident:Lists)
         {
             Long residentId = resident.getUserInfo().getId();
@@ -155,9 +159,11 @@ public class ElectricWaterUsageController {
             billingRepository.save(newWaterBilling);
         }
 
+       return ResponseEntity.status(HttpStatus.OK).body(
+               new ResponseObject("OK","record electric water usage successfully! ",ListElectric)
 
+       );
 
-        return ResponseEntity.ok().body(" ghi số điện nươc thành công!");
     }
     // toàn bộ record lương điện nước của 1 phòng được ghi lại
     @GetMapping("/{roomId}/view-electric-water-usage")
