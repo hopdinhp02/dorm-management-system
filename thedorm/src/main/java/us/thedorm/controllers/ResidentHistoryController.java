@@ -94,7 +94,21 @@ public class ResidentHistoryController {
                 new ResponseObject("failed", "", "")
         );
     }
+    // view ALL Residents of a roomId in the  range time
+    @GetMapping("/{roomid}/view-list-residents/{ewuId}")
+    public ResponseEntity<ResponseObject> AllResidentsByRoomId(@PathVariable Long roomid,@PathVariable Long ewuId) {
+        List<ResidentHistory> ListResidents = residentHistoryRepository.findResidentsByRoomId(roomid, ewuId);
 
+
+        if (ListResidents.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "", "")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", " List Residents By RoomId", ListResidents)
+        );
+    }
     @PostMapping("/guard/check-in")
     ResponseEntity<ResponseObject> checkIn(@RequestBody UserInfo resident) {
 
@@ -184,6 +198,7 @@ public class ResidentHistoryController {
     }
 
 
+
     @GetMapping("/find/{name}")
     ResponseEntity<ResponseObject> searchResidentByName(@PathVariable String name) {
 
@@ -262,6 +277,7 @@ public class ResidentHistoryController {
                 new ResponseObject("ok", "Found", residentHistories)
         );
     }
+
 }
 
 

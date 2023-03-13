@@ -2,6 +2,7 @@ package us.thedorm.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Data
 @NoArgsConstructor
@@ -68,6 +69,9 @@ public class UserInfo implements UserDetails {
     @OneToMany(mappedBy = "resident")
     @JsonIgnore
     private Collection<CheckInOut> residentCheck;
+    @OneToMany(mappedBy = "resident")
+    @JsonIgnore
+    private Collection<Request> requests;
 
 
     @Enumerated(EnumType.STRING)

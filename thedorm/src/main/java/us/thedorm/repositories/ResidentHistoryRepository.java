@@ -8,17 +8,39 @@ import us.thedorm.models.FacilityDetail;
 import us.thedorm.models.ResidentHistory;
 import us.thedorm.models.UserInfo;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 
 public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory,Long> {
+
     Optional<ResidentHistory> findTopByUserInfo_IdOrderByEndDate(long id);
 
     Optional<ResidentHistory> findByUserInfo_IdOrderByEndDate(long id);
 
     Optional<ResidentHistory> findTopByUserInfo_IdOrderByIdDesc(long id);
+
+    Optional<ResidentHistory> findTopByUserInfo_IdAndSlot_Room_Dorm_Branch_IdOrderByIdDesc(long userId, long brandId);
+    Optional<ResidentHistory> findByUserInfo_IdOrderByEndDate(long id);
+    // all nhiều tháng
+    @Query(value = "select reh.* from resident_history as reh inner join slot on reh.slot_id = slot.id " +
+            "inner join room on slot.room_id = room.id inner join electric_water_usage as ewu on room.id = ewu.room_id " +
+            "where  (ewu.created_date BETWEEN reh.start_date And reh.end_date) " +
+            "And ewu.room_id=? and ewu.id=?",nativeQuery = true)
+    List<ResidentHistory> findResidentsByRoomId(Long roomid, Long id);
+    //all 1 tháng
+    @Query(value = "select reh.* from resident_history as reh inner join slot on reh.slot_id = slot.id \n" +
+            "            inner join room on slot.room_id = room.id \n" +
+            "            where  room_id=?1 and (?2 BETWEEN reh.start_date and reh.end_date) and reh.checkin_date IS NOT NULL\n" +
+            "            AND((?3 >= reh.checkin_date AND DATEADD(month, DATEDIFF(month, 0, ?4), 0) <= reh.end_date AND reh.checkout_date IS NULL)\n" +
+            "            OR(?5 >= reh.checkin_date AND DATEADD(month, DATEDIFF(month, 0, ?6), 0)<= reh.checkout_date AND reh.checkout_date IS NOT NULl\n" +
+            "            ))",nativeQuery = true)
+    List<ResidentHistory> findResidentsByRoomIdInMonth(Long roomid , LocalDate month_pay1, LocalDate month_pay2,LocalDate month_pay3,LocalDate month_pay4,LocalDate month_pay5);
+
+
+;
 
     @Query(value = "select * from resident_history where :date between start_date and end_date", nativeQuery = true)
     List<ResidentHistory> findByDateBetweenStartDateAndEndDate(@Param("date") Date date);
@@ -36,7 +58,6 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
 
     @Query(value = "select top 1 * from resident_history where resident_id = :resident_id  and (GETDATE() between start_date and end_date)", nativeQuery = true)
     Optional<ResidentHistory> findCurrentSlotOfResident(@Param("resident_id") long residentId);
-
 
 
 
@@ -73,3 +94,5 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
             "   where  uf.name like '%'+:name +'%' AND ( rh.checkin_date IS NOT NULL and rh.checkout_date IS NULL) and GETDATE() between rh.start_date and rh.end_date and dorm.branch_id =:branch_id", nativeQuery = true)
     List<ResidentHistory> findResidentHistoriesByNameAndBranchId(@Param("name") String name, @Param("branch_id") long id);
 }
+
+

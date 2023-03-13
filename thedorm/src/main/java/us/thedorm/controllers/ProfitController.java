@@ -5,9 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import us.thedorm.models.Facility;
-import us.thedorm.models.ResponseObject;
-import us.thedorm.models.Slot;
+import us.thedorm.models.*;
+import us.thedorm.repositories.BranchRepository;
+import us.thedorm.repositories.DormRepository;
+import us.thedorm.repositories.RoomRepository;
 import us.thedorm.repositories.SlotRepository;
 import us.thedorm.service.ProfitService;
 
@@ -25,6 +26,12 @@ public class ProfitController {
     private ProfitService profitService;
     @Autowired
     private SlotRepository slotRepository;
+    @Autowired
+    private RoomRepository roomRepository;
+    @Autowired
+    private DormRepository dormRepository;
+    @Autowired
+    private BranchRepository branchRepository;
     @GetMapping("/slots/{id}/revenue")
     ResponseEntity<ResponseObject> getSlotRevenueByDay(@RequestBody JsonNode requestBody, @PathVariable Long id) {
         String dateJson = requestBody.get("date").asText();
@@ -143,12 +150,76 @@ public class ProfitController {
 
     }
     @GetMapping("/slots/{id}/{type}/months-in-year")
-    ResponseEntity<ResponseObject> getSlotMoneyByMonthsInYear(@RequestBody JsonNode requestBody, @PathVariable Long id, @PathVariable String type) {
-        String year = requestBody.get("year").asText();
+    ResponseEntity<ResponseObject> getSlotMoneyByMonthsInYear(@PathVariable Long id, @RequestParam String year, @PathVariable String type) {
         try{
             int yearInt = Integer.parseInt(year);
             Optional<Slot> slot = slotRepository.findById(id);
             double[] money = profitService.getSlotMoneyByMonthsInYear(type,slot.get(), yearInt);
+            if(money.length > 0){
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("OK", "", money)
+                );
+            }else{
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("Fail", "", ""));
+            }
+
+        }catch (NumberFormatException | ParseException e){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Fail", "", ""));
+        }
+
+    }
+    @GetMapping("/rooms/{id}/{type}/months-in-year")
+    ResponseEntity<ResponseObject> getRoomMoneyByMonthsInYear(@PathVariable Long id, @RequestParam String year, @PathVariable String type) {
+        try{
+            int yearInt = Integer.parseInt(year);
+            Optional<Room> room = roomRepository.findById(id);
+            double[] money = profitService.getRoomMoneyByMonthsInYear(type,room.get(), yearInt);
+            if(money.length > 0){
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("OK", "", money)
+                );
+            }else{
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("Fail", "", ""));
+            }
+
+        }catch (NumberFormatException | ParseException e){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Fail", "", ""));
+        }
+
+    }
+
+    @GetMapping("/dorms/{id}/{type}/months-in-year")
+    ResponseEntity<ResponseObject> getDormMoneyByMonthsInYear(@PathVariable Long id, @RequestParam String year, @PathVariable String type) {
+        try{
+            int yearInt = Integer.parseInt(year);
+            Optional<Dorm> dorm = dormRepository.findById(id);
+            double[] money = profitService.getDormMoneyByMonthsInYear(type,dorm.get(), yearInt);
+            if(money.length > 0){
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("OK", "", money)
+                );
+            }else{
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("Fail", "", ""));
+            }
+
+        }catch (NumberFormatException | ParseException e){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Fail", "", ""));
+        }
+
+    }
+
+    @GetMapping("/branchs/{id}/{type}/months-in-year")
+    ResponseEntity<ResponseObject> getBranchMoneyByMonthsInYear(@PathVariable Long id, @RequestParam String year, @PathVariable String type) {
+        try{
+            int yearInt = Integer.parseInt(year);
+            Optional<Branch> branch = branchRepository.findById(id);
+            double[] money = profitService.getBranchMoneyByMonthsInYear(type,branch.get(), yearInt);
             if(money.length > 0){
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("OK", "", money)

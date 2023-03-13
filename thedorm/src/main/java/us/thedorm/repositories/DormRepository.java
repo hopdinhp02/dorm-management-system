@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface DormRepository extends JpaRepository<Dorm, Long> {
     List<Dorm> getDormsByBranch_Id(Long branchId);
+
 }

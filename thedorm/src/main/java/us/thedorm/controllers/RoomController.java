@@ -64,7 +64,7 @@ public class RoomController {
         Room updateRoom = roomRepository.findById(id)
                 .map(room -> {
                    room.setName(newRoom.getName());
-                   room.setFloor(newRoom.getFloor());
+//                   room.setFloor(newRoom.getFloor());
                    room.setDorm(newRoom.getDorm());
                    room.setSlots(newRoom.getSlots());
                    room.setBasePrice(newRoom.getBasePrice());

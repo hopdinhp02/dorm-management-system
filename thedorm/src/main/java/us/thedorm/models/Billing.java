@@ -20,7 +20,7 @@ public enum Status{
     Paid,Unpaid,Refund
 }
 public enum Type{
-    slot, Water, Electric, Internet, Clean
+    slot, Water,Electric, Internet, Clean
 }
 
     @Id
@@ -33,6 +33,8 @@ public enum Type{
 private Type type;
     private int cost;
 //    private String status;
+@Column(name = "usageAmount")
+    private int usageAmount;
     @Enumerated(EnumType.STRING)
     private Status status;
     @Column(name = "created_date")
@@ -46,5 +48,6 @@ private Type type;
     @ManyToOne
     @JoinColumn(name = "resident_id")
     private UserInfo userInfo;
+    private String note;
 
 }

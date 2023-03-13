@@ -3,13 +3,15 @@ package us.thedorm.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import us.thedorm.models.Billing;
-import us.thedorm.models.BookingRequest;
-import us.thedorm.models.ResponseObject;
-import us.thedorm.models.Room;
+import us.thedorm.models.*;
 import us.thedorm.repositories.BillingRepository;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,5 +92,6 @@ public class BillingController {
                 new ResponseObject("failed", "", "")
         );
     }
+
 
 }

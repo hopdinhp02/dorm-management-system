@@ -3,10 +3,13 @@ package us.thedorm.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.BookingRequest;
 import us.thedorm.models.ResponseObject;
 import us.thedorm.models.Branch;
+import us.thedorm.models.UserInfo;
+import us.thedorm.repositories.AuthRepository;
 import us.thedorm.repositories.BranchRepository;
 
 import java.util.Date;
@@ -19,6 +22,8 @@ import java.util.Optional;
 public class BranchController {
     @Autowired
     private BranchRepository branchRepository;
+    @Autowired
+    private AuthRepository authRepository;
 
     @GetMapping("")
 
@@ -45,10 +50,16 @@ public class BranchController {
     @PostMapping("")
 
     ResponseEntity<ResponseObject> insertBranch(@RequestBody Branch newBranch) {
-
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Insert successfully", branchRepository.save(newBranch))
-        );
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int numInsert = authRepository.getNumberOfPermission(user.getId(),"BRANCH","INSERT");
+        if(numInsert >=1) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Insert successfully", branchRepository.save(newBranch))
+            );
+        }else{
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ResponseObject("ERROR", "User does not have permission to insert a new branch", null));
+        }
     }
 
     @PutMapping("/{id}")

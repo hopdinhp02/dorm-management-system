@@ -1,6 +1,8 @@
+
 package us.thedorm.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +11,14 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.Date;
-
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="FacilityDetail")
 @Builder
+
 public class FacilityDetail {
     public enum Type{
         bed
