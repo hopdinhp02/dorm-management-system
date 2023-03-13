@@ -26,9 +26,13 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
     @Query(value = "select * from resident_history where slot_id = :slot_id and (:date between start_date and end_date)", nativeQuery = true)
     ResidentHistory findBySlotIdWithDateBetweenStartDateAndEndDate(@Param("slot_id") long id, @Param("date") Date date);
 
-    List<ResidentHistory> findBySlot_IdAndCheckinDateIsNull(Long slotId);
 
-    List<ResidentHistory> findBySlot_IdAndCheckoutDateIsNull(Long slotId);
+    @Query(value = " select rh.*from resident_history as rh  where ( rh.checkin_date IS Not NULL and rh.checkout_date IS Null)  and  GETDATE() between rh.start_date and rh.end_date and rh.slot_id =:slot_id", nativeQuery = true)
+    List<ResidentHistory> findBySlot_IdAndCheckOutDateIsNull(@Param("slot_id") long id);
+
+
+    @Query(value = "select rh.*from resident_history as rh  where ( rh.checkin_date IS NULL)  and  GETDATE() between rh.start_date and rh.end_date and rh.slot_id =:slot_id ", nativeQuery = true)
+    List<ResidentHistory> findBySlot_IdAndCheckinDateIsNull(@Param("slot_id") long id);
 
     @Query(value = "select top 1 * from resident_history where resident_id = :resident_id  and (GETDATE() between start_date and end_date)", nativeQuery = true)
     Optional<ResidentHistory> findCurrentSlotOfResident(@Param("resident_id") long residentId);
@@ -57,15 +61,15 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
             "    inner join user_info as uf on rh.resident_id = uf.id\n" +
             "\tinner join slot sl on rh.slot_id = sl.id\n" +
             "                 inner join room room on sl.room_id = room.id\n" +
-            "   where  uf.name like '%'+:name +'%'and GETDATE() between rh.start_date and rh.end_date and room.dorm_id =:dorm_id", nativeQuery = true)
+            "   where  uf.name like '%'+:name +'%'and ( rh.checkin_date IS NOT NULL and rh.checkout_date IS NULL) and GETDATE() between rh.start_date and rh.end_date and room.dorm_id =:dorm_id", nativeQuery = true)
     List<ResidentHistory> findResidentHistoriesByNameAndDormId(@Param("name") String name, @Param("dorm_id") long id);
 
 
-    @Query(value = "   select rh.*from resident_history as rh \n" +
+    @Query(value = "  select rh.*from resident_history as rh \n" +
             "    inner join user_info as uf on rh.resident_id = uf.id\n" +
             "\tinner join slot sl on rh.slot_id = sl.id\n" +
-            "                 inner join room room on sl.room_id = room.id\n" +
-            "\t\t\t\t inner join dorm dorm on room.dorm_id=dorm.id\n" +
-            "   where  uf.name like '%'+:name +'%' and GETDATE() between rh.start_date and rh.end_date and dorm.branch_id = :branch_id", nativeQuery = true)
+            "  inner join room room on sl.room_id = room.id\n" +
+            "inner join dorm dorm on room.dorm_id=dorm.id\n" +
+            "   where  uf.name like '%'+:name +'%' AND ( rh.checkin_date IS NOT NULL and rh.checkout_date IS NULL) and GETDATE() between rh.start_date and rh.end_date and dorm.branch_id =:branch_id", nativeQuery = true)
     List<ResidentHistory> findResidentHistoriesByNameAndBranchId(@Param("name") String name, @Param("branch_id") long id);
 }

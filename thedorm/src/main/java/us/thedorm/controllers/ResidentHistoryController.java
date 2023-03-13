@@ -161,7 +161,7 @@ public class ResidentHistoryController {
     @GetMapping("/guard/check-out/slots/{id}")
     ResponseEntity<ResponseObject> ViewNotCheckOutYetBySlot(@PathVariable Long id) {
 
-        List<ResidentHistory> residentHistories = residentHistoryRepository.findBySlot_IdAndCheckoutDateIsNull(id);
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findBySlot_IdAndCheckOutDateIsNull(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "", residentHistories)
@@ -189,60 +189,83 @@ public class ResidentHistoryController {
 
         List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByName(name);
 
-        return  checkForSearch(residentHistories);
-    }
-
-    @GetMapping("/find/{name}/slot/{id}")
-    ResponseEntity<ResponseObject> searchByNameAndSlotId(@PathVariable String name, @PathVariable Long id) {
-
-        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndSlotId(name, id);
-      return checkForSearch(residentHistories);
-    }
-
-
-    @GetMapping("/find/{name}/room/{id}")
-    ResponseEntity<ResponseObject> searchByNameAndRoomId(@PathVariable String name, @PathVariable Long id) {
-
-        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndRoomId(name, id);
-
-       return checkForSearch(residentHistories);
-    }
-
-    @GetMapping("/find/{name}/dorm/{id}")
-    ResponseEntity<ResponseObject> searchByNameAndDormId(@PathVariable String name, @PathVariable Long id) {
-
-        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndDormId(name, id);
-
-    return  checkForSearch(residentHistories);
-    }
-
-
-    @GetMapping("/find/{name}/branch/{id}")
-    ResponseEntity<ResponseObject> searchByNameAndBranchId(@PathVariable String name, @PathVariable Long id) {
-
-        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndBranchId(name, id);
-
-        return  checkForSearch(residentHistories);
-    }
-
-
-    ResponseEntity<ResponseObject> checkForSearch(List<ResidentHistory> residentHistories) {
-
-        for (ResidentHistory item : residentHistories) {
-            if (item.getCheckinDate() == null || item.getCheckoutDate() != null) {
-                residentHistories.remove(item);
-            }
-
-            if (residentHistories.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("", "No found Resident", "")
-                );
-            }
+        if (residentHistories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found Resident", "")
+            );
         }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "", residentHistories)
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("ok", "Found", residentHistories)
+        );
+    }
+
+    @GetMapping("/find-by-slot")
+    ResponseEntity<ResponseObject> searchByNameAndSlotId(@RequestParam String name, @RequestParam String slotid) {
+        long id = Long.parseLong(slotid);
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndSlotId(name, id);
+        if (residentHistories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found Resident", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("ok", "Found", residentHistories)
+        );
+    }
+
+
+    @GetMapping("/find-by-room")
+    ResponseEntity<ResponseObject> searchByNameAndRoomId(@RequestParam String name, @RequestParam String roomid) {
+        long id = Long.parseLong(roomid);
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndRoomId(name, id);
+        if (residentHistories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found Resident", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("ok", "Found", residentHistories)
+        );
+    }
+
+    @GetMapping("/find-by-dorm")
+    ResponseEntity<ResponseObject> searchByNameAndDormId(@RequestParam String name, @RequestParam String dormid) {
+        long id = Long.parseLong(dormid);
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndDormId(name, id);
+        if (residentHistories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found Resident", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("ok", "Found", residentHistories)
+        );
+
+    }
+
+
+    @GetMapping("/find-by-branch")
+    ResponseEntity<ResponseObject> searchByNameAndBranchId(@RequestParam String name, @RequestParam String branchid) {
+        long id = Long.parseLong(branchid);
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndBranchId(name, id);
+        if (residentHistories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found Resident", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("ok", "Found", residentHistories)
         );
     }
 }
+
+
+
+
 
 
