@@ -52,7 +52,7 @@ public class FacilityController {
                 ));
     }
 
-    @GetMapping("/facility-detail//{id}")
+    @GetMapping("/facility-detail/{id}")
     ResponseEntity<ResponseObject> findByFacilityDetailId(@PathVariable Long id) {
         Optional<FacilityDetail> found = facilityDetailRepository.findById(id);
         return found.isPresent() ? ResponseEntity.status(HttpStatus.OK).body(
