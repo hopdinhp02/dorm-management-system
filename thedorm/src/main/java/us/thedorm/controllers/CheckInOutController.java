@@ -9,6 +9,7 @@ import us.thedorm.models.*;
 import us.thedorm.repositories.CheckInOutRepository;
 import us.thedorm.repositories.ResidentHistoryRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +49,7 @@ public class CheckInOutController {
 
 
     @PostMapping("")
-    ResponseEntity<ResponseObject> insertRoom(@RequestBody CheckInOut checkInOut) {
+    ResponseEntity<ResponseObject> insertCheckInOut(@RequestBody CheckInOut checkInOut) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", checkInOutRepository.save(checkInOut))
         );
@@ -61,7 +62,7 @@ public class CheckInOutController {
                 .map(check_InOut -> {
                     check_InOut.setGuard(newCheckInOut.getGuard());
                     check_InOut.setResident(newCheckInOut.getResident());
-                    check_InOut.setCreateDate(newCheckInOut.getCreateDate());
+                    check_InOut.setCreateDate(new Date());
                     check_InOut.setConfirmDate(newCheckInOut.getConfirmDate());
                     check_InOut.setType(newCheckInOut.getType());
                     return checkInOutRepository.save(check_InOut);
