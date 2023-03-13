@@ -52,6 +52,16 @@ public class FacilityController {
                 ));
     }
 
+    @GetMapping("/facility-detail//{id}")
+    ResponseEntity<ResponseObject> findByFacilityDetailId(@PathVariable Long id) {
+        Optional<FacilityDetail> found = facilityDetailRepository.findById(id);
+        return found.isPresent() ? ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "", found)
+        ) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("false", "", ""
+                ));
+    }
+
     @PostMapping("")
     ResponseEntity<ResponseObject> insert(@RequestBody Facility newFacility, @RequestParam(name = "quantity", required = false) String quantityRaw) {
         int quantity;
