@@ -11,10 +11,21 @@
 
 <body>
     <div class="container-fluid">
+        Show Chart By: <br><select class="SBB-input" id="show-by" onchange="showBy()">
+            <option value="0" >ALL</option>
+            <option value="1" >Branch</option>
+            <option value="2" >Dorm</option>
+            <option value="3" >Room</option>
+            <option value="4" >Slot</option>
+          </select><br>
+          <div id="load">
+            
+          </div>
         <form>
-            Chart by Month-Year:
+        Month-Year:
             <!-- <input type="month" id="month" name="date"> -->
             <input id="year" type="number" min="1900" max="2099" step="1"/>
+            <br>
             <input type="button" onclick="genLineChart()" value="Show">
         </form>
         <div class='row'>
