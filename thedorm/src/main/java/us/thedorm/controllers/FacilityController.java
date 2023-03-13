@@ -230,6 +230,7 @@ public class FacilityController {
     }
 
     @PostMapping("/{id}/facility-detail/maintenances")
+    //facility
     ResponseEntity<ResponseObject> maintenance(@RequestBody Maintenance maintenance, @PathVariable Long id) {
         Facility updateFacilityDetail = facilityRepository.findById(id)
                 .map(facility -> {
