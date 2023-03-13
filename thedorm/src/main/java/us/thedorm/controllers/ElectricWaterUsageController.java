@@ -135,7 +135,7 @@ public class ElectricWaterUsageController {
                 electricWaterUsageRepo.save(electricWaterUsage);
         LocalDate monthPay = electricWaterUsage.getMonthPay();
 
-        List<ResidentHistory> Lists = residentHistoryRepository.findResidentsByRoomIdInMonth(roomId,monthPay,monthPay,monthPay);
+        List<ResidentHistory> Lists = residentHistoryRepository.findResidentsByRoomIdInMonth(roomId,monthPay,monthPay,monthPay,monthPay,monthPay);
         for (ResidentHistory resident:Lists)
         {
            Long residentId = resident.getUserInfo().getId();
