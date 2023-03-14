@@ -24,8 +24,8 @@ public class BillingController {
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllBilling() {
-        List<Billing> foundBilling =billingRepository.findAll();
-        if(foundBilling.size() == 0){
+        List<Billing> foundBilling = billingRepository.findAll();
+        if (foundBilling.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("empty", "", "")
             );
@@ -56,7 +56,7 @@ public class BillingController {
 
     @PutMapping("/{id}")
     ResponseEntity<ResponseObject> update(@RequestBody Billing newBilling, @PathVariable Long id) {
-      Billing update = billingRepository.findById(id)
+        Billing update = billingRepository.findById(id)
                 .map(billing -> {
                     billing.setStatus(newBilling.getStatus());
                     billing.setCost(newBilling.getCost());
@@ -69,7 +69,7 @@ public class BillingController {
                     return billingRepository.save(billing);
                 }).orElseGet(() -> null);
 
-        if(update != null){
+        if (update != null) {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "Insert Product successfully", update)
             );
@@ -94,4 +94,21 @@ public class BillingController {
     }
 
 
+    @GetMapping("/resident")
+    ResponseEntity<ResponseObject> getBillingByResidentId() {
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<Billing> billings = billingRepository.findAllByUserInfo_Id(user.getId());
+        if (billings.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", " successfully", billings)
+        );
+
+
+    }
 }
