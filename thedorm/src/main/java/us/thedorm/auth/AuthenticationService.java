@@ -2,6 +2,7 @@ package us.thedorm.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,18 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
 
   public AuthenticationResponse register(RegisterRequest request) {
+    UserInfo.Role userRole = UserInfo.Role.USER;
+    if(request.getRole() != null && request.getRole().equalsIgnoreCase("staff")){
+      userRole =UserInfo.Role.STAFF;
+    }else if (request.getRole() != null && request.getRole().equalsIgnoreCase("guard")){
+      userRole = UserInfo.Role.GUARD;
+    }else if(request.getRole() != null && request.getRole().equalsIgnoreCase("admin")){
+      userRole = UserInfo.Role.ADMIN;
+    }
     var user = UserInfo.builder()
             .username(request.getUsername())
         .password(passwordEncoder.encode(request.getPassword()))
-        .role(UserInfo.Role.USER)
+        .role(userRole)
         .build();
     repository.save(user);
     var jwtToken = jwtService.generateToken(user);
@@ -40,9 +49,13 @@ public class AuthenticationService {
     );
     var user = repository.findByUsername(request.getUsername())
         .orElseThrow();
-    var jwtToken = jwtService.generateToken(user);
-    return AuthenticationResponse.builder()
-        .token(jwtToken)
-        .build();
+    if(user.isActive()) {
+      var jwtToken = jwtService.generateToken(user);
+      return AuthenticationResponse.builder()
+              .token(jwtToken)
+              .build();
+    }
+    throw new DisabledException("Account is not active");
+
   }
 }
