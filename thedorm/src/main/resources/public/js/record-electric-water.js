@@ -146,9 +146,25 @@ function recordElectric() {
 
 function loadForm(){
     let form = document.getElementById("recordElectric")
-    form.innerHTML = `electricStart: <br> <input type="number" id="electricStart"><br>
-    electricEnd: <br> <input type="number" id="electricEnd"><br>
-    waterStart: <br> <input type="number" id="waterStart"><br>
-    waterEnd: <br> <input type="number" id="waterEnd"><br>
-    <button type="button" onclick="recordElectric()">Record</button>`
+    form.innerHTML = `
+    <label class="SBB-input-label no-margin">ElectricStart</label><br>
+          <input class="SBB-input" type="number" id="electricStart"><br>
+    <label class="SBB-input-label no-margin">ElectricEnd</label><br>
+          <input class="SBB-input" type="number" id="electricEnd"><br>
+    <label class="SBB-input-label no-margin">WaterStart</label><br>      
+          <input class="SBB-input" type="number" id="waterStart"><br>
+    <label class="SBB-input-label no-margin">WaterEnd</label><br>
+          <input class="SBB-input" type="number" id="waterEnd"><br><br>
+    <button style="margin-left: 94%  ;" type="button" onclick="recordElectric()"  class="orange-btn">Record</button>`
+
+}
+function accept(id, value) {
+
+    if (confirm("The value has changed to: " + value)) {
+        updateBookingRequest(id, value)
+    } else {
+        setTimeout(loadBooking(), 500)
+
+
+    }
 }

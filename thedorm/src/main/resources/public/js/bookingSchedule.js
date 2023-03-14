@@ -91,8 +91,8 @@ function loadBookingSchedule() {
                 <td>${element.newEndDate}</td>
                 <td>${element.startDate}</td>
                 <td>${element.endDate}</td>
-                <td>${element.reset}</td>
-                <td>${element.active ? "Actived" : `<button class="btn btn-primary"  onclick="activeSchedule(${element.branch.id})">Active</button>`}</td>
+                <td style=" font-weight:900; font-size:18px">${element.reset}</td>
+                <td style="color: green; font-weight:900; font-size:18px">${element.active ? "Actived" : `<button class="btn btn-primary"   onclick="activeSchedule(${element.branch.id})" style="color: red;">Active</button>`}</td>
                 </tr>`;
                 console.log(dataJson);
             });
