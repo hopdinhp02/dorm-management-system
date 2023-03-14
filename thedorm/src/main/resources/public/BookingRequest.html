@@ -2,248 +2,199 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
+  <title>Student Page</title>
+  <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Main CSS-->
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"> -->
+  <!-- or -->
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/font-awesome.min.css">
   <link rel="stylesheet" href="css/elegant-icons.css">
   <link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
 
-<body>
-  <!-- <h1>Booking Request</h1>
-    <form>
-    ResidentID: <input type="number" id="ResidentID"><br>
-    Branch Name: <select id="branchs" onchange="loaddorm()"><option value="">Chọn một lựa chọn</option></select><br>
-    Dorm Name: <select id="dorms" onchange="loadrooms()"><option value="" >Chọn một lựa chọn</option></select><br>
-    Room Name: <select id="rooms" onchange="loadbeds()"></select><br>
-    Bed ID: <select id="BedID" name="BedID"></select><br> -->
-  <!-- BedID: <input type="number" id="BedID"><br> -->
-  <!-- Note: <input type="text" id="Note"><br>
-    Created date: <input type="datetime-local" id="CreatedDate"><br>
-    Start date: <input type="datetime-local" id="startdate"><br>
-    End date: <input type="datetime-local" id="EndDate"><br>
-    </form><br>
-    <button class="btn btn-primary" type="submit" onclick="addBookingRequests()">Add</button>
-    <table class="table table-bordered">
-        <thead>
-          <tr>
-            <tr>
-              <th>ID</th>
-              <th>BedID</th>
-              <th>UserID</th>
-              <th>Note</th>
-              <th>StartDate</th>
-              <th>EndDate</th>
-              <th>CreatedDate</th>
-              <th>Status</th>
-            </thead>
-        <tbody id="booking">
-          <tr>
-            <th scope="row"></th>
-            <td ></td>
-            <td></td>
-            <td></td>
-          </tr>
+<body onload="time()" class="app sidebar-mini rtl">
+  <!-- Navbar-->
+  <header class="app-header">
+    <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar"
+      aria-label="Hide Sidebar"></a>
+    <!-- Navbar Right Menu-->
+    <ul class="app-nav">
 
-        </tbody>
 
-      </table><br> -->
+      <!-- User Menu-->
+      <li><a class="app-nav__item" href="home.html"><i class='bx bx-log-out bx-rotate-180'></i> </a>
 
-  <div>
-    <div class="my-navbar">
-      <div class="navbar-content flex justify-between items-center">
-        <div class="flex items-center">
-          <a href="#" class="logo">
-            <img src="images/logo.png" alt="logo">
-          </a>
-        </div>
-        <div class="campus">
-            <select class="SBB-input" id="branchs" onchange="checkDayKeep()">
-              <option value="" disabled selected>Chọn một lựa chọn</option>
-            </select><br>
-          </div>
+      </li>
+    </ul>
+  </header>
+  <!-- Sidebar menu-->
+  <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+  <aside class="app-sidebar">
+    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="images/user0.png" width="50px"
+        alt="User Image">
+      <div>
+        <p class="app-sidebar__user-name"><b>Student Page</b></p>
+        <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
       </div>
     </div>
-  </div>
-  <!-- sidebar-linkItem-active sidebar-icon-active style="max-height:  500px;" -->
-  <div id="sidebar-full" class="sidebar-full hidden">
-    <div class="sidebar-top">
-      <div class="sidebar-infoUser flex">
-        <div class="sidebar-link">
-          <a href="student.html" class="sidebar-linkItem flex items-center " width="24" height="24" viewBox="0 0 24 24"
-            fill="none">
-            <p style="color: #034EA2 ;" class="fa fa-home"> Home</p>
-          </a>
-          <a href="new.html" class="sidebar-linkItem flex items-center">
-            <p style="color: #034EA2 ;" class="fa fa-bell"> News</p>
-          </a>
-          <a href="BookingRequest.html"
-            class="sidebar-linkItem flex items-center sidebar-linkItem-active sidebar-icon-active">
-
-            <p style="color: #034EA2 ;" class="fa fa-bed"> Booking bed</p>
-          </a>
-          <div></div>
-          <a href="#" class="sidebar-linkItem flex items-center">
-            <p style="color: #034EA2 ;" class="fa fa-list-alt"> Parking ticket</p>
-          </a>
-          <a href="#" class="sidebar-linkItem flex items-center">
-            <p style="color: #034EA2 ;" class="fa fa-plug"> Electricity water usage</p>
-          </a>
-          <a href="billing.html" class="sidebar-linkItem flex items-center">
-            <p style="color: #034EA2 ;" class="fa fa-money"> Payment history</p>
-          </a>
-          <a href="residentHistory.html" class="sidebar-linkItem flex items-center">
-            <p style="color: #034EA2 ;" class="fa fa-history"> Resident history</p>
-          </a>
-          <a href="#" class="sidebar-linkItem flex items-center">
-            <p style="color: #034EA2 ;" class="fa fa-heart"> CFD score</p>
-          </a>
-          <a href="#" class="sidebar-linkItem flex items-center">
-            <p style="color: #034EA2 ;" class="fa fa-sticky-note"> My request</p>
-          </a>
-          <a href="#" class="sidebar-linkItem flex items-center">
-            <p style="color: #034EA2 ;" class="fa fa-pencil-square"> User guide</p>
-          </a>
-          <a href="#" class="sidebar-linkItem flex items-center">
-            <p style="color: #034EA2 ;" class="fa fa-balance-scale"> FUD Regulations</p>
-          </a>
-        </div>
-        <div class="sidebar-bottom" style="height: 100px;">
-          <div class="flex justify-center">
-            <a class="btn-logout" href="#">Logout</a>
-          </div>
+    <hr>
+    <ul class="app-menu">
+      <li><a class="app-menu__item" href="new.html"><i class='app-menu__icon bx bx-bed'></i><span
+            class="app-menu__label">New</span></a></li>
+      <li><a class="app-menu__item" href="BookingRequest.html"><i class='app-menu__icon bx bx-bed'></i><span
+            class="app-menu__label">Book room</span></a></li>
+      <li><a class="app-menu__item" href="electricWaterUsage.html"><i class='app-menu__icon bx bx-shower'></i><span
+            class="app-menu__label">Electric water usage</span></a></li>
+      <li><a class="app-menu__item" href="billing.html"><i class='app-menu__icon bx bx-money-withdraw'></i><span
+            class="app-menu__label ">Billing</span></a>
+      </li>
+      <li><a class="app-menu__item" href="#"><i class='app-menu__icon bx bx-history'></i><span
+            class="app-menu__label">Resident history</span></a></li>
+      <li><a class="app-menu__item" href="#" target="_blank"><i class='app-menu__icon bx bxs-to-top'></i><span
+            class="app-menu__label">Top-up</span></a></li>
+    </ul>
+  </aside>
+  <main class="app-content">
+    <div class="row">
+      <div class="col-md-12" style="padding-left: 125px">
+        <div class="app-title">
+          <ul class="app-breadcrumb ">
+          </ul>
+          <div id="clock"></div>
+      </div>
         </div>
       </div>
-
     </div>
 
-  </div>
 
-  <div id="content-body" class="content-body pl-328">
-    <div class="container-fluid my-container">
-      <h1 class="big-title">Booking bed</h1>
-      <form action="" id="create" method="post"><input name="__RequestVerificationToken" type="hidden" />
-        <div class="SBB-create-container">
-          <div class="col-xs-12 col-md-5 no-padding no-margin">
-            <p class="SBB-l-title"> Your Account Balance</p>
-            <p class="SBB-l-content">0 VND</p>
-            <p class="SBB-l-title"> Minimum Balance required in VND</p>
-            <p class="SBB-l-content">3.800.000 VND</p>
-            <p class="SBB-l-title"> Your Balance after booking</p>
-            <p class="SBB-l-content">-3.800.000 VND</p>
-            <p class="SBB-l-title"> Số slot còn lại</p>
-            <label id="" class="SBB-l-content">
+    <div class="row">
+      <div class="col-md-12 col-lg-12" style="padding-left: 125px">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="tile">
+              <h3 class="tile-title"></h3>
 
-            </label>
-          </div>
-        </div>
-      </form>
-      <h1 id="check"></h1>
-      <div id="booking-request-form">
-        <form>
-          <div class="col-xs-12 col-md-7 no-padding no-margin">
-            <div id="dorm">
-              <h1 id="check"></h1>
-              <!-- <div class="form-group" hidden>
-                <label class="control-label col-md-2" for="StudentId">RollNumber</label>
-                <div class="col-md-10">
-                  <input class="form-control text-box single-line" id="StudentId" name="StudentId" readonly=""
-                    type="text" value="HE163476" />
-                </div>
-              </div> -->
-              <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
-                <div class="SBB-available-btn">
-                  <a href="#" class="sidebar-linkItem flex items-center">See available beds</a>
-                </div>
-                <div class="flex-1">
-                  <label class="SBB-input-label no-margin">Room Type</label>
-                  <div class="" style="width: 100%;">
-                    <input class="SBB-input " readonly="" type="text" value="SVVN - 3 beds - 950.000">
-                    <input id="RoomTypeId" name="RoomTypeId" type="hidden" value="3">
+              <div class="container-fluid my-container">
+                <h1 class="big-title" id="bookingtitle">Booking bed</h1>
+                <form action="" id="create" method="post"><input name="__RequestVerificationToken" type="hidden" />
+                  <div class="SBB-create-container">
+                    <div class="col-xs-12 col-md-5 no-padding no-margin">
+                      <p class="SBB-l-title"> Your Account Balance</p>
+                      <p class="SBB-l-content">0 VND</p>
+                      <p class="SBB-l-title"> Minimum Balance required in VND</p>
+                      <p class="SBB-l-content">3.800.000 VND</p>
+                      <p class="SBB-l-title"> Your Balance after booking</p>
+                      <p class="SBB-l-content">-3.800.000 VND</p>
+                      <p class="SBB-l-title"> Số slot còn lại</p>
+                      <label id="" class="SBB-l-content">
+
+                      </label>
+                    </div>
                   </div>
+                </form>
+                <h1 id="check"></h1>
+                <div id="booking-request-form">
+                  <form>
+                    <div class="col-xs-12 col-md-7 no-padding no-margin">
+                      <div class="campus">
+
+                        <select class="SBB-input" id="branchs" onchange="checkDayKeep()">
+                          <option value="" disabled selected>Chọn Branch</option>
+                        </select><br>
+                      </div><br>
+                      <div id="dorm">
+                        <h1 id="check"></h1>
+                      </div>
+                    </div>
                 </div>
-              </div>
-              <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
-                <div class="SBB-layout-1">
-                  <label class="SBB-input-label no-margin">Dom</label>
-                  <div class="my-select-style">
-                    <select class="SBB-input" id="dorms" name="DomId" onchange="loadrooms()"></select>
-                  </div>
-                </div>
-                <div class="flex-1">
-                  <label class="SBB-input-label no-margin">Room</label>
-                  <div class="my-select-style">
-                    <select class="SBB-input" id="rooms" name="Rooms"></select>
-                  </div>
-                </div>
-              </div>
-              <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
-                <div class="SBB-layout-1">
-                  <label class="SBB-input-label no-margin" for="Note">Note</label>
-                  <div class="">
-                    <input class="SBB-input text-box single-line" id="Note" name="Note" type="text" value="" />
-                  </div>
-                </div>
-                <div class="flex-1">
-                  <label class="SBB-input-label no-margin" for="Semester">Semester</label>
-                  <div class="my-select-style">
-                    <select class="SBB-input" id="SemesterYear" name="SemesterYear">
-                      <option value="1|2023">Spring - 2023</option>
-                      <option value="2|2023">Summer - 2023</option>
-                    </select>
-                  </div>
-                </div>
+                </form><br>
               </div>
             </div>
-          </div>
-        </form><br>
-      </div>
-    </div>
-  </div>
 
-  <!-- <div class="modal fade" id="exampleModalLong" tabindex="" role="dialog"
-          aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Chấp nhận quy định về ký túc xá</h5>
-                <button style="padding: 10px;" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div id="the-canvas"></div>
-                <div class="form-check" id="formCheck">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                  <label class="form-check-label" for="flexCheckChecked">
-                    Đồng ý với quy định về ký túc xá
-                  </label>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="confirm" onclick="checkConfirm();" disabled type="button"
-                  class="btn btn-primary">Confirm</button>
-              </div>
-            </div>
-          </div>
-        </div> -->
-  <!-- <div id='dvProgress' class="my-loader">
-          <div class="my-loader-container">
-            <span class="loader"></span>
           </div>
         </div>
-        <canvas id="canvas"></canvas> -->
-  </form>
-  </div>
-  </div>
-  </div>
+
+      </div>
+    </div>
+    </div>
+  </main>
+  <script type="text/javascript">
+    var data = {
+      labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6"],
+      datasets: [{
+        label: "Dữ liệu đầu tiên",
+        fillColor: "rgba(255, 213, 59, 0.767), 212, 59)",
+        strokeColor: "rgb(255, 212, 59)",
+        pointColor: "rgb(255, 212, 59)",
+        pointStrokeColor: "rgb(255, 212, 59)",
+        pointHighlightFill: "rgb(255, 212, 59)",
+        pointHighlightStroke: "rgb(255, 212, 59)",
+        data: [20, 59, 90, 51, 56, 100]
+      },
+      {
+        label: "Dữ liệu kế tiếp",
+        fillColor: "rgba(9, 109, 239, 0.651)  ",
+        pointColor: "rgb(9, 109, 239)",
+        strokeColor: "rgb(9, 109, 239)",
+        pointStrokeColor: "rgb(9, 109, 239)",
+        pointHighlightFill: "rgb(9, 109, 239)",
+        pointHighlightStroke: "rgb(9, 109, 239)",
+        data: [48, 48, 49, 39, 86, 10]
+      }
+      ]
+    };
+    var ctxl = $("#lineChartDemo").get(0).getContext("2d");
+    var lineChart = new Chart(ctxl).Line(data);
+
+    var ctxb = $("#barChartDemo").get(0).getContext("2d");
+    var barChart = new Chart(ctxb).Bar(data);
+  </script>
+  <script type="text/javascript">
+    //Thời Gian
+    function time() {
+      var today = new Date();
+      var weekday = new Array(7);
+      weekday[0] = "Chủ Nhật";
+      weekday[1] = "Thứ Hai";
+      weekday[2] = "Thứ Ba";
+      weekday[3] = "Thứ Tư";
+      weekday[4] = "Thứ Năm";
+      weekday[5] = "Thứ Sáu";
+      weekday[6] = "Thứ Bảy";
+      var day = weekday[today.getDay()];
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1;
+      var yyyy = today.getFullYear();
+      var h = today.getHours();
+      var m = today.getMinutes();
+      m = checkTime(m);
+      nowTime = h + ":" + m + "";
+      if (dd < 10) {
+        dd = '0' + dd
+      }
+      if (mm < 10) {
+        mm = '0' + mm
+      }
+      today = day + ', ' + dd + '/' + mm + '/' + yyyy;
+      tmp = '<span class="date"> ' + today + ' - ' + nowTime +
+        '</span>';
+      document.getElementById("clock").innerHTML = tmp;
+      clocktime = setTimeout("time()", "1000", "Javascript");
+
+      function checkTime(i) {
+        if (i < 10) {
+          i = "0" + i;
+        }
+        return i;
+      }
+    }
+  </script>
 </body>
-<!-- <script src="js/BookingRequest.js"></script> -->
 <script src="js/BookingRequest2.js"></script>
-
-
+<script src="js/auth.js"></script>
 </html>

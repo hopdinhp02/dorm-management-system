@@ -112,15 +112,24 @@ public class BookingRequestController {
     ResponseEntity<ResponseObject> checkUserIdInBookingRequest() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(), BookingRequest.Status.Decline);
-        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(foundBookingRequest.get().getSlot().getRoom().getDorm().getBranch().getId());
-        if (foundBookingRequest.get().getStartDate().equals(bookingSchedule.get().getStartDate()) && foundBookingRequest.get().getEndDate().equals(bookingSchedule.get().getEndDate())){
+        if(foundBookingRequest.isPresent()){
+            Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(foundBookingRequest.get().getSlot().getRoom().getDorm().getBranch().getId());
+            if(bookingSchedule.isPresent()){
+                if (foundBookingRequest.get().getStartDate().equals(bookingSchedule.get().getStartDate()) && foundBookingRequest.get().getEndDate().equals(bookingSchedule.get().getEndDate())){
+                    return ResponseEntity.status(HttpStatus.OK).body(
+                            new ResponseObject("", "Booked", true)
+                    );
+                }
+            }
+
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("", "Booked", true)
+                    new ResponseObject("OK", "Not Book", false)
             );
         }
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Not Book", false)
         );
+
     }
 
     @GetMapping("/check-living")
