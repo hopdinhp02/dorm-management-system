@@ -199,8 +199,8 @@ public class ResidentHistoryController {
 
 
 
-    @GetMapping("/find/{name}")
-    ResponseEntity<ResponseObject> searchResidentByName(@PathVariable String name) {
+    @GetMapping("/find")
+    ResponseEntity<ResponseObject> searchResidentByName(@RequestParam String name) {
 
         List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByName(name);
 
