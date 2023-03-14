@@ -137,6 +137,11 @@ public class FacilityController {
                         facility.setSlot(null);
                         facility.setRoom(null);
                         facility.setDorm(null);
+                    } else {
+                        facility.setBranch(null);
+                        facility.setSlot(null);
+                        facility.setRoom(null);
+                        facility.setDorm(null);
                     }
                     return facilityRepository.save(facility);
 
@@ -213,6 +218,7 @@ public class FacilityController {
     }
 
     @GetMapping("/{id}/facility-detail/maintenances")
+    //facility
     ResponseEntity<ResponseObject> getAllMaintenancesByFacilityId(@PathVariable Long id) {
         Optional<Facility> facility = facilityRepository.findById(id);
         if (facility.isPresent()) {
