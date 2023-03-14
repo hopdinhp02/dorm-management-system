@@ -12,6 +12,8 @@ import us.thedorm.repositories.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +32,7 @@ public class ElectricWaterUsageController {
     private ElectricWaterUsageRepo electricWaterUsageRepo;
     @Autowired
     private SlotRepository slotRepository;
+
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllUsage() {
         List<ElectricWaterUsage> found = electricWaterUsageRepo.findAll();
@@ -47,7 +50,7 @@ public class ElectricWaterUsageController {
 
     @GetMapping("/{id}")
     ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
-        Optional<ElectricWaterUsage> found =electricWaterUsageRepo.findById(id);
+        Optional<ElectricWaterUsage> found = electricWaterUsageRepo.findById(id);
         return found.isPresent() ? ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "", found)
         ) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -99,7 +102,10 @@ public class ElectricWaterUsageController {
             );
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ResponseObject("Fail", "", ""));
+
+                new ResponseObject("failed", "", "")
+        );
+
     }
 
     @PutMapping("/{roomId}/write-electric-water-usage")
@@ -111,38 +117,37 @@ public class ElectricWaterUsageController {
             return ResponseEntity.notFound().build();
         }
 
-        List<Slot> slots = slotRepository.getSlotsByRoom_IdAndStatus(roomId, Slot.Status.NotAvailable);
-        if (slots.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("Fail","","")
-            );
-        }
+//        List<Slot> slots = slotRepository.getSlotsByRoom_IdAndStatus(roomId, Slot.Status.NotAvailable);
+//        if (slots.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+//                    new ResponseObject("Fail", "", "")
+//            );
+//        }
         int month = electricWaterUsage.getMonthPay().getMonthValue();
         int year = electricWaterUsage.getMonthPay().getYear();
 
-        List<ElectricWaterUsage> ListElectric = electricWaterUsageRepo.ListElecWaterOfRoomIdInMonth(month,year,roomId);
+        List<ElectricWaterUsage> ListElectric = electricWaterUsageRepo.ListElecWaterOfRoomIdInMonth(month, year, roomId);
 
-                if(ListElectric.size() != 0){
-                    return ResponseEntity.status(HttpStatus.OK).body(
-                            new ResponseObject("OK","đã ghi điện nước",ListElectric)
-                    );
-                }
-                electricWaterUsage.setCreatedDate(new Date());
-                electricWaterUsage.setRoom(roomRepository.findById(roomId).orElse(null));
-                electricWaterUsage.setElectricUsage(electricWaterUsage.getElectricEnd()-electricWaterUsage.getElectricStart());
-                electricWaterUsage.setWaterUsage(electricWaterUsage.getWaterEnd()- electricWaterUsage.getWaterStart());
-                electricWaterUsageRepo.save(electricWaterUsage);
+        if (ListElectric.size() != 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "đã ghi điện nước", ListElectric)
+            );
+        }
+        electricWaterUsage.setCreatedDate(new Date());
+        electricWaterUsage.setRoom(roomRepository.findById(roomId).orElse(null));
+        electricWaterUsage.setElectricUsage(electricWaterUsage.getElectricEnd() - electricWaterUsage.getElectricStart());
+        electricWaterUsage.setWaterUsage(electricWaterUsage.getWaterEnd() - electricWaterUsage.getWaterStart());
+        electricWaterUsageRepo.save(electricWaterUsage);
 
         LocalDate monthPay = electricWaterUsage.getMonthPay();
 
-        List<ResidentHistory> Lists = residentHistoryRepository.findResidentsByRoomIdInMonth(roomId,monthPay,monthPay,monthPay,monthPay,monthPay);
-        for (ResidentHistory resident:Lists)
-        {
+        List<ResidentHistory> Lists = residentHistoryRepository.findResidentsByRoomIdInMonth(roomId, monthPay, monthPay, monthPay, monthPay, monthPay);
+        for (ResidentHistory resident : Lists) {
             Long residentId = resident.getUserInfo().getId();
             Billing newElecBilling = Billing.builder()
                     .userInfo(UserInfo.builder().id(residentId).build())
                     .type(Billing.Type.Electric)
-                    .cost((electricWaterUsage.getElectricUsage()*3000)/Lists.size())
+                    .cost((electricWaterUsage.getElectricUsage() * 3000) / Lists.size())
                     .status(Billing.Status.Unpaid)
                     .createdDate(new Date())
                     .build();
@@ -151,55 +156,57 @@ public class ElectricWaterUsageController {
             Billing newWaterBilling = Billing.builder()
                     .userInfo(UserInfo.builder().id(residentId).build())
                     .type(Billing.Type.Water)
-                    .cost((electricWaterUsage.getWaterUsage()*5000)/Lists.size())
+                    .cost((electricWaterUsage.getWaterUsage() * 5000) / Lists.size())
                     .status(Billing.Status.Unpaid)
                     .createdDate(new Date())
                     .build();
             billingRepository.save(newWaterBilling);
         }
 
-       return ResponseEntity.status(HttpStatus.OK).body(
-               new ResponseObject("OK","record electric water usage successfully! ",ListElectric)
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "record electric water usage successfully! ", ListElectric)
 
-       );
+        );
 
     }
+
     // toàn bộ record lương điện nước của 1 phòng được ghi lại
     @GetMapping("/{roomId}/view-electric-water-usage")
-    public ResponseEntity<ResponseObject> ListElectricWaterUsage(@PathVariable Long roomId){
+    public ResponseEntity<ResponseObject> ListElectricWaterUsage(@PathVariable Long roomId) {
         List<ElectricWaterUsage> ListElectricWaterUsage = electricWaterUsageRepo.findElectricWaterUsagesByRoomId(roomId);
-        if(ListElectricWaterUsage.size()==0){
+        if (ListElectricWaterUsage.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("failed", "", ""));
         }
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", " List Electric Usage  By RoomId", ListElectricWaterUsage));
     }
+
     //
     @GetMapping("/view-list-Elec-water-of-room/{roomid}/and-resident/{residentId}-in-month-by-bill/{ewuId}")
-    ResponseEntity<ResponseObject> getListResidentsOfRoomInMonth(@RequestBody JsonNode requestBody, @PathVariable Long roomid, @PathVariable Long ewuId,@PathVariable Long residentId) throws ParseException {
+    ResponseEntity<ResponseObject> getListResidentsOfRoomInMonth(@RequestBody JsonNode requestBody, @PathVariable Long roomid, @PathVariable Long ewuId, @PathVariable Long residentId) throws ParseException {
         String monthRaw = requestBody.get("month").asText();
         String yearRaw = requestBody.get("year").asText();
-        try{
+        try {
             int month = Integer.parseInt(monthRaw);
             int year = Integer.parseInt(yearRaw);
-            ResidentHistory ResidentsOfRoomInMonth = electricWaterUsageRepo.ElecWaterOfRoomIdAndResidentInMonth(month,year,roomid,ewuId,residentId);
+            ResidentHistory ResidentsOfRoomInMonth = electricWaterUsageRepo.ElecWaterOfRoomIdAndResidentInMonth(month, year, roomid, ewuId, residentId);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "List Residents  of Room in month", ResidentsOfRoomInMonth)
             );
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("Fail", "", ""));
         }
     }
+
     @GetMapping("/all-electric-water-usage-of-resident")
-    ResponseEntity<ResponseObject> GetListElectricWaterUsageOfResident()
-    {
+    ResponseEntity<ResponseObject> GetListElectricWaterUsageOfResident() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<ElectricWaterUsage> ListElectricWaterUsageOfResidentId = electricWaterUsageRepo.ListElecWaterOfResidenId(user.getId());
-        if(ListElectricWaterUsageOfResidentId.size()==0){
+        if (ListElectricWaterUsageOfResidentId.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("Fail","",""));
+                    new ResponseObject("Fail", "", ""));
 
         }
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -207,21 +214,36 @@ public class ElectricWaterUsageController {
         );
 
     }
+
     @GetMapping("/all-rooms-not-even-record-electric-water-usage-of-dorm/{dormId}")
-
-    ResponseEntity<ResponseObject> GetListRoomNotEvenRecordElectricWaterUsageOfDorm(@PathVariable Long dormId,@RequestParam String month,@RequestParam String year)
-    {
-
-
-        List<Room> ListRoomNotEvenRecordElectricWaterUsageOfDorm = roomRepository.ListRoomNotEvenRecordElectricWaterUsageOfDormId(dormId,month,year);
-        if(ListRoomNotEvenRecordElectricWaterUsageOfDorm.size() == 0){
+    ResponseEntity<ResponseObject> GetListRoomNotEvenRecordElectricWaterUsageOfDorm(@PathVariable Long dormId, @RequestParam String month, @RequestParam String year) {
+        try{
+            int monthInt = Integer.parseInt(month);
+            int yearInt = Integer.parseInt(year);
+            YearMonth yearMonth = YearMonth.of(yearInt, monthInt);
+            LocalDate date = yearMonth.atEndOfMonth();
+            List<Room> found = new ArrayList<>();
+            List<Room> ListRoomNotEvenRecordElectricWaterUsageOfDorm = roomRepository.ListRoomNotEvenRecordElectricWaterUsageOfDormId(dormId, month, year);
+            for (Room room:ListRoomNotEvenRecordElectricWaterUsageOfDorm) {
+                List<ResidentHistory> listResidents = residentHistoryRepository.findResidentsByRoomIdInMonth(room.getId(), date, date, date, date, date);
+                if(listResidents.size() > 0){
+                    found.add(room);
+                }
+            }
+            if (ListRoomNotEvenRecordElectricWaterUsageOfDorm.size() == 0) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ResponseObject("Fail", "", "")
+                );
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Ok", "", found)
+            );
+        }catch (NumberFormatException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("Fail","","")
+                    new ResponseObject("Fail", "", "")
             );
         }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("Ok","",ListRoomNotEvenRecordElectricWaterUsageOfDorm)
-        );
+
 
     }
 

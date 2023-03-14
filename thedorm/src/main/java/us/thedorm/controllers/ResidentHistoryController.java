@@ -125,15 +125,36 @@ public class ResidentHistoryController {
         );
     }
 
+    @PostMapping("/is-check-in")
+    ResponseEntity<ResponseObject> checkIsCheckIn(@RequestBody UserInfo user) {
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
+
+        if (residentHistory.get().getCheckinDate() == null) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Failed", "", false)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("Ok", "", true)
+        );
+
+    }
+
+
     @PostMapping("/guard/check-out")
     ResponseEntity<ResponseObject> checkOut(@RequestBody UserInfo resident) {
 
         Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(resident.getId());
         if (residentHistory.isPresent()) {
-            residentHistory.get().setCheckoutDate(new Date());
-            residentHistoryRepository.save(residentHistory.get());
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("Ok", "checked", "")
+            if (checkIsCheckIn(resident).getBody().getData().equals(true)) {
+                residentHistory.get().setCheckoutDate(new Date());
+                residentHistoryRepository.save(residentHistory.get());
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("Ok", "checked", "")
+                );
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("Fail", "Resident do not check-in", "")
             );
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -154,7 +175,7 @@ public class ResidentHistoryController {
     @GetMapping("/guard/check-out/slots/{id}")
     ResponseEntity<ResponseObject> ViewNotCheckOutYetBySlot(@PathVariable Long id) {
 
-        List<ResidentHistory> residentHistories = residentHistoryRepository.findBySlot_IdAndCheckoutDateIsNull(id);
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findBySlot_IdAndCheckOutDateIsNull(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "", residentHistories)
@@ -165,7 +186,7 @@ public class ResidentHistoryController {
     ResponseEntity<ResponseObject> getCurrentSlotOfResident() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<ResidentHistory> residentHistory = residentHistoryRepository.findCurrentSlotOfResident(user.getId());
-        if(residentHistory.isPresent()){
+        if (residentHistory.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "", residentHistory)
             );
@@ -176,4 +197,91 @@ public class ResidentHistoryController {
 
     }
 
+
+
+    @GetMapping("/find/{name}")
+    ResponseEntity<ResponseObject> searchResidentByName(@PathVariable String name) {
+
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByName(name);
+
+        if (residentHistories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found Resident", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("ok", "Found", residentHistories)
+        );
+    }
+
+    @GetMapping("/find-by-slot")
+    ResponseEntity<ResponseObject> searchByNameAndSlotId(@RequestParam String name, @RequestParam String slotid) {
+        long id = Long.parseLong(slotid);
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndSlotId(name, id);
+        if (residentHistories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found Resident", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("ok", "Found", residentHistories)
+        );
+    }
+
+
+    @GetMapping("/find-by-room")
+    ResponseEntity<ResponseObject> searchByNameAndRoomId(@RequestParam String name, @RequestParam String roomid) {
+        long id = Long.parseLong(roomid);
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndRoomId(name, id);
+        if (residentHistories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found Resident", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("ok", "Found", residentHistories)
+        );
+    }
+
+    @GetMapping("/find-by-dorm")
+    ResponseEntity<ResponseObject> searchByNameAndDormId(@RequestParam String name, @RequestParam String dormid) {
+        long id = Long.parseLong(dormid);
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndDormId(name, id);
+        if (residentHistories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found Resident", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("ok", "Found", residentHistories)
+        );
+
+    }
+
+
+    @GetMapping("/find-by-branch")
+    ResponseEntity<ResponseObject> searchByNameAndBranchId(@RequestParam String name, @RequestParam String branchid) {
+        long id = Long.parseLong(branchid);
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByNameAndBranchId(name, id);
+        if (residentHistories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found Resident", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("ok", "Found", residentHistories)
+        );
+    }
+
 }
+
+
+
+
+
+
