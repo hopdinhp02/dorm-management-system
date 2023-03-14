@@ -95,6 +95,12 @@ async function genLineChart() {
         chart.destroy();
     }
 
+    chartCanvas = document.getElementById('yearPieChart');
+    chart = Chart.getChart(chartCanvas);
+    if (chart != undefined) {
+        chart.destroy();
+    }
+    
     const year = document.getElementById("year").value;
     const yearLabels = [];
     for (let i = 0; i < 12; i++) {

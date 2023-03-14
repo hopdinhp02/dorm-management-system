@@ -64,7 +64,6 @@
           </ul>
           <div id="clock"></div>
       </div>
-        </div>
       </div>
     </div>
 
@@ -74,24 +73,27 @@
         <div class="row">
           <div class="col-md-12">
             <div class="tile">
-              <h3 class="tile-title"></h3>             
+              <h3 class="tile-title"></h3>              
               <div class="">
-                <h1 class="big-title">Resident history</h1>
+                <h1 class="big-title">Billing history</h1>
                 <table class="table table-bordered">
                   <thead>
                     <tr>
                     <tr>
                       <th>ID</th>
                       <th>UserID</th>
-                      <th>slotID</th>
-                      <th>CheckinDate</th>
-                      <th>checkoutDate</th>
-                      <th>StartDate</th>
-                      <th>EndDate</th>
+                      <th>Type</th>
+                      <th>Cost</th>
+                      <th>Status</th>
+                      <th>CreatedDate</th>
+                      <th>DeadlineDate</th>
+                      <th>PayDate</th>
                   </thead>
-                  <tbody id="residentHistory">
+                  <tbody id="billing">
                     <tr>
                       <th scope="row"></th>
+                      <td></td>
+                      <td></td>
                       <td></td>
                       <td></td>
                       <td></td>
@@ -183,6 +185,7 @@
     }
   </script>
 </body>
-<script src="js/BookingRequest2.js"></script>
-<script src="js/auth.js"></script>
+<!-- <script src="js/BookingRequest2.js"></script>
+<script src="js/auth.js"></script> -->
+<script src="js/billing.js"></script>
 </html>

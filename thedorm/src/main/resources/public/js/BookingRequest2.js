@@ -24,26 +24,37 @@ function checkUserIsBook() {
   let url = "http://localhost:8081/api/v1/booking-requests/userInfo/is-booked";
   let bookingForm = document.getElementById("booking-request-form");
   fetch(url, {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem("jwt")}`
-      }
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+    }
   })
-      .then(response => response.json())
-      .then(dataJson => {
-          console.log(dataJson);
-          if (dataJson.data == true) {
-              bookingForm.innerHTML = "<h3  style='color: red;'>You have booked</h3>";
-          } else {
-            loadbranch();
-          }
+    .then(response => response.json())
+    .then(dataJson => {
+      console.log(dataJson);
+      if (dataJson.data != false) {
+        bookingForm.innerHTML = `<h3 class="big-title"  style='color: red;'>You have booked</h3>
+             <div style="font-size: 20px;" >
+              Branch: ${dataJson.data.slot.room.dorm.branch.name}<br>
+              Dorm: ${dataJson.data.slot.room.dorm.name}<br>
+              Room: ${dataJson.data.slot.room.name}<br>
+              Slot: ${dataJson.data.slot.name}<br>
+              Start Date: ${dataJson.data.startDate}<br>
+              End Date: ${dataJson.data.endDate}<br>
+              Created Date: ${dataJson.data.createdDate}<br>
+             </div>`;
 
-      })
-   
-      .catch(error => {
-          console.error('Error:', error);
-      });
+
+      } else {
+        loadbranch();
+      }
+
+    })
+
+    .catch(error => {
+      console.error('Error:', error);
+    });
 }
 function loadbranch() {
   let branchDropDown = document.getElementById("branchs");
@@ -173,7 +184,7 @@ function loadslots() {
 
 function checkDayKeep() {
   let url = "http://localhost:8081/api/v1/booking-schedule/check-day-keep";
-  let text = document.getElementById("check");
+  let text = document.getElementById("bookingtitle");
   let bookingRequest = ``;
   let branchId = document.getElementById("branchs").value
   let dorm = document.getElementById("dorm")
@@ -192,8 +203,8 @@ function checkDayKeep() {
     .then(dataJson => {
       console.log(dataJson);
       if (dataJson.data == true) {
-        bookingRequest = `<h1>Keeping Day</h1>`
-        text.innerHTML = bookingRequest
+      //  bookingRequest = `<h1>Keeping Day</h1>`
+        text.innerHTML ="Keeping Day"
 
 
         checkliving();
@@ -238,7 +249,7 @@ function addBookingRequests() {
 
 function checkDayBooking() {
   let url = "http://localhost:8081/api/v1/booking-schedule/check-day-booking";
-  let text = document.getElementById("check");
+  let text = document.getElementById("bookingtitle");
   let bookingRequest = ``;
   let branchId = document.getElementById("branchs").value
   let dormRequest = ``;
@@ -256,61 +267,71 @@ function checkDayBooking() {
     .then(response => response.json())
     .then(dataJson => {
       if (dataJson.data == true) {
-        bookingRequest = `<h1>Booking Day</h1>`
-        text.innerHTML = bookingRequest
+        // bookingRequest = `<h3>Booking Day</h3>`
+        text.innerHTML = "Booking Day"
         dormRequest = `
         <div id="booking-request-form">
-              <div class="col-xs-12 col-md-7 no-padding no-margin">
-                <h1 id="check"></h1>
-                <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
-                  <div class="SBB-available-btn">
-                    <a href="#" class="sidebar-linkItem flex items-center">See available beds</a>
-                  </div>
-                  <div class="flex-1">
-                    <label class="SBB-input-label no-margin">Room Type</label>
-                    <div class="" style="width: 100%;">
-                      <input class="SBB-input " readonly="" type="text" value="SVVN - 3 beds - 950.000">
-                      <input id="RoomTypeId" name="RoomTypeId" type="hidden" value="3">
-                    </div>
-                  </div>
-                </div>
-                <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
-                  <div class="SBB-layout-1">
-                    <label class="SBB-input-label no-margin">Dom</label>
-                    <div class="my-select-style">
-                      <select class="SBB-input" id="dorms" name="DomId" onchange="loadrooms()"></select>
-                    </div>
-                  </div>
-                  <div class="flex-1">
-                    <label class="SBB-input-label no-margin">Room</label>
-                    <div class="my-select-style">
-                      <select class="SBB-input" id="rooms" name="Rooms"></select>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
-                <div class="flex-1">
-                  <label class="SBB-input-label no-margin" for="Semester">Slot</label>
-                  <div class="my-select-style">
-                    <select class="SBB-input" id="slots" name="Slot">
-                    </select>
-                  </div>
+        <div class=" no-padding no-margin">
+            <h1 id="check"></h1>
+            <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-available-btn" >
+                    <a href="#" class="sidebar-linkItem flex items-center" style="height: 42px">See available beds</a>
                 </div>
                 <div class="SBB-layout-1">
-                  <label class="SBB-input-label no-margin" for="Note">Note</label>
-                  <div class="">
-                    <input class="SBB-input text-box single-line" id="Note" name="Note" type="text" value="" />
-                  </div>
+                    <label class="SBB-input-label no-margin">Room Type</label>
+                    <div class="" >
+                        <input class="SBB-input " readonly="" type="text" value="SV - 3 beds - 950.000">
+                        <input id="RoomTypeId" name="RoomTypeId" type="hidden" value="3">
+                    </div>
                 </div>
+            </div>
+            <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Dom</label>
+                    <div class="my-select-style">
+                        <select class="SBB-input" id="dorms" name="DomId" onchange="loadrooms()"></select>
+                    </div>
                 </div>
-                  <button class="btn btn-primary"  onclick="addBookingRequests()">Add</button>
-        </div>`          
-
-        dorm.innerHTML = dormRequest;
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Room</label>
+                    <div class="my-select-style">
+                        <select class="SBB-input" id="rooms" name="Rooms"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin" for="Semester">Slot</label>
+                    <div class="my-select-style">
+                        <select class="SBB-input" id="slots" name="Slot">
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin" for="Note">Note</label>
+                    <div class="">
+                        <input class="SBB-input text-box single-line" id="Note" name="Note" type="text" value="" style="height: 42px">
+                        </input>
+                    </div>
+                </div>
+                
+            </div>
+            <button onclick="addBookingRequests()"  class="orange-btn">Add</button>
+        </div>
+    </div>`
+          // < div class="SBB-layout-1" >
+          //           <label class="SBB-input-label no-margin" for="Note">Note</label>
+          //           <div class="my-select-style">
+          //               <input class="SBB-input" id="Note" name="Note">
+          //               </input>
+          //           </div>
+          //       </div >
+          dorm.innerHTML = dormRequest;
         loaddorm();
       } else {
-        bookingRequest = `<h1>Sorry, it's not right time to book a new bed!</h1>`
-        text.innerHTML = bookingRequest
+        //bookingRequest = `<h3 style="color:red;">Sorry, it's not right time to book a new bed!</h3>`
+        text.innerHTML = "Sorry, it's not right time to book a new bed!"
         dormRequest = ``;
         dorm.innerHTML = dormRequest;
 
@@ -324,8 +345,8 @@ function checkDayBooking() {
 
 function checkliving() {
   let branchId = document.getElementById("branchs").value
-  let url = "http://localhost:8081/api/v1/booking-requests/check-living/branchs/" + branchId ;
-  let text = document.getElementById("check");
+  let url = "http://localhost:8081/api/v1/booking-requests/check-living/branchs/" + branchId;
+  let text = document.getElementById("bookingtitle");
   let bookingRequest = ``;
 
   fetch(url, {
@@ -341,9 +362,9 @@ function checkliving() {
       if (dataJson.data == true) {
         getOldSlot();
       } else {
-        bookingRequest = `<h1>keeping day: 
-                                          you don't have room</h1>`
-        text.innerHTML = bookingRequest
+        // bookingRequest = `<h1>keeping day: 
+        //                                   you don't have room</h1>`
+        text.innerHTML = "keeping day: you don't have room"
         document.getElementById("dorm").innerHTML = "";
       }
     })
@@ -375,9 +396,9 @@ function getOldSlot() {
         dormRequest = `
             <div id="booking-request-form">
               <form>
-                    <div class="col-xs-12 col-md-7 no-padding no-margin">
+                    <div class="no-padding no-margin">
                 <h1 id="check"></h1>
-                <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="flex" style="gap: 48px;  margin-bottom: px;">
                   <div class="SBB-available-btn">
                     <a href="#" class="sidebar-linkItem flex items-center">See available beds</a>
                   </div>
@@ -394,7 +415,7 @@ function getOldSlot() {
                     <label class="SBB-input-label no-margin">Dom</label>
                     <div class="my-select-style">
                       <select class="SBB-input" id="dorms" name="DomId" onchange="loadrooms()">
-                      <option value="${data.room.dorm.id}" disabled selected>${data.room.dorm.name}</option></select></select>
+                      <option value="${dataJsondata.room.dorm.id}" disabled selected>${data.room.dorm.name}</option></select></select>
                     </div>
                   </div>
                   <div class="flex-1">
@@ -417,11 +438,11 @@ function getOldSlot() {
                 <div class="SBB-layout-1">
                   <label class="SBB-input-label no-margin" for="Note">Note</label>
                   <div class="">
-                    <input class="SBB-input text-box single-line" id="Note" name="Note" type="text" value="" />
+                    <input class="SBB-input text-box single-line" id="Note" name="Note" type="text" value="" style="height: 42px />
                   </div>
                 </div>
               </div>
-                  <button class="btn btn-primary"  onclick="addBookingRequests()">Add</button>
+                  <button onclick="addBookingRequests()"  class="orange-btn">Add</button>
                   </form>
             </div>`
         //     Dorm: <br><select class="SBB-input" id="dorms" onchange="">
@@ -448,20 +469,3 @@ function getOldSlot() {
       console.error('Error:', error);
     });
 }
-// const handleToggleSidebar = ()=>{
-//     if (isSidebarFull) {
-//         sidebarFullTag.classList.add("hidden");
-//         isSidebarFull = false;
-//         contentBodyTag.classList.remove("pl-328");
-//     } else {
-//         sidebarFullTag.classList.remove("hidden");
-//         isSidebarFull = true;
-//         contentBodyTag.classList.add("pl-328");
-//     }
-// };
-
-// $(document).ready(function(){
-//     $("#sidebarCollapse").on('click', function(){
-//         $("#sidebar").toggleClass('active');
-//     });
-// });

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,7 +39,7 @@
         <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="images/user0.png" width="50px"
                 alt="User Image">
             <div>
-                <p class="app-sidebar__user-name"><b>Admin Page</b></p>
+                <p class="app-sidebar__user-name"><b>${sessionScope.user.user_name}</b></p>
                 <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
             </div>
         </div>
@@ -76,36 +75,12 @@
                         <div class="tile">
                             <h3 class="tile-title"></h3>
                             <div class="container-fluid my-container">
-                                <h1 class="big-title" id="bookingtitle">Static Profit</h1>
-                                <div class="container-fluid">
-                                    <label class="SBB-input-label no-margin">Show Chart By</label>
-                                    <select class="SBB-input" id="show-by" onchange="showBy()">
-                                        <option value="0">ALL</option>
-                                        <option value="1">Branch</option>
-                                        <option value="2">Dorm</option>
-                                        <option value="3">Room</option>
-                                        <option value="4">Slot</option>
-                                    </select><br>
-                                    <div id="load">
-                                    </div>                                  
-                                        <label class="SBB-input-label no-margin">Year</label><br>
-                                        <input class="SBB-input" id="year" type="number" min="1900" max="2099" step="1" />
-                                        <br>
-                                        <input type="button" onclick="genLineChart()" value="Show">
-                                    
-                                    <div class='row'>
-                                        <div class="col-8">
-                                            <canvas id="yearBarChart"></canvas>
-                                        </div>
-                                        <div class="col-4">
-                                            <canvas id="yearPieChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
+
             </div>
         </div>
         </div>
@@ -182,57 +157,6 @@
         }
     </script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="js/profit.js"></script>
+<script src="js/BookingRequest2.js"></script>
 
 </html>
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/bootstrap.min.css" >
-    <title>Document</title>
-</head>
-
-<body>
-    <div class="container-fluid">
-        Show Chart By: <br><select class="SBB-input" id="show-by" onchange="showBy()">
-            <option value="0" >ALL</option>
-            <option value="1" >Branch</option>
-            <option value="2" >Dorm</option>
-            <option value="3" >Room</option>
-            <option value="4" >Slot</option>
-          </select><br>
-          <div id="load">
-            
-          </div>
-        <form>
-        Month-Year:
-            <input id="year" type="number" min="1900" max="2099" step="1"/>
-            <br>
-            <input type="button" onclick="genLineChart()" value="Show">
-        </form>
-        <div class='row'>
-            <div class="col-6">
-                <canvas id="yearBarChart"></canvas>
-            </div>
-            <div class="col-6">
-                <canvas id="yearPieChart"></canvas>
-            </div>
-            
-            
-        </div>
-        <hr>
-        <hr>
-        
-    </div>
-    
-   
-</body>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="js/profit.js"></script>
-
-</html> -->
