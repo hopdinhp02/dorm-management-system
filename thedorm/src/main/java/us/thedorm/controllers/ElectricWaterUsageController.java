@@ -54,8 +54,7 @@ public class ElectricWaterUsageController {
         return found.isPresent() ? ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "", found)
         ) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ResponseObject("false", "", ""
-                ));
+                new ResponseObject("false", "", ""));
     }
 
 
@@ -83,16 +82,13 @@ public class ElectricWaterUsageController {
                     electricWaterUsage.setElectricUsage(newElectricWaterUsage.getElectricEnd() - newElectricWaterUsage.getElectricStart());
                     electricWaterUsage.setWaterUsage(newElectricWaterUsage.getWaterEnd() - newElectricWaterUsage.getWaterStart());
                     return electricWaterUsageRepo.save(electricWaterUsage);
-
                 }).orElseGet(() -> null);
         if (update != null) {
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("OK", "Insert Product successfully", update)
-            );
+                    new ResponseObject("OK", "Insert Product successfully", update));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ResponseObject("false", "", ""
-                ));
+                new ResponseObject("false", "", ""));
     }
 
     @DeleteMapping("/{id}")
@@ -106,12 +102,14 @@ public class ElectricWaterUsageController {
             );
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+
                 new ResponseObject("failed", "", "")
         );
+
     }
 
     @PutMapping("/{roomId}/write-electric-water-usage")
-    public ResponseEntity<ResponseObject> writeElectricWaterUsage(@PathVariable Long roomId, @RequestBody ElectricWaterUsage electricWaterUsage) throws ParseException {
+    public ResponseEntity<ResponseObject> writeElectricWaterUsage(@PathVariable Long roomId,@RequestBody ElectricWaterUsage electricWaterUsage) throws ParseException {
 
 
         Room room = roomRepository.findById(roomId).orElse(null);
@@ -248,6 +246,7 @@ public class ElectricWaterUsageController {
 
 
     }
+
 
 
 }

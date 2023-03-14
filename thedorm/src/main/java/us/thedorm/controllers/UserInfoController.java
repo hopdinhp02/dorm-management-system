@@ -5,9 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import us.thedorm.models.Billing;
 import us.thedorm.models.ResponseObject;
 import us.thedorm.models.Slot;
 import us.thedorm.models.UserInfo;
+import us.thedorm.repositories.BillingRepository;
 import us.thedorm.repositories.SlotRepository;
 import us.thedorm.repositories.UserInfoRepository;
 
@@ -22,6 +24,8 @@ public class UserInfoController {
     private UserInfoRepository userInfoRepository;
     @Autowired
     private SlotRepository slotRepository;
+    @Autowired
+    private BillingRepository billingRepository;
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllUserInfo() {
@@ -129,12 +133,50 @@ public class UserInfoController {
                 );
             }
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("OK", "OKK", true)
+                    new ResponseObject("OK", "OK", true)
             );
 
         }
         return null;
     }
-
+    @PostMapping("/check-balane-to-pay-bill")
+    ResponseEntity<ResponseObject> checkBalanceToPayBills(@RequestBody Billing bill){
+       UserInfo user =(UserInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       Optional<Billing> billing = billingRepository.findById(bill.getId());
+       if(billing.isPresent()){
+           int cost = billing.get().getCost();
+           if(user.getBalance()< cost){
+               return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                 new ResponseObject("Fail","Can not pay bills",false)
+               );
+           }
+           return ResponseEntity.status(HttpStatus.OK).body(
+                   new ResponseObject("OK","YOU CAN PAY BILL",true));
+       }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("Fail","NOT FOUND",""));
+    }
+    @PutMapping("/pay-bill")
+    ResponseEntity<ResponseObject> payBills(@RequestBody Billing bill){
+        UserInfo user =(UserInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Billing> billing = billingRepository.findById(bill.getId());
+        if(billing.isPresent()){
+            int cost = billing.get().getCost();
+            if(user.getBalance()< cost){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ResponseObject("Fail","Can not pay bills","")
+                );
+            }else{
+                user.setBalance(user.getBalance()-cost);
+                billing.get().setStatus(Billing.Status.Paid);
+                userInfoRepository.save(user);
+                billingRepository.save(billing.get());
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("OK","YOU PAID ",billing.get()));
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("Fail","NOT FOUND",""));
+    }
     }
 
