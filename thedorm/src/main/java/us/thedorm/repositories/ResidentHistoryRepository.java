@@ -18,7 +18,7 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
 
     Optional<ResidentHistory> findTopByUserInfo_IdOrderByEndDate(long id);
 
-    Optional<ResidentHistory> findByUserInfo_IdOrderByEndDate(long id);
+//    Optional<ResidentHistory> findByUserInfo_IdOrderByEndDate(long id);
 
     Optional<ResidentHistory> findTopByUserInfo_IdOrderByIdDesc(long id);
 
