@@ -12,6 +12,8 @@ import us.thedorm.repositories.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -117,12 +119,12 @@ public class ElectricWaterUsageController {
             return ResponseEntity.notFound().build();
         }
 
-        List<Slot> slots = slotRepository.getSlotsByRoom_IdAndStatus(roomId, Slot.Status.NotAvailable);
-        if (slots.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("Fail", "", "")
-            );
-        }
+//        List<Slot> slots = slotRepository.getSlotsByRoom_IdAndStatus(roomId, Slot.Status.NotAvailable);
+//        if (slots.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+//                    new ResponseObject("Fail", "", "")
+//            );
+//        }
         int month = electricWaterUsage.getMonthPay().getMonthValue();
         int year = electricWaterUsage.getMonthPay().getYear();
 
@@ -217,17 +219,33 @@ public class ElectricWaterUsageController {
 
     @GetMapping("/all-rooms-not-even-record-electric-water-usage-of-dorm/{dormId}")
     ResponseEntity<ResponseObject> GetListRoomNotEvenRecordElectricWaterUsageOfDorm(@PathVariable Long dormId, @RequestParam String month, @RequestParam String year) {
-
-
-        List<Room> ListRoomNotEvenRecordElectricWaterUsageOfDorm = roomRepository.ListRoomNotEvenRecordElectricWaterUsageOfDormId(dormId, month, year);
-        if (ListRoomNotEvenRecordElectricWaterUsageOfDorm.size() == 0) {
+        try{
+            int monthInt = Integer.parseInt(month);
+            int yearInt = Integer.parseInt(year);
+            YearMonth yearMonth = YearMonth.of(yearInt, monthInt);
+            LocalDate date = yearMonth.atEndOfMonth();
+            List<Room> found = new ArrayList<>();
+            List<Room> ListRoomNotEvenRecordElectricWaterUsageOfDorm = roomRepository.ListRoomNotEvenRecordElectricWaterUsageOfDormId(dormId, month, year);
+            for (Room room:ListRoomNotEvenRecordElectricWaterUsageOfDorm) {
+                List<ResidentHistory> listResidents = residentHistoryRepository.findResidentsByRoomIdInMonth(room.getId(), date, date, date, date, date);
+                if(listResidents.size() > 0){
+                    found.add(room);
+                }
+            }
+            if (ListRoomNotEvenRecordElectricWaterUsageOfDorm.size() == 0) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ResponseObject("Fail", "", "")
+                );
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Ok", "", found)
+            );
+        }catch (NumberFormatException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("Fail", "", "")
             );
         }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("Ok", "", ListRoomNotEvenRecordElectricWaterUsageOfDorm)
-        );
+
 
     }
 
