@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface BookingScheduleRepository extends JpaRepository<BookingSchedule,Long> {
 
     Optional<BookingSchedule> findBookingScheduleByBranch_Id(long id);
+    Optional<BookingSchedule> findTopByBranch_IdOrderByIdDesc(long id);
 }

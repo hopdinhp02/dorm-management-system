@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   checkJwtExpiration(localStorage.getItem("jwt"))
   checkUserIsBook()
+  getBalance()
 });
 
 setInterval(function () {
@@ -43,6 +44,7 @@ function checkUserIsBook() {
               Start Date: ${dataJson.data.startDate}<br>
               End Date: ${dataJson.data.endDate}<br>
               Created Date: ${dataJson.data.createdDate}<br>
+              Status: ${dataJson.data.status}<br>
              </div>`;
 
 
@@ -100,6 +102,11 @@ function loaddorm() {
   })
     .then(response => response.json())
     .then(jsonData => {
+      var option = document.createElement("option");
+        option.text = "Select dorm";
+        option.disabled = true;
+        option.selected = true;
+        dormDropDown.append(option);
       jsonData.data.forEach(element => {
         var option = document.createElement("option");
         option.text = element.name;
@@ -108,9 +115,9 @@ function loaddorm() {
       });
 
     })
-    .then(
-      loadrooms
-    )
+    // .then(
+    //   loadrooms
+    // )
 
     .catch(error => {
       console.error('Error:', error);
@@ -134,19 +141,24 @@ function loadrooms() {
   })
     .then(response => response.json())
     .then(jsonData => {
+      var option = document.createElement("option");
+        option.text = "Select room";
+        option.disabled = true;
+        option.selected = true;
+        roomDropDown.append(option);
       jsonData.data.forEach(element => {
         var option = document.createElement("option");
         option.text = element.name;
         option.value = element.id;
         roomDropDown.append(option);
       });
-
+      console.log(11);
     }
-
+  
     )
-    .then(
-      loadslots
-    )
+    // .then(
+    //   loadslots
+    // )
     .catch(error => {
       console.error('Error:', error);
     });
@@ -154,12 +166,14 @@ function loadrooms() {
 
 
 function loadslots() {
+  console.log(1);
   let slotDropDown = document.getElementById("slots");
   slotDropDown.innerHTML = '';
   const selectElement = document.getElementById("rooms");
   const roomId = selectElement.value;
   console.log("roomid for slot: " + roomId);
   let url = "http://localhost:8081/api/v1/slots/room/" + roomId + "/available";
+  // console.log(url);
   fetch(url, {
     method: 'GET',
     headers: {
@@ -169,6 +183,11 @@ function loadslots() {
   })
     .then(response => response.json())
     .then(jsonData => {
+      var option = document.createElement("option");
+      option.text = "Select slot";
+      option.disabled = true;
+      option.selected = true;
+      slotDropDown.append(option);
       jsonData.data.forEach(element => {
         var option = document.createElement("option");
         option.text = element.name;
@@ -295,7 +314,7 @@ function checkDayBooking() {
                 <div class="SBB-layout-1">
                     <label class="SBB-input-label no-margin">Room</label>
                     <div class="my-select-style">
-                        <select class="SBB-input" id="rooms" name="Rooms"></select>
+                        <select class="SBB-input" id="rooms" name="Rooms" onchange="loadslots()"></select>
                     </div>
                 </div>
             </div>
@@ -303,7 +322,7 @@ function checkDayBooking() {
                 <div class="SBB-layout-1">
                     <label class="SBB-input-label no-margin" for="Semester">Slot</label>
                     <div class="my-select-style">
-                        <select class="SBB-input" id="slots" name="Slot">
+                        <select class="SBB-input" id="slots" name="Slot" onchange="getBookingCost()">
                         </select>
                     </div>
                 </div>
@@ -317,7 +336,10 @@ function checkDayBooking() {
                 </div>
                 
             </div>
-            <button onclick="addBookingRequests()"  class="orange-btn">Add</button>
+            <div id="booking">
+            
+            </div>
+            
         </div>
     </div>`
           // < div class="SBB-layout-1" >
@@ -442,7 +464,10 @@ function getOldSlot() {
                   </div>
                 </div>
               </div>
-                  <button onclick="addBookingRequests()"  class="orange-btn">Add</button>
+              <div id="booking">
+            
+            </div>
+                  
                   </form>
             </div>`
         //     Dorm: <br><select class="SBB-input" id="dorms" onchange="">
@@ -460,6 +485,8 @@ function getOldSlot() {
         //   <button class="btn btn-primary"  onclick="addBookingRequests()">Add</button>`
 
         dorm.innerHTML = dormRequest;
+        getBookingCost();
+        checkBalance();
       } else {
 
       }
@@ -467,5 +494,68 @@ function getOldSlot() {
     })
     .catch(error => {
       console.error('Error:', error);
+    });
+}
+
+function getBalance(){
+  let url = "http://localhost:8081/api/v1/user-infos/balance";
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+    }
+  })
+    .then(response => response.json())
+    .then(jsonData => {
+      document.getElementById("balance").innerHTML = jsonData.data.toLocaleString('en-US') + " VND";
+    })
+    .catch(error => {
+      console.log("error");
+    });
+}
+
+function getBookingCost(){
+  slotid = document.getElementById("slots").value;
+  let url = "http://localhost:8081/api/v1/user-infos/booking-cost?slotid="+slotid;
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+    }
+  })
+    .then(response => response.json())
+    .then(jsonData => {
+      document.getElementById("cost").innerHTML = jsonData.data.toLocaleString('en-US') + " VND";
+    }).then(checkBalance())
+    .catch(error => {
+      console.log("error");
+    });
+}
+
+function checkBalance(){
+  console.log(1111);
+  slotid = document.getElementById("slots").value;
+  let url = "http://localhost:8081/api/v1/user-infos/check-balance?slotid="+slotid;
+  console.log(url);
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+    }
+  })
+    .then(response => response.json())
+    .then(jsonData => {
+      if(jsonData.data == true){
+        document.getElementById("booking").innerHTML = '<button onclick="addBookingRequests()"  class="orange-btn">Add</button>';
+      }
+      else{
+        document.getElementById("booking").innerHTML = "Not enough balance.";
+      }
+    })
+    .catch(error => {
+      console.log("error");
     });
 }
