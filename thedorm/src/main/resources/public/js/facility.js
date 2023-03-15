@@ -24,7 +24,7 @@ function loadFacility() {
                 <td>${element.slot == null ? null : element.slot.id}</td>
                 <td onclick="loadfacilityDetailById(${element.id})"> ${element.facilityDetail.id} </td>
                 </tr>`;
-                console.log(facilityRequest)
+                
             });
 
             facilityTable.innerHTML = facilityRequest;
@@ -37,6 +37,7 @@ function loadFacility() {
 
 
 function addFacility() {
+    console.log(1);
     url = "http://localhost:8081/api/v1/facilities";
     codeProduct = document.getElementById("codeProduct").value;
     Name = document.getElementById("name").value;
@@ -47,7 +48,7 @@ function addFacility() {
     Status = document.getElementById("status").value;
     Type = document.getElementById("type").value;
     Value = document.getElementById("value").value;
-
+    
     jsonData = {
         facilityDetail:{codeProduct: codeProduct, 
         name: Name,
