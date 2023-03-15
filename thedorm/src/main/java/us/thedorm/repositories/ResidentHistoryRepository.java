@@ -63,18 +63,18 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
 
 
     @Query(value = "select  rh.*from resident_history as rh inner join user_info as uf on rh.resident_id = uf.id\n" +
-            "   where uf.name like '%'+:name +'%'and ( rh.checkin_date IS NOT NULL and rh.checkout_date IS NULL) and GETDATE() between rh.start_date and rh.end_date", nativeQuery = true)
+            "   where uf.name like '%'+:name +'%' and GETDATE() between rh.start_date and rh.end_date", nativeQuery = true)
     List<ResidentHistory> findResidentHistoriesByName(@Param("name") String name);
 
 
     @Query(value = "    select rh.*from resident_history as rh \n" +
             "    inner join user_info as uf on rh.resident_id = uf.id\n" +
             "\tinner join slot sl on rh.slot_id = sl.id            \n" +
-            "   where  uf.name like '%'+:name +'%'and ( rh.checkin_date IS NOT NULL and rh.checkout_date IS NULL) and GETDATE() between rh.start_date and rh.end_date and  sl.room_id =:room_id", nativeQuery = true)
+            "   where  uf.name like '%'+:name +'%' and GETDATE() between rh.start_date and rh.end_date and  sl.room_id =:room_id", nativeQuery = true)
     List<ResidentHistory> findResidentHistoriesByNameAndRoomId(@Param("name") String name, @Param("room_id") long id);
 
     @Query(value = "select  rh.*from resident_history as rh inner join user_info as uf on rh.resident_id = uf.id\n" +
-            "   where uf.name like '%'+:name +'%' and ( rh.checkin_date IS NOT NULL and rh.checkout_date IS NULL) and GETDATE() between rh.start_date and rh.end_date and rh.slot_id =:slot_id", nativeQuery = true)
+            "   where uf.name like '%'+:name +'%' and GETDATE() between rh.start_date and rh.end_date and rh.slot_id =:slot_id", nativeQuery = true)
     List<ResidentHistory> findResidentHistoriesByNameAndSlotId(@Param("name") String name, @Param("slot_id") long id);
 
 
