@@ -101,7 +101,7 @@ public class UserInfoController {
     }
 
     @PutMapping("/{id}/topup")
-    ResponseEntity<ResponseObject> topUp(@RequestBody UserInfo newUserInfo, @PathVariable Long id) {
+    ResponseEntity<ResponseObject> topUpByUserId(@RequestBody UserInfo newUserInfo, @PathVariable Long id) {
         UserInfo TopUp = userInfoRepository.findById(id)
                 .map(userInfo -> {
                     userInfo.setBalance(userInfo.getBalance() + newUserInfo.getBalance());
@@ -120,6 +120,23 @@ public class UserInfoController {
 
     }
 
+    @PutMapping("/topup")
+    ResponseEntity<ResponseObject> topUp(@RequestParam String amount) {
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try{
+            user.setBalance(user.getBalance() + Double.parseDouble(amount));
+            userInfoRepository.save(user);
+
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Top up successfully", true));
+
+        }catch (NumberFormatException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ResponseObject("failed", ex.getMessage(), false)
+            );
+        }
+
+    }
     @GetMapping("/check-balance")
     ResponseEntity<ResponseObject> checkBalanceForBookingRequest(@RequestBody Slot bookSlot) {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -179,4 +196,5 @@ public class UserInfoController {
                 new ResponseObject("Fail","NOT FOUND",""));
     }
     }
+
 
