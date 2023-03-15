@@ -45,6 +45,8 @@ public class UserInfo implements UserDetails {
     private String image;
     private double balance;
 
+    private boolean gender;
+
 
     @OneToMany(mappedBy = "userInfo")
     @JsonIgnore

@@ -3,9 +3,11 @@ package us.thedorm.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.ResponseObject;
 import us.thedorm.models.Room;
+import us.thedorm.models.UserInfo;
 import us.thedorm.repositories.SlotRepository;
 import us.thedorm.repositories.RoomRepository;
 
@@ -52,6 +54,22 @@ public class RoomController {
                 new ResponseObject("ok", "", foundRooms));
 
     }
+
+    @GetMapping("/dorm/{id}/gender")
+    ResponseEntity<ResponseObject> findByDormIdAndGender(@PathVariable Long id) {
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Room> foundRooms = roomRepository.getRoomsByDorm_IdAndSex(id,user.isGender());
+        if(foundRooms.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("ok", "No found room", ""));
+
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "", foundRooms));
+
+    }
+
+
     @PostMapping("")
     ResponseEntity<ResponseObject> insertRoom(@RequestBody Room newRoom) {
         return ResponseEntity.status(HttpStatus.OK).body(
