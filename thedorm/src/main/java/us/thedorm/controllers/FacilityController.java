@@ -77,8 +77,8 @@ public class FacilityController {
             }
         }
 
-        FacilityDetail facilityDetail = newFacility.getFacilityDetail();
         for (int i = 0; i < quantity; i++) {
+            FacilityDetail facilityDetail = newFacility.getFacilityDetail();
             FacilityDetail newFD = FacilityDetail.builder()
                     .name(facilityDetail.getName())
                     .provider(facilityDetail.getProvider())
@@ -91,8 +91,12 @@ public class FacilityController {
                     .status(FacilityDetail.Status.good)
                     .build();
 
-            facilityDetailRepository.save(newFD);
+            newFD =  facilityDetailRepository.save(newFD);
             Facility facility = Facility.builder()
+                    .slot(newFacility.getSlot())
+                    .room(newFacility.getRoom())
+                    .dorm(newFacility.getDorm())
+                    .branch(newFacility.getBranch())
                     .facilityDetail(newFD)
                     .build();
             facilityRepository.save(facility);

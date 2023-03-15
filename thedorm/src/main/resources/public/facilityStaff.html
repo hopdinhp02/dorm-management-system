@@ -12,18 +12,24 @@
 </head>
 <body>
     Facility <br>
+    <div id="add">
     <select id="facility"  onchange="loadFacility()">
         <option value="" disabled selected>Chọn một lựa chọn</option>
         <option value="1" >Assigned</option>
         <option value="2" >Not Assign</option>
-    </select><br>
+    </select>
+    </div>
     <div id="hopnghien">
     </div>
+    <div id="load">
+    </div>
+    <div id="formAddFacility">
+    </div>
+    
       
-      <div id="load">
       
-      </div>
     <div id="facilityForm">
+      
         
         <!-- <form>
           Branch: <br><select class="SBB-input" id="branchs" onchange="loaddorm()">
@@ -49,7 +55,7 @@
                   <th>ExpirationDate</th>
                   <th>Code Product</th>
                   <th>Price</th>
-                  <th>ProcudingDate</th>
+                  <th>ProducingDate</th>
                   <th>Provider</th>
                   <th>Type</th>
                   <th>Status</th>
