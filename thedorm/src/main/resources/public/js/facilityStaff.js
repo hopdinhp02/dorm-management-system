@@ -16,18 +16,115 @@ function checkJwtExpiration(token) {
 }
 
 function loadFacility() {
+    let add = document.getElementById("add")
+    let addButton = ``
     console.log(1);
     let value = document.getElementById("facility").value
     console.log(value);
     if (value == 1) {
         loadFacilityAssign()
+        addButton = `<select id="facility"  onchange="loadFacility()">
+        <option value="1" disabled selected>Assigned</option>
+        <option value="2" >Not Assign</option>
+    </select>`
     } else if (value == 2) {
         loadFacilityNotAssign()
+        addButton = `<select id="facility"  onchange="loadFacility()">
+        <option value="1" >Assigned</option>
+        <option value="2" disabled selected>Not Assign</option>
+    </select><br><button class="btn btn-primary" type="submit" id="show" onclick="showFormAddFacilityNotAssign()">Add</button><br>`
     }
-
+    add.innerHTML = addButton
 }
 
+function showFormAddFacilityNotAssign() {
+    let form = document.getElementById("formAddFacility")
+    form.innerHTML = `Code Product: <input type="text" id="codeProduct"><br>
+    Name: <input type="text" id="name"><br>
+    Price: <input type="number" id="price"><br>
+    Provider: <input type="text" id="provider"><br>
+    Expiration Date: <input type="datetime-local" id="expirationDate"><br>
+    Producing Date: <input type="datetime-local" id="procudingDate"><br>
+    Quantity: <input type="number" value = "1" id="quantity"><br>
+    Type: <input type="text" id="type"><br>
+    <button class="btn btn-primary" type="submit" id="show" onclick="addFacilityNotAssign()">Add</button><br>`
+
+    let show = document.getElementById("show")
+    show.innerHTML = ``
+}
+
+function addFacilityNotAssign() {
+    Quantity = document.getElementById("quantity").value == "" ? 1:document.getElementById("quantity").value;
+    console.log(1);
+    url = "http://localhost:8081/api/v1/facilities?quantity="+Quantity;
+    codeProduct = document.getElementById("codeProduct").value;
+    Name = document.getElementById("name").value;
+    Price = document.getElementById("price").value;
+    Provider = document.getElementById("provider").value;
+    expirationDate = document.getElementById("expirationDate").value;
+    procudingDate = document.getElementById("procudingDate").value;
+    Type = document.getElementById("type").value;
+
+    const expirationdate = new Date(expirationDate);
+    const expirationyear = expirationdate.getFullYear();
+    const expirationmonth = expirationdate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
+    const expirationday = expirationdate.getDate();
+    const expirationhours = expirationdate.getHours();
+    const expirationminutes = expirationdate.getMinutes();
+    const expirationseconds = expirationdate.getSeconds();
+    const expirationFormattedDate = `${expirationyear}-${expirationmonth.toString().padStart(2, "0")}-${expirationday.toString().padStart(2, "0")} ${expirationhours.toString().padStart(2, "0")}:${expirationminutes.toString().padStart(2, "0")}:${expirationseconds.toString().padStart(2, "0")}`;
+
+
+    const procudingdate = new Date(procudingDate);
+    const procudingyear = procudingdate.getFullYear();
+    const procudingmonth = procudingdate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
+    const procudingday = procudingdate.getDate();
+    const procudinghours = procudingdate.getHours();
+    const procudingminutes = procudingdate.getMinutes();
+    const procudingseconds = procudingdate.getSeconds();
+    const procudingFormattedDate = `${procudingyear}-${procudingmonth.toString().padStart(2, "0")}-${procudingday.toString().padStart(2, "0")} ${procudinghours.toString().padStart(2, "0")}:${procudingminutes.toString().padStart(2, "0")}:${procudingseconds.toString().padStart(2, "0")}`;
+    jsonData = {
+        facilityDetail: {
+            codeProduct: codeProduct,
+            name: Name,
+            price: Price,
+            provider: Provider,
+            expirationDate: expirationFormattedDate,
+            procudingDate: procudingFormattedDate,
+            type: Type,
+        }
+    };
+    console.log(jsonData);
+    fetch(url,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+            },
+
+            body: JSON.stringify(jsonData)
+        }
+    )
+        .then(respone => respone.json())
+        .then(data => {
+
+            console.log(data);
+        })
+        .then(alert("Add Successfully!!"))
+        .then(loadFacilityNotAssign)
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+
+
 function loadFacilityAssign() {
+    let addForm = document.getElementById("formAddFacility")
+    addForm.innerHTML = ``
+    let facilityTable = document.getElementById("facilityTable")
+    facilityTable.innerHTML = ``
     let showBy = document.getElementById("hopnghien")
     showBy.innerHTML = ` Show By: <br><select class="SBB-input" id="idRemove" onchange="loadIdRemove()">
     <option value="" disabled selected>Chọn một lựa chọn</option>
@@ -36,13 +133,15 @@ function loadFacilityAssign() {
     <option value="3" >Room</option>
     <option value="4" >Slot</option>
   </select><br>`
- 
+
 }
 
 function loadFacilityNotAssign() {
+    let load = document.getElementById("load")
+    load.innerHTML = ``
     console.log(3);
     let facilityTable = document.getElementById("facilityTable")
-    facilityTable.innerHTML=``
+    facilityTable.innerHTML = ``
     let facility = ``
     let showBy = document.getElementById("hopnghien")
     showBy.innerHTML = ``
@@ -62,13 +161,13 @@ function loadFacilityNotAssign() {
         <tbody id="facilityDetail">
         <tr>
         <td>${element.facilityDetail.id}</td>
-        <td>${element.facilityDetail.name==null?"":element.facilityDetail.name}</td>
-        <td>${element.facilityDetail.expirationDate==null?"":element.facilityDetail.expirationDate}</td>
-        <td>${element.facilityDetail.codeProduct==null?"":element.facilityDetail.codeProduct}</td>
-        <td>${element.facilityDetail.price==null?"":element.facilityDetail.price}</td>
-        <td>${element.facilityDetail.producingDate==null?"":element.facilityDetail.producingDate}</td>
-        <td>${element.facilityDetail.provider==null?"":element.facilityDetail.provider}</td>
-        <td>${element.facilityDetail.type==null?"":element.facilityDetail.type}</td>
+        <td>${element.facilityDetail.name == null ? "" : element.facilityDetail.name}</td>
+        <td>${element.facilityDetail.expirationDate == null ? "" : element.facilityDetail.expirationDate}</td>
+        <td>${element.facilityDetail.codeProduct == null ? "" : element.facilityDetail.codeProduct}</td>
+        <td>${element.facilityDetail.price == null ? "" : element.facilityDetail.price}</td>
+        <td>${element.facilityDetail.producingDate == null ? "" : element.facilityDetail.producingDate}</td>
+        <td>${element.facilityDetail.provider == null ? "" : element.facilityDetail.provider}</td>
+        <td>${element.facilityDetail.type == null ? "" : element.facilityDetail.type}</td>
         <td>
         <select onchange=" accept(${element.id}, this.value)">
              <option value="good" ${element.facilityDetail.status == "good" ? "selected" : ""}>good</option>
@@ -90,9 +189,9 @@ function loadFacilityNotAssign() {
 }
 function updateFacilityDetail(id, value) {
     let value1 = document.getElementById("facility").value
-    url = "http://localhost:8081/api/v1/facilities/"+ id  +"/facility-detail " 
+    url = "http://localhost:8081/api/v1/facilities/" + id + "/facility-detail "
     let facilityDetailStatus = value
-    jsonData = { facilityDetail: { status: facilityDetailStatus }};
+    jsonData = { facilityDetail: { status: facilityDetailStatus } };
     fetch(url, {
         method: "PUT",
         headers: {
@@ -108,12 +207,12 @@ function updateFacilityDetail(id, value) {
         .catch(error => {
             console.error('Error:', error);
         });
-        if (value1 == 1) {
-    setTimeout(loadFacilityAssign, 500);
-            
-        } else {
-    setTimeout(loadFacilityNotAssign, 500);
-        }
+    if (value1 == 1) {
+        setTimeout(loadFacilityAssign, 500);
+
+    } else {
+        setTimeout(loadFacilityNotAssign, 500);
+    }
 }
 
 function accept(id, value) {
@@ -121,11 +220,146 @@ function accept(id, value) {
 
     if (confirm("The value has changed to: " + value)) {
         updateFacilityDetail(id, value)
-    } else if(value1 == 1 ){
+    } else if (value1 == 1) {
         setTimeout(loadFacilityAssign(), 500)
-    } else if(value1 == 2 ){
+    } else if (value1 == 2) {
         setTimeout(loadFacilityNotAssign(), 500)
-    } 
+    }
+}
+
+function loadFormAddFacilityAssign(){
+    let form = document.getElementById("formAddFacility")
+    form.innerHTML = `Code Product: <input type="text" id="codeProduct"><br>
+    Name: <input type="text" id="name"><br>
+    Price: <input type="number" id="price"><br>
+    Provider: <input type="text" id="provider"><br>
+    Expiration Date: <input type="datetime-local" id="expirationDate"><br>
+    Producing Date: <input type="datetime-local" id="procudingDate"><br>
+    Quantity: <input type="number" id="quantity"><br>
+    Type: <input type="text" id="type"><br>
+    <button class="btn btn-primary" type="" id="show" onclick="addFacilityAssign()">Add</button><br>`
+    let show = document.getElementById("show")
+    show.innerHTML = ``
+    
+}
+
+function addFacilityAssign(){
+    let idSelected = document.getElementById("idRemove").value
+    console.log(2);
+    let quantityValue = document.getElementById("quantity").value==""?1:document.getElementById("quantity").value
+    console.log(quantityValue);
+    url = "http://localhost:8081/api/v1/facilities?quantity="+quantityValue;
+    codeProduct = document.getElementById("codeProduct").value;
+    Name = document.getElementById("name").value;
+    Price = document.getElementById("price").value;
+    Provider = document.getElementById("provider").value;
+    expirationDate = document.getElementById("expirationDate").value;
+    procudingDate = document.getElementById("procudingDate").value;
+    Type = document.getElementById("type").value;
+
+    const expirationdate = new Date(expirationDate);
+    const expirationyear = expirationdate.getFullYear();
+    const expirationmonth = expirationdate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
+    const expirationday = expirationdate.getDate();
+    const expirationhours = expirationdate.getHours();
+    const expirationminutes = expirationdate.getMinutes();
+    const expirationseconds = expirationdate.getSeconds();
+    const expirationFormattedDate = `${expirationyear}-${expirationmonth.toString().padStart(2, "0")}-${expirationday.toString().padStart(2, "0")} ${expirationhours.toString().padStart(2, "0")}:${expirationminutes.toString().padStart(2, "0")}:${expirationseconds.toString().padStart(2, "0")}`;
+
+
+    const procudingdate = new Date(procudingDate);
+    const procudingyear = procudingdate.getFullYear();
+    const procudingmonth = procudingdate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
+    const procudingday = procudingdate.getDate();
+    const procudinghours = procudingdate.getHours();
+    const procudingminutes = procudingdate.getMinutes();
+    const procudingseconds = procudingdate.getSeconds();
+    const procudingFormattedDate = `${procudingyear}-${procudingmonth.toString().padStart(2, "0")}-${procudingday.toString().padStart(2, "0")} ${procudinghours.toString().padStart(2, "0")}:${procudingminutes.toString().padStart(2, "0")}:${procudingseconds.toString().padStart(2, "0")}`;
+    if (idSelected ==1) {
+        let branchId = document.getElementById("branchRemove").value
+        console.log(branchId);
+        jsonData = {
+            facilityDetail: {
+                codeProduct: codeProduct,
+                name: Name,
+                price: Price,
+                provider: Provider,
+                expirationDate: expirationFormattedDate,
+                procudingDate: procudingFormattedDate,
+                type: Type,
+            },
+            branch: {id: branchId}
+        };
+    }else if(idSelected == 2){
+        let dormId = document.getElementById("dormRemove").value
+        console.log(dormId);
+        jsonData = {
+            facilityDetail: {
+                codeProduct: codeProduct,
+                name: Name,
+                price: Price,
+                provider: Provider,
+                expirationDate: expirationFormattedDate,
+                procudingDate: procudingFormattedDate,
+                type: Type,
+            },
+            dorm: {id: dormId}
+        };
+    }else if(idSelected == 3){
+        let roomId = document.getElementById("roomRemove").value
+        console.log(roomId);
+        jsonData = {
+            facilityDetail: {
+                codeProduct: codeProduct,
+                name: Name,
+                price: Price,
+                provider: Provider,
+                expirationDate: expirationFormattedDate,
+                procudingDate: procudingFormattedDate,
+                type: Type,
+            },
+            room: {id: roomId}
+        };
+    }else if(idSelected == 4){
+        let slotId = document.getElementById("slotRemove").value
+        console.log(slotId);
+        jsonData = {
+            facilityDetail: {
+                codeProduct: codeProduct,
+                name: Name,
+                price: Price,
+                provider: Provider,
+                expirationDate: expirationFormattedDate,
+                procudingDate: procudingFormattedDate,
+                type: Type,
+            },
+            slot: {id: slotId}
+        };
+    }
+    
+    console.log(jsonData);
+    fetch(url,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+            },
+
+            body: JSON.stringify(jsonData)
+        }
+    )
+        .then(respone => respone.json())
+        .then(alert("Add Successfully!!"))
+        .then(location.reload())
+        .then(data => {
+
+            console.log(data);
+        })
+        
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 function loadIdRemove() {
@@ -135,7 +369,7 @@ function loadIdRemove() {
     if (idSelected == 1) {
         reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange="loadFacilityByBranch()">
                  <option value="" disabled selected>Chọn một lựa chọn</option>
-               </select><br>
+               </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>
        `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
@@ -145,7 +379,7 @@ function loadIdRemove() {
   </select><br> 
   DormID: <br><select class="SBB-input" id="dormRemove" onchange="loadFacilityByDorm()">
        <option value="" disabled selected>Chọn một lựa chọn</option>
-       </select><br>
+       </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>
        `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
@@ -158,7 +392,7 @@ function loadIdRemove() {
        </select><br>
        RoomID: <br><select class="SBB-input" id="roomRemove" onchange="loadFacilityByRoom()">
          <option value="" disabled selected>Chọn một lựa chọn</option>
-       </select><br>
+       </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>
       `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
@@ -174,7 +408,7 @@ function loadIdRemove() {
            </select><br>
            SlotID: <br><select class="SBB-input" id="slotRemove" onchange="loadFacilityBySlot()">
          <option value="" disabled selected>Chọn một lựa chọn</option>
-       </select><br></br>`
+       </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>`
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
     }
@@ -225,11 +459,11 @@ function loaddorm() {
         .then(response => response.json())
         .then(jsonData => {
             var option = document.createElement("option");
-                option.text = "Chọn một lựa chọn"
-                option.value = ""
-                option.disabled = true
-                option.selected = true
-                dormDropDown.append(option);
+            option.text = "Chọn một lựa chọn"
+            option.value = ""
+            option.disabled = true
+            option.selected = true
+            dormDropDown.append(option);
             jsonData.data.forEach(element => {
 
                 var option = document.createElement("option");
@@ -266,11 +500,11 @@ function loadrooms() {
         .then(response => response.json())
         .then(jsonData => {
             var option = document.createElement("option");
-                option.text = "Chọn một lựa chọn"
-                option.value = ""
-                option.disabled = true
-                option.selected = true
-                roomDropDown.append(option);
+            option.text = "Chọn một lựa chọn"
+            option.value = ""
+            option.disabled = true
+            option.selected = true
+            roomDropDown.append(option);
             jsonData.data.forEach(element => {
                 var option = document.createElement("option");
                 option.text = element.name;
@@ -307,11 +541,11 @@ function loadslots() {
         .then(response => response.json())
         .then(jsonData => {
             var option = document.createElement("option");
-                option.text = "Chọn một lựa chọn"
-                option.value = ""
-                option.disabled = true
-                option.selected = true
-                slotDropDown.append(option);
+            option.text = "Chọn một lựa chọn"
+            option.value = ""
+            option.disabled = true
+            option.selected = true
+            slotDropDown.append(option);
             jsonData.data.forEach(element => {
                 var option = document.createElement("option");
                 option.text = element.name;
@@ -332,7 +566,7 @@ function loadFacilityByBranch() {
     facilityTable.innerHTML = ``
     let facility = ``
     let id = document.getElementById("branchRemove").value
-    let url = "http://localhost:8081/api/v1/facilities/branchs/"+id;
+    let url = "http://localhost:8081/api/v1/facilities/branchs/" + id;
     fetch(url, {
         method: 'GET',
         headers: {
@@ -348,13 +582,13 @@ function loadFacilityByBranch() {
         <tbody id="facilityDetail">
         <tr>
         <td>${element.facilityDetail.id}</td>
-        <td>${element.facilityDetail.name==null?"":element.facilityDetail.name}</td>
-        <td>${element.facilityDetail.expirationDate==null?"":element.facilityDetail.expirationDate}</td>
-        <td>${element.facilityDetail.codeProduct==null?"":element.facilityDetail.codeProduct}</td>
-        <td>${element.facilityDetail.price==null?"":element.facilityDetail.price}</td>
-        <td>${element.facilityDetail.producingDate==null?"":element.facilityDetail.producingDate}</td>
-        <td>${element.facilityDetail.provider==null?"":element.facilityDetail.provider}</td>
-        <td>${element.facilityDetail.type==null?"":element.facilityDetail.type}</td>
+        <td>${element.facilityDetail.name == null ? "" : element.facilityDetail.name}</td>
+        <td>${element.facilityDetail.expirationDate == null ? "" : element.facilityDetail.expirationDate}</td>
+        <td>${element.facilityDetail.codeProduct == null ? "" : element.facilityDetail.codeProduct}</td>
+        <td>${element.facilityDetail.price == null ? "" : element.facilityDetail.price}</td>
+        <td>${element.facilityDetail.producingDate == null ? "" : element.facilityDetail.producingDate}</td>
+        <td>${element.facilityDetail.provider == null ? "" : element.facilityDetail.provider}</td>
+        <td>${element.facilityDetail.type == null ? "" : element.facilityDetail.type}</td>
         <td>
         <select onchange=" accept(${element.id}, this.value)">
              <option value="good" ${element.facilityDetail.status == "good" ? "selected" : ""}>good</option>
@@ -379,7 +613,7 @@ function loadFacilityByDorm() {
     facilityTable.innerHTML = ``
     let facility = ``
     let id = document.getElementById("dormRemove").value
-    let url = "http://localhost:8081/api/v1/facilities/dorms/"+id;
+    let url = "http://localhost:8081/api/v1/facilities/dorms/" + id;
     fetch(url, {
         method: 'GET',
         headers: {
@@ -395,13 +629,13 @@ function loadFacilityByDorm() {
         <tbody id="facilityDetail">
         <tr>
         <td>${element.facilityDetail.id}</td>
-        <td>${element.facilityDetail.name==null?"":element.facilityDetail.name}</td>
-        <td>${element.facilityDetail.expirationDate==null?"":element.facilityDetail.expirationDate}</td>
-        <td>${element.facilityDetail.codeProduct==null?"":element.facilityDetail.codeProduct}</td>
-        <td>${element.facilityDetail.price==null?"":element.facilityDetail.price}</td>
-        <td>${element.facilityDetail.producingDate==null?"":element.facilityDetail.producingDate}</td>
-        <td>${element.facilityDetail.provider==null?"":element.facilityDetail.provider}</td>
-        <td>${element.facilityDetail.type==null?"":element.facilityDetail.type}</td>
+        <td>${element.facilityDetail.name == null ? "" : element.facilityDetail.name}</td>
+        <td>${element.facilityDetail.expirationDate == null ? "" : element.facilityDetail.expirationDate}</td>
+        <td>${element.facilityDetail.codeProduct == null ? "" : element.facilityDetail.codeProduct}</td>
+        <td>${element.facilityDetail.price == null ? "" : element.facilityDetail.price}</td>
+        <td>${element.facilityDetail.producingDate == null ? "" : element.facilityDetail.producingDate}</td>
+        <td>${element.facilityDetail.provider == null ? "" : element.facilityDetail.provider}</td>
+        <td>${element.facilityDetail.type == null ? "" : element.facilityDetail.type}</td>
         <td>
         <select onchange=" accept(${element.id}, this.value)">
              <option>${element.facilityDetail.status}</option>
@@ -429,7 +663,7 @@ function loadFacilityByRoom() {
 
     let facility = ``
     let id = document.getElementById("roomRemove").value
-    let url = "http://localhost:8081/api/v1/facilities/rooms/"+id;
+    let url = "http://localhost:8081/api/v1/facilities/rooms/" + id;
     fetch(url, {
         method: 'GET',
         headers: {
@@ -445,13 +679,13 @@ function loadFacilityByRoom() {
         <tbody id="facilityDetail">
         <tr>
         <td>${element.facilityDetail.id}</td>
-        <td>${element.facilityDetail.name==null?"":element.facilityDetail.name}</td>
-        <td>${element.facilityDetail.expirationDate==null?"":element.facilityDetail.expirationDate}</td>
-        <td>${element.facilityDetail.codeProduct==null?"":element.facilityDetail.codeProduct}</td>
-        <td>${element.facilityDetail.price==null?"":element.facilityDetail.price}</td>
-        <td>${element.facilityDetail.producingDate==null?"":element.facilityDetail.producingDate}</td>
-        <td>${element.facilityDetail.provider==null?"":element.facilityDetail.provider}</td>
-        <td>${element.facilityDetail.type==null?"":element.facilityDetail.type}</td>
+        <td>${element.facilityDetail.name == null ? "" : element.facilityDetail.name}</td>
+        <td>${element.facilityDetail.expirationDate == null ? "" : element.facilityDetail.expirationDate}</td>
+        <td>${element.facilityDetail.codeProduct == null ? "" : element.facilityDetail.codeProduct}</td>
+        <td>${element.facilityDetail.price == null ? "" : element.facilityDetail.price}</td>
+        <td>${element.facilityDetail.producingDate == null ? "" : element.facilityDetail.producingDate}</td>
+        <td>${element.facilityDetail.provider == null ? "" : element.facilityDetail.provider}</td>
+        <td>${element.facilityDetail.type == null ? "" : element.facilityDetail.type}</td>
         <td>
         <select onchange=" accept(${element.id}, this.value)">
              <option value="good" ${element.facilityDetail.status == "good" ? "selected" : ""}>good</option>
@@ -477,7 +711,7 @@ function loadFacilityBySlot() {
     facilityTable.innerHTML = ``
     let facility = ``
     let id = document.getElementById("slotRemove").value
-    let url = "http://localhost:8081/api/v1/facilities/slots/"+id;
+    let url = "http://localhost:8081/api/v1/facilities/slots/" + id;
     fetch(url, {
         method: 'GET',
         headers: {
@@ -493,13 +727,13 @@ function loadFacilityBySlot() {
         <tbody id="facilityDetail">
         <tr>
         <td>${element.facilityDetail.id}</td>
-        <td>${element.facilityDetail.name==null?"":element.facilityDetail.name}</td>
-        <td>${element.facilityDetail.expirationDate==null?"":element.facilityDetail.expirationDate}</td>
-        <td>${element.facilityDetail.codeProduct==null?"":element.facilityDetail.codeProduct}</td>
-        <td>${element.facilityDetail.price==null?"":element.facilityDetail.price}</td>
-        <td>${element.facilityDetail.producingDate==null?"":element.facilityDetail.producingDate}</td>
-        <td>${element.facilityDetail.provider==null?"":element.facilityDetail.provider}</td>
-        <td>${element.facilityDetail.type==null?"":element.facilityDetail.type}</td>
+        <td>${element.facilityDetail.name == null ? "" : element.facilityDetail.name}</td>
+        <td>${element.facilityDetail.expirationDate == null ? "" : element.facilityDetail.expirationDate}</td>
+        <td>${element.facilityDetail.codeProduct == null ? "" : element.facilityDetail.codeProduct}</td>
+        <td>${element.facilityDetail.price == null ? "" : element.facilityDetail.price}</td>
+        <td>${element.facilityDetail.producingDate == null ? "" : element.facilityDetail.producingDate}</td>
+        <td>${element.facilityDetail.provider == null ? "" : element.facilityDetail.provider}</td>
+        <td>${element.facilityDetail.type == null ? "" : element.facilityDetail.type}</td>
         <td>
         <select onchange=" accept(${element.id}, this.value)">
              <option>${element.facilityDetail.status}</option>
@@ -524,15 +758,15 @@ function loadFacilityBySlot() {
 function moveToUpdate(id) {
     const data = id;
 
-  // Chuyển đến trang mới với dữ liệu
-  window.location.href = 'updateFacility.html?data=' + encodeURIComponent(data);
-    
+    // Chuyển đến trang mới với dữ liệu
+    window.location.href = 'updateFacility.html?data=' + encodeURIComponent(data);
+
 }
 
 
 
-function moveToMaintenance(id){
-   
+function moveToMaintenance(id) {
+
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
@@ -541,8 +775,8 @@ function moveToMaintenance(id){
 
 
 
-function moveToRemove(id){
-   
+function moveToRemove(id) {
+
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
