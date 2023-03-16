@@ -130,8 +130,8 @@ public class UserInfoController {
             user.setBalance(user.getBalance() + Double.parseDouble(amount));
             userInfoRepository.save(user);
 
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("OK", "Top up successfully", ""));
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Top up successfully", ""));
 
         }catch (NumberFormatException ex){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
@@ -196,10 +196,10 @@ public class UserInfoController {
                     long cost = slot.get().getRoom().getBasePrice().getSlotPrice() *  monthsBetween;
 //                    System.out.println(monthsBetween);
 //                    System.out.println(cost);
-                        return ResponseEntity.status(HttpStatus.OK).body(
-                                new ResponseObject("Ok", "", cost)
-                        );
-                    }
+                    return ResponseEntity.status(HttpStatus.OK).body(
+                            new ResponseObject("Ok", "", cost)
+                    );
+                }
             }
         }catch (NumberFormatException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -213,18 +213,18 @@ public class UserInfoController {
     }
     @PostMapping("/check-balane-to-pay-bill")
     ResponseEntity<ResponseObject> checkBalanceToPayBills(@RequestBody Billing bill){
-       UserInfo user =(UserInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-       Optional<Billing> billing = billingRepository.findById(bill.getId());
-       if(billing.isPresent()){
-           int cost = billing.get().getCost();
-           if(user.getBalance()< cost){
-               return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                 new ResponseObject("Fail","Can not pay bills",false)
-               );
-           }
-           return ResponseEntity.status(HttpStatus.OK).body(
-                   new ResponseObject("OK","YOU CAN PAY BILL",true));
-       }
+        UserInfo user =(UserInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Billing> billing = billingRepository.findById(bill.getId());
+        if(billing.isPresent()){
+            int cost = billing.get().getCost();
+            if(user.getBalance()< cost){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ResponseObject("Fail","Can not pay bills",false)
+                );
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK","YOU CAN PAY BILL",true));
+        }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("Fail","NOT FOUND",""));
     }
@@ -261,6 +261,4 @@ public class UserInfoController {
         );
 
     }
-    }
-
-
+}
