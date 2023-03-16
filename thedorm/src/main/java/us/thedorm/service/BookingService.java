@@ -14,6 +14,8 @@ import java.util.Optional;
 
 @Service
 public class BookingService {
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private BillingRepository billingRepository;
@@ -25,6 +27,8 @@ public class BookingService {
     private BookingRequestRepository bookingRequestRepository;
     @Autowired
     private SlotRepository slotRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @Autowired
     private UserInfoRepository userInfoRepository;
@@ -70,6 +74,19 @@ public class BookingService {
         Optional<Billing> billing = billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(booking_request.getUserInfo().getId(), Billing.Type.slot);
 
         if (booking_request.getStatus().equals(BookingRequest.Status.Processing) && newBookingRequest.getStatus().equals(BookingRequest.Status.Accept)) {
+            String titleBooking ="Booking Sucessfull";
+            String contentBooking ="Congratulation on your sucessfull booking: Room: "
+                    +booking_request.getSlot().getRoom().getName()+
+                    ", Slot: "+booking_request.getSlot().getName()+" on "+ booking_request.getCreatedDate();
+            Long userid = booking_request.getUserInfo().getId();
+            notificationService.sendNotification(titleBooking,contentBooking,userid);
+//            Notification newNotification = Notification.builder()
+//                    .title(titleBooking)
+//                    .content(contentBooking)
+//                    .createdDate(new Date())
+//                    .userInfo(UserInfo.builder().id(booking_request.getUserInfo().getId()).build())
+//                    .build();
+//            notificationRepository.save(newNotification);
 
             if (booking_request.getSlot().getId() == residentHistory.get().getSlot().getId()) {
                 addResidentHistory(booking_request).setCheckinDate(residentHistory.get().getCheckinDate());
@@ -120,7 +137,21 @@ public class BookingService {
                 user.setBalance(user.getBalance() - cost);
                 userInfoRepository.save(user);
                 addBilling(newBookingRequest);
-
+                //
+                String titleBooking ="Booking Processing";
+                String contentBooking ="Wait a second. You have requested to book : Room: "
+                        +newBookingRequest.getSlot().getRoom().getName()+
+                        ", Slot: "+newBookingRequest.getSlot().getName()+" on "+ newBookingRequest.getCreatedDate();
+                Long userid = user.getId();
+                notificationService.sendNotification(titleBooking,contentBooking,userid);
+//                Notification newNotification = Notification.builder()
+//                        .title(titleBooking)
+//                        .content(contentBooking)
+//                        .createdDate(new Date())
+//                        .userInfo(UserInfo.builder().id(user.getId()).build())
+//                        .build();
+//                notificationRepository.save(newNotification);
+//
             } else {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("OK", "Slot is not available", "")
@@ -133,6 +164,7 @@ public class BookingService {
                 new ResponseObject("OK", "Insert successfully", bookingRequestRepository.save(newBookingRequest))
         );
     }
+
 }
 
 

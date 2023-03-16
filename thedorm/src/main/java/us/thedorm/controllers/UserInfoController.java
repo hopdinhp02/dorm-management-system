@@ -178,5 +178,9 @@ public class UserInfoController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("Fail","NOT FOUND",""));
     }
+    @GetMapping("/search-users")
+    List<UserInfo> searchUsers(@RequestParam String name,@RequestParam String role,@RequestParam String isActive){
+return userInfoRepository.SearchUsers("%"+name+"%","%"+role+"%","%"+isActive+"%");
+    }
     }
 
