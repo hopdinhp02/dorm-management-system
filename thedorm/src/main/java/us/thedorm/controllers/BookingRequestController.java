@@ -111,23 +111,25 @@ public class BookingRequestController {
     @GetMapping("/userInfo/is-booked")
     ResponseEntity<ResponseObject> checkUserIdInBookingRequest() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-
         Optional<BookingRequest> foundBookingRequest = bookingRequestRepository.findTopByUserInfo_IdAndStatusIsNotOrderByIdDesc(user.getId(), BookingRequest.Status.Decline);
         if(foundBookingRequest.isPresent()){
-            Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findTopByBranch_IdOrderByIdDesc(foundBookingRequest.get().getSlot().getRoom().getDorm().getBranch().getId());
-            if(bookingSchedule.isPresent()) {
-                if (foundBookingRequest.get().getStartDate().equals(bookingSchedule.get().getStartDate()) && foundBookingRequest.get().getEndDate().equals(bookingSchedule.get().getEndDate())) {
+            Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(foundBookingRequest.get().getSlot().getRoom().getDorm().getBranch().getId());
+            if(bookingSchedule.isPresent()){
+                if (foundBookingRequest.get().getStartDate().equals(bookingSchedule.get().getStartDate()) && foundBookingRequest.get().getEndDate().equals(bookingSchedule.get().getEndDate())){
                     return ResponseEntity.status(HttpStatus.OK).body(
                             new ResponseObject("", "Booked", foundBookingRequest)
                     );
                 }
             }
-        }
 
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Not Book", false)
+            );
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Not Book", false)
         );
+
     }
 
     @GetMapping("/check-living")
@@ -149,12 +151,13 @@ public class BookingRequestController {
         );
     }
     @GetMapping("/check-living/branchs/{id}")
-    ResponseEntity<ResponseObject> checkLivingByBranch(@PathVariable Long id) {
+    ResponseEntity<ResponseObject> checkLivingByBranch(@PathVariable Long branchId) {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdAndSlot_Room_Dorm_Branch_IdOrderByIdDesc(user.getId(),id);
-       List<BookingSchedule> bookingSchedules = bookingScheduleRepository.findBookingScheduleLastSemesterByBranch(id);
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdAndSlot_Room_Dorm_Branch_IdOrderByIdDesc(user.getId(), branchId);
+
+        Date date = new Date();
         if (residentHistory.isPresent()) {
-            if (residentHistory.get().getStartDate().equals(bookingSchedules.get(1).getStartDate()) && residentHistory.get().getEndDate().equals(bookingSchedules.get(1).getEndDate())) {
+            if (residentHistory.get().getEndDate().after(date)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("", "OK", true)
                 );
@@ -165,24 +168,21 @@ public class BookingRequestController {
                 new ResponseObject("", "OK", false)
         );
     }
-    @GetMapping("/get-old-slot/branchs/{id}")
-    ResponseEntity<ResponseObject> getOldSlot(@PathVariable Long id) {
+    @GetMapping("/get-old-slot")
+    ResponseEntity<ResponseObject> getOldSlot() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdAndSlot_Room_Dorm_Branch_IdOrderByIdDesc(user.getId(),id);
-        List<BookingSchedule> bookingSchedules = bookingScheduleRepository.findBookingScheduleLastSemesterByBranch(id);
-        if (residentHistory.isPresent()) {
-            if (residentHistory.get().getStartDate().equals(bookingSchedules.get(1).getStartDate()) && residentHistory.get().getEndDate().equals(bookingSchedules.get(1).getEndDate())) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("", "OK", residentHistory.get().getSlot())
-                );
 
-            }
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ResponseObject("", "Not OK", "")
-        );
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.getId());
+
+//       residentHistory.get().getSlot().setStatus(Slot.Status.Available);
+
+        return residentHistory.map(history -> ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("", "OK", history.getSlot())
+        )).orElseGet(() -> ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "Not Ok", "false")
+        ));
+
     }
-
     private HistoryBookingRequest recordChangeInBooking(BookingRequest booking) {
         HistoryBookingRequest historyBookingRequest = new HistoryBookingRequest();
         historyBookingRequest.setBookingRequest(booking);
