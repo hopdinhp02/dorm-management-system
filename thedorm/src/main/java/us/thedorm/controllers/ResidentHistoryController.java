@@ -294,8 +294,6 @@ public class ResidentHistoryController {
     }
 
 
-
-
 }
 
 
