@@ -51,6 +51,13 @@ public class BookingScheduleController {
 
     @PostMapping("")
     ResponseEntity<ResponseObject> insertBookingSchedule(@RequestBody BookingSchedule newBookingSchedule) {
+        if(newBookingSchedule.getKeepStartDate().after(newBookingSchedule.getKeepEndDate()) ||
+        newBookingSchedule.getNewStartDate().after(newBookingSchedule.getNewEndDate()) ||
+        newBookingSchedule.getStartDate().after(newBookingSchedule.getEndDate())){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Invalid date", "")
+            );
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", bookingScheduleRepository.save(newBookingSchedule))
@@ -102,7 +109,7 @@ public class BookingScheduleController {
 
     @PostMapping("/check-day-booking")
     ResponseEntity<ResponseObject> checkDayBooking(@RequestBody Branch branch) {
-        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
+        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findTopByBranch_IdOrderByIdDesc(branch.getId());
 
         Date date = new Date();
         if (bookingSchedule.isPresent()) {
@@ -123,7 +130,7 @@ public class BookingScheduleController {
     @PostMapping("/check-day-keep")
     ResponseEntity<ResponseObject> checkDayKeep(@RequestBody Branch branch) {
 
-        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
+        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findTopByBranch_IdOrderByIdDesc(branch.getId());
         Date date = new Date();
         if (bookingSchedule.isPresent()) {
             if (date.after(bookingSchedule.get().getKeepStartDate()) && date.before(bookingSchedule.get().getKeepEndDate())) {
@@ -145,7 +152,7 @@ public class BookingScheduleController {
 
     @PostMapping("/reset-slots")
     ResponseEntity<ResponseObject> resetSlot(@RequestBody Branch branch) {
-        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(branch.getId());
+        Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findTopByBranch_IdOrderByIdDesc(branch.getId());
 
         if(checkReset(bookingSchedule)) {
             return ResponseEntity.status(HttpStatus.OK).body(

@@ -77,8 +77,8 @@ public class FacilityController {
             }
         }
 
-        FacilityDetail facilityDetail = newFacility.getFacilityDetail();
         for (int i = 0; i < quantity; i++) {
+            FacilityDetail facilityDetail = newFacility.getFacilityDetail();
             FacilityDetail newFD = FacilityDetail.builder()
                     .name(facilityDetail.getName())
                     .provider(facilityDetail.getProvider())
@@ -91,8 +91,12 @@ public class FacilityController {
                     .status(FacilityDetail.Status.good)
                     .build();
 
-            facilityDetailRepository.save(newFD);
+            newFD =  facilityDetailRepository.save(newFD);
             Facility facility = Facility.builder()
+                    .slot(newFacility.getSlot())
+                    .room(newFacility.getRoom())
+                    .dorm(newFacility.getDorm())
+                    .branch(newFacility.getBranch())
                     .facilityDetail(newFD)
                     .build();
             facilityRepository.save(facility);
@@ -134,6 +138,11 @@ public class FacilityController {
                         facility.setBranch(null);
                     } else if (newFacility.getBranch() != null) {
                         facility.setBranch(newFacility.getBranch());
+                        facility.setSlot(null);
+                        facility.setRoom(null);
+                        facility.setDorm(null);
+                    } else {
+                        facility.setBranch(null);
                         facility.setSlot(null);
                         facility.setRoom(null);
                         facility.setDorm(null);
@@ -213,6 +222,7 @@ public class FacilityController {
     }
 
     @GetMapping("/{id}/facility-detail/maintenances")
+    //facility
     ResponseEntity<ResponseObject> getAllMaintenancesByFacilityId(@PathVariable Long id) {
         Optional<Facility> facility = facilityRepository.findById(id);
         if (facility.isPresent()) {

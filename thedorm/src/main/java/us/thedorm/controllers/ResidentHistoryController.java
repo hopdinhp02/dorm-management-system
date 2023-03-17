@@ -199,8 +199,8 @@ public class ResidentHistoryController {
 
 
 
-    @GetMapping("/find/{name}")
-    ResponseEntity<ResponseObject> searchResidentByName(@PathVariable String name) {
+    @GetMapping("/find")
+    ResponseEntity<ResponseObject> searchResidentByName(@RequestParam String name) {
 
         List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByName(name);
 
@@ -277,6 +277,24 @@ public class ResidentHistoryController {
                 new ResponseObject("ok", "Found", residentHistories)
         );
     }
+
+    @GetMapping("/resident")
+    ResponseEntity<ResponseObject> getResidentHistoriesByResidentId() {
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List< ResidentHistory> residentHistories = residentHistoryRepository.findAllByUserInfo_Id(user.getId());
+        if (residentHistories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "successfully", residentHistories)
+        );
+    }
+
+
+
 
 }
 

@@ -69,10 +69,10 @@ public class BookingService {
 
     public void updateBookingRequest(BookingRequest newBookingRequest, BookingRequest booking_request) {
         Optional<UserInfo> user = userInfoRepository.findById(booking_request.getUserInfo().getId());
-        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdOrderByIdDesc(user.get().getId());
+        Optional<ResidentHistory> residentHistory = residentHistoryRepository.findTopByUserInfo_IdAndSlot_Room_Dorm_Branch_IdOrderByIdDesc(user.get().getId(),booking_request.getSlot().getRoom().getDorm().getBranch().getId());
         Optional<Slot> slot = slotRepository.findById(booking_request.getSlot().getId());
         Optional<Billing> billing = billingRepository.findTopByUserInfo_IdAndTypeOrderByIdDesc(booking_request.getUserInfo().getId(), Billing.Type.slot);
-
+        List<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleLastSemesterByBranch(booking_request.getSlot().getRoom().getDorm().getBranch().getId());
         if (booking_request.getStatus().equals(BookingRequest.Status.Processing) && newBookingRequest.getStatus().equals(BookingRequest.Status.Accept)) {
             String titleBooking ="Booking Sucessfull";
             String contentBooking ="Congratulation on your sucessfull booking: Room: "
@@ -88,11 +88,17 @@ public class BookingService {
 //                    .build();
 //            notificationRepository.save(newNotification);
 
-            if (booking_request.getSlot().getId() == residentHistory.get().getSlot().getId()) {
-                addResidentHistory(booking_request).setCheckinDate(residentHistory.get().getCheckinDate());
-            } else {
+            if(residentHistory.isPresent()){
+                if (booking_request.getSlot().getId() == residentHistory.get().getSlot().getId() && residentHistory.get().getStartDate().equals(bookingSchedule.get(1).getStartDate()) && residentHistory.get().getCheckoutDate()==null) {
+                    addResidentHistory(booking_request).setCheckinDate(residentHistory.get().getCheckinDate());
+                } else {
+                    addResidentHistory(booking_request);
+                }
+
+            }else{
                 addResidentHistory(booking_request);
             }
+
 
         } else if (booking_request.getStatus().equals(BookingRequest.Status.Processing) && newBookingRequest.getStatus().equals(BookingRequest.Status.Decline)) {
             user.get().setBalance(user.get().getBalance() + booking_request.getSlot().getRoom().getBasePrice().getSlotPrice());
@@ -112,7 +118,7 @@ public class BookingService {
         Optional<Slot> bookslot = slotRepository.findById(newBookingRequest.getSlot().getId());
         if (bookslot.isPresent()) {
             newBookingRequest.setSlot(bookslot.get());
-            Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findBookingScheduleByBranch_Id(newBookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
+            Optional<BookingSchedule> bookingSchedule = bookingScheduleRepository.findTopByBranch_IdOrderByIdDesc(newBookingRequest.getSlot().getRoom().getDorm().getBranch().getId());
 
             newBookingRequest.setUserInfo(user);
             newBookingRequest.setStartDate(bookingSchedule.get().getStartDate());
@@ -166,5 +172,6 @@ public class BookingService {
     }
 
 }
+
 
 

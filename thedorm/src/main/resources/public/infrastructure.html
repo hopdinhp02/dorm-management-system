@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/elegant-icons.css">
+    <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+    <h1>Infrastructure</h1>
+        
+    ID: <br><select class="SBB-input" id="infrastructure"  onchange="loadInfrastructure()">
+        <option value="" disabled selected>Chọn một lựa chọn</option>
+        <option value="1" >Branch</option>
+        <option value="2" >Dorm</option>
+        <option value="3" >Room</option>
+      </select><br>
+    
+    <div id="form">
+    </div>
+    <div id="button"></div>
+    <div id="add">
+    </div>
+    <div id="update">
+        
+    </div>
+    <table class="table table-bordered">
+        <thead id="head">
+        </thead>
+        <tbody  id="infrastructureTable">
+        </tbody>
+    </table><br>
+</body>
+<script src="js/infrastructure.js"></script>
+</html>

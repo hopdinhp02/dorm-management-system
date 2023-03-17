@@ -48,6 +48,8 @@ public class UserInfo implements UserDetails {
     private double balance;
     private boolean isActive;
 
+    private boolean gender;
+
 
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
     @JsonIgnore
