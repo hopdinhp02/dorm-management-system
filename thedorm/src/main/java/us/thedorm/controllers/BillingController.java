@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
 import us.thedorm.repositories.BillingRepository;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,21 +93,5 @@ public class BillingController {
         );
     }
 
-
-    @GetMapping("/resident")
-    ResponseEntity<ResponseObject> getBillingByResidentId() {
-        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        List<Billing> billings = billingRepository.findAllByUserInfo_Id(user.getId());
-        if (billings.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("", "No found", "")
-            );
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", " successfully", billings)
-        );
-    }
 
 }
