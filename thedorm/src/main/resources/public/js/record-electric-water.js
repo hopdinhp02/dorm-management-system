@@ -106,7 +106,7 @@ function loadRoom() {
 function recordElectric() {
     let roomID = document.getElementById("rooms").value
     console.log(2);
-    url = "http://localhost:8081/api/v1/elec-water-usages/" + roomID + "/record-electric-water-usage";
+    url = "http://localhost:8081/api/v1/elec-water-usages/" + roomID + "/write-electric-water-usage";
     const monthInput = document.getElementById("month").value;
     // Tách chuỗi giá trị thành năm và tháng
     const [year, month] = monthInput.split("-");
