@@ -268,6 +268,32 @@ return userInfoRepository.SearchUsers("%"+name+"%","%"+role+"%","%"+isActive+"%"
 
 
     }
+
+    @PutMapping("/{id}")
+    ResponseEntity<ResponseObject> updateIsActive(@RequestParam(name="is-active") String isActiveRaw, @PathVariable Long id) {
+        try{
+            boolean isActive = Boolean.parseBoolean(isActiveRaw);
+            UserInfo updateUserInfo = userInfoRepository.findById(id)
+                    .map(userInfo -> {
+                        userInfo.setActive(isActive);
+                        return userInfoRepository.save(userInfo);
+                    }).orElseGet(() -> null);
+
+            if (updateUserInfo != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("OK", "Insert Product successfully", updateUserInfo)
+                );
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "", "")
+            );
+
+        }catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ResponseObject("failed", "", ""));
+        }
+
+    }
  }
 
 

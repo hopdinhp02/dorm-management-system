@@ -3,10 +3,9 @@ package us.thedorm.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import us.thedorm.models.Maintenance;
-import us.thedorm.models.Notification;
-import us.thedorm.models.ResponseObject;
+import us.thedorm.models.*;
 import us.thedorm.repositories.MaintenanceRepository;
 import us.thedorm.repositories.NotificationRepository;
 
@@ -88,6 +87,22 @@ public class NotificationController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("failed", "", "")
+        );
+    }
+
+    @GetMapping("/resident")
+    ResponseEntity<ResponseObject> getNotificationsByResidentId() {
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<Notification> notifications = notificationRepository.findAllByUserInfo_Id(user.getId());
+        if (notifications.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("", "No found", "")
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", " successfully", notifications)
         );
     }
 }
