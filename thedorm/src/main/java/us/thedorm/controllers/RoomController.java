@@ -58,7 +58,7 @@ public class RoomController {
     @GetMapping("/dorm/{id}/gender")
     ResponseEntity<ResponseObject> findByDormIdAndGender(@PathVariable Long id) {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Room> foundRooms = roomRepository.getRoomsByDorm_IdAndSex(id,user.isGender());
+        List<Room> foundRooms = roomRepository.getRoomsByDorm_IdAndGender(id,user.isGender());
         if(foundRooms.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("ok", "No found room", ""));
