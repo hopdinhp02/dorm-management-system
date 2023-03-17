@@ -7,14 +7,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Main CSS-->
-  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"> -->
   <!-- or -->
   <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/elegant-icons.css">
-  <link rel="stylesheet" href="css/style.css" type="text/css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/elegant-icons.css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
 
 </head>
 
@@ -36,7 +36,7 @@
   <!-- Sidebar menu-->
   <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
   <aside class="app-sidebar">
-    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="images/user0.png" width="50px"
+    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="/images/user0.png" width="50px"
         alt="User Image">
       <div>
         <p class="app-sidebar__user-name"><b>Guard Page</b></p>
@@ -45,13 +45,13 @@
     </div>
     <hr>
     <ul class="app-menu">
-      <li><a class="app-menu__item" href="#"><i class='app-menu__icon bx bx-tachometer'></i><span
+      <li><a class="app-menu__item" href="/PageGuard/viewResident.html"><i class='app-menu__icon bx bx-tachometer'></i><span
             class="app-menu__label">View Resident</span></a></li>
-      <li><a class="app-menu__item" href="checkInCheckOut.html"><i class='app-menu__icon bx bx-calendar-check'></i><span
+      <li><a class="app-menu__item" href="/PageGuard/checkInCheckOut.html"><i class='app-menu__icon bx bx-calendar-check'></i><span
             class="app-menu__label">Check-in-out</span></a></li>
-      <li><a class="app-menu__item" href="record-electric-water.html"><i class='app-menu__icon bx bx-shower'></i><span
+      <li><a class="app-menu__item" href="/PageGuard/record-electric-water.html"><i class='app-menu__icon bx bx-shower'></i><span
             class="app-menu__label">Record electric water</span></a></li>
-      <li><a class="app-menu__item" href="facilityDetail.html"><i class='app-menu__icon bx bx-building'></i><span
+      <li><a class="app-menu__item" href="/PageGuard/facilityDetail.html"><i class='app-menu__icon bx bx-building'></i><span
             class="app-menu__label">Facility Status</span></a></li>
     </ul>
   </aside>
@@ -187,69 +187,6 @@
     }
   </script>
 </body>
-<script src="js/checkInCheckOut.js"></script>
-<script src="js/auth.js"></script>
+<script src="/js/checkInCheckOut.js"></script>
+<script src="/js/auth.js"></script>
 </html>
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/elegant-icons.css">
-  <link rel="stylesheet" href="css/booking.css">
-</head>
-<body>
-    CheckIn/CheckOut <br>
-    <select id="checkInCheckOut"  onchange="load()">
-        <option value="" disabled selected>Chọn một lựa chọn</option>
-        <option value="1" >Check In</option>
-        <option value="2" >Check Out</option>
-    </select>
-    <div id="checkIn-Out-form">
-        <form>
-          Branch: <br><select class="SBB-input" id="branchs" onchange="loaddorm()">
-            <option value="" disabled selected>Chọn một lựa chọn</option>
-          </select><br>
-          Dorm: <br><select class="SBB-input" id="dorms" onchange="loadrooms()">
-            <option value="" disabled selected>Chọn một lựa chọn</option>
-          </select>
-          <br>
-          Room:<br> <select class="SBB-input" id="rooms" onchange="loadslots()"></select>
-          <br>
-          slot: <br><select class="SBB-input" id="slots" onchange="">
-            <div id="op"></div>
-          </select><br>
-        </form><br>
-      </div>
-      <button class="btn btn-primary" type="" onclick="checkInCheckOut()">Check</button>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Email</th>
-            <th>Phone</th>
-            
-        </thead>
-        <tbody id="checkInCheckOut2">
-          <tr>
-            <th scope="row"></th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    
-        </tbody>
-    
-      </table><br>
-</body>
-
-</html> -->
