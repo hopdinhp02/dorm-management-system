@@ -7,14 +7,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Main CSS-->
-        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link rel="stylesheet" type="text/css" href="/css/main.css">
         <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"> -->
         <!-- or -->
         <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/font-awesome.min.css">
-        <link rel="stylesheet" href="css/elegant-icons.css">
-        <link rel="stylesheet" href="css/style.css" type="text/css">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/css/elegant-icons.css">
+        <link rel="stylesheet" href="/css/style.css" type="text/css">
 
     </head>
 
@@ -36,7 +36,7 @@
         <!-- Sidebar menu-->
         <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
         <aside class="app-sidebar">
-            <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="images/user0.png" width="50px"
+            <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="/images/user0.png" width="50px"
                                                 alt="User Image">
                 <div>
                     <p class="app-sidebar__user-name"><b>Guard Page</b></p>
@@ -45,14 +45,14 @@
             </div>
             <hr>
             <ul class="app-menu">
-                <li><a class="app-menu__item" href="#"><i class='app-menu__icon bx bx-tachometer'></i><span
+                <li><a class="app-menu__item" href="/PageGuard/viewResident.html"><i class='app-menu__icon bx bx-tachometer'></i><span
                             class="app-menu__label">View Resident</span></a></li>
-                <li><a class="app-menu__item" href="checkInCheckOut.html"><i class='app-menu__icon bx bx-calendar-check'></i><span
+                <li><a class="app-menu__item" href="/PageGuard/checkInCheckOut.html"><i class='app-menu__icon bx bx-calendar-check'></i><span
                             class="app-menu__label">Check-in-out</span></a></li>
-                <li><a class="app-menu__item" href="record-electric-water.html"><i
+                <li><a class="app-menu__item" href="/PageGuard/record-electric-water.html"><i
                             class='app-menu__icon bx bx-shower'></i><span class="app-menu__label">Record electric water</span></a>
                 </li>
-                <li><a class="app-menu__item" href="facilityDetail.html"><i class='app-menu__icon bx bx-building'></i><span
+                <li><a class="app-menu__item" href="/PageGuard/facilityDetail.html"><i class='app-menu__icon bx bx-building'></i><span
                             class="app-menu__label">Facility Status</span></a></li>
             </ul>
         </aside>
@@ -72,32 +72,28 @@
                         <div class="col-md-12">
                             <div class="tile">
                                 <h3 class="tile-title"></h3>
-                                <h1 class="big-title">facility Detail</h1>
-                                <table class="table table-bordered">
-                                  <thead>
-                                    <tr>
-                                    <tr>
-                                      <th>ID</th>
-                                      <th>Name</th>
-                                      <th>ExpirationDate</th>
-                                      <th>Code Product</th>
-                                      <th>Price</th>
-                                      <th>ProcudingDate</th>
-                                      <th>Provider</th>
-                                      <th>Type</th>
-                                      <th>Status</th>
-                                  </thead>
-                                  <tbody id="facilityDetail">
-                                    <tr>
-                                      <th scope="row"></th>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                    </tr>
-                              
-                                  </tbody>
-                              
-                                </table><br>
+                                <h1 class="big-title">Record electric water</h1>
+                                <form>
+                                  <input class="SBB-input" type="month" id="month" name="date"><br>
+                                  <label class="SBB-input-label no-margin">Branch</label>
+                                    <select class="SBB-input" id="branchs" onchange="loaddorm()">
+                                        <option value="" disabled selected>Chọn một lựa chọn</option>
+                                      </select><br>
+                                  <label class="SBB-input-label no-margin">Dorm</label>    
+                                       <select class="SBB-input" id="dorms" onchange="">
+                                        <option value="" disabled selected>Chọn một lựa chọn</option>
+                                      </select>
+                                      <br><br>
+                                      <input style="margin-left: 94%  ;" type="button" onclick="loadRoom()" value="Show"  class="orange-btn"><br>
+                                      <label class="SBB-input-label no-margin">Room</label>
+                                      <select class="SBB-input" id="rooms" onchange="loadForm()">
+                                        <option value="" disabled selected>Chọn một lựa chọn</option>
+                                      </select>
+                                      <br>
+                                    </form><br>
+                                    <form id="recordElectric">
+                                      
+                                    </form>
                             </div>
                         </div>
                         <!-- / col-12 -->
@@ -177,6 +173,6 @@
             }
         </script>
     </body>
-    <script src="js/facilityDetail.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="/js/record-electric-water.js"></script>
+    <script src="/js/auth.js"></script>
 </html>

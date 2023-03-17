@@ -1,49 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/elegant-icons.css">
-  <link rel="stylesheet" href="css/style.css" type="text/css">
-</head>
-<body>
-    <h1>ElectricWaterUsage</h1>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-          <tr>
-            <th>ID</th>
-            <th>roomID</th>
-            <th>electricUsage</th>
-            <th>waterUsage</th>
-            <th>createdDate</th>
-            <th>electricEnd</th>
-            <th>electricStart</th>
-            <th>monthPay</th>
-            <th>waterStart</th>
-            <th>waterEnd</th>
-        </thead>
-        <tbody id="electricWaterUsage">
-          <tr>
-            <th scope="row"></th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td ></td>
-          
-          </tr>
-    
-        </tbody>
-    
-      </table><br>
-      
-</body>
-<script src="js/electricWaterUsage.js"></script>
-</html> -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,14 +7,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Main CSS-->
-  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"> -->
   <!-- or -->
   <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/elegant-icons.css">
-  <link rel="stylesheet" href="css/style.css" type="text/css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/elegant-icons.css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
 </head>
 
 <body onload="time()" class="app sidebar-mini rtl">
@@ -73,7 +27,7 @@
 
 
       <!-- User Menu-->
-      <li><a class="app-nav__item" href="home"><i class='bx bx-log-out bx-rotate-180'></i> </a>
+      <li><a class="app-nav__item" href="home.html"><i class='bx bx-log-out bx-rotate-180'></i> </a>
 
       </li>
     </ul>
@@ -81,7 +35,7 @@
   <!-- Sidebar menu-->
   <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
   <aside class="app-sidebar">
-    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="images/user0.png" width="50px"
+    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="/images/user0.png" width="50px"
         alt="User Image">
       <div>
         <p class="app-sidebar__user-name"><b>Student Page</b></p>
@@ -90,13 +44,13 @@
     </div>
     <hr>
     <ul class="app-menu">
-      <li><a class="app-menu__item" href="new.html"><i class='app-menu__icon bx bx-bed'></i><span
+      <li><a class="app-menu__item" href="/PageResident/new.html"><i class='app-menu__icon bx bx-bed'></i><span
             class="app-menu__label">New</span></a></li>
-      <li><a class="app-menu__item" href="BookingRequest.html"><i class='app-menu__icon bx bx-bed'></i><span
+      <li><a class="app-menu__item" href="/PageResident/BookingRequest.html"><i class='app-menu__icon bx bx-bed'></i><span
             class="app-menu__label">Book room</span></a></li>
-      <li><a class="app-menu__item" href="electricWaterUsage.html"><i class='app-menu__icon bx bx-shower'></i><span
+      <li><a class="app-menu__item" href="/PageResident/electricWaterUsage.html"><i class='app-menu__icon bx bx-shower'></i><span
             class="app-menu__label">Electric water usage</span></a></li>
-      <li><a class="app-menu__item" href="billing.html"><i class='app-menu__icon bx bx-money-withdraw'></i><span
+      <li><a class="app-menu__item" href="/PageResident/billing.html"><i class='app-menu__icon bx bx-money-withdraw'></i><span
             class="app-menu__label ">Billing</span></a>
       </li>
       <li><a class="app-menu__item" href="#"><i class='app-menu__icon bx bx-history'></i><span
@@ -113,6 +67,7 @@
           </ul>
           <div id="clock"></div>
       </div>
+        </div>
       </div>
     </div>
 
@@ -123,36 +78,41 @@
           <div class="col-md-12">
             <div class="tile">
               <h3 class="tile-title"></h3>
-              <div class="">
-                <h1 class="big-title">ElectricWaterUsage</h1>
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                    <tr>
-                      <th>ID</th>
-                      <th>roomID</th>
-                      <th>electricUsage</th>
-                      <th>waterUsage</th>
-                      <th>createdDate</th>
-                      <th>electricEnd</th>
-                      <th>electricStart</th>
-                      <th>monthPay</th>
-                      <th>waterStart</th>
-                      <th>waterEnd</th>
-                  </thead>
-                  <tbody id="electricWaterUsage">
-                    <tr>
-                      <th scope="row"></th>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
 
-                    </tr>
+              <div class="container-fluid my-container">
+                <h1 class="big-title" id="bookingtitle">Booking bed</h1>
+                <form action="" id="create" method="post"><input name="__RequestVerificationToken" type="hidden" />
+                  <div class="SBB-create-container">
+                    <div class="col-xs-12 col-md-5 no-padding no-margin">
+                      <p class="SBB-l-title"> Your Account Balance</p>
+                      <p id="balance" class="SBB-l-content">0 VND</p>
+                      <p class="SBB-l-title"> Minimum Balance required in VND</p>
+                      <p id="cost" class="SBB-l-content">0 VND</p>
+                      <p class="SBB-l-title"> Your Balance after booking</p>
+                      <p id="remain" class="SBB-l-content">0 VND</p>
+                      <p class="SBB-l-title"> Số slot còn lại</p>
+                      <label id="" class="SBB-l-content">
 
-                  </tbody>
+                      </label>
+                    </div>
+                  </div>
+                </form>
+                <h1 id="check"></h1>
+                <div id="booking-request-form">
+                  <form>
+                    <div class="col-xs-12 col-md-7 no-padding no-margin">
+                      <div class="campus">
 
-                </table><br>
+                        <select class="SBB-input" id="branchs" onchange="checkDayKeep()">
+                          <option value="" disabled selected>Select Branch</option>
+                        </select><br>
+                      </div><br>
+                      <div id="dorm">
+                        <h1 id="check"></h1>
+                      </div>
+                    </div>
+                </div>
+                </form><br>
               </div>
             </div>
 
@@ -235,8 +195,6 @@
     }
   </script>
 </body>
-<!-- <script src="js/billing.js"></script>
-<script src="js/BookingRequest2.js"></script> -->
-<script src="js/auth.js"></script>
-<script src="js/electricWaterUsage.js"></script>
+<script src="/js/BookingRequest2.js"></script>
+<script src="/js/auth.js"></script>
 </html>

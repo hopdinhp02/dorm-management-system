@@ -7,14 +7,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Main CSS-->
-  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"> -->
   <!-- or -->
   <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/elegant-icons.css">
-  <link rel="stylesheet" href="css/style.css" type="text/css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/elegant-icons.css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
 </head>
 
 <body onload="time()" class="app sidebar-mini rtl">
@@ -35,7 +35,7 @@
   <!-- Sidebar menu-->
   <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
   <aside class="app-sidebar">
-    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="images/user0.png" width="50px"
+    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="/images/user0.png" width="50px"
         alt="User Image">
       <div>
         <p class="app-sidebar__user-name"><b>Staff Page</b></p>
@@ -44,16 +44,16 @@
     </div>
     <hr>
     <ul class="app-menu">
-      <li><a class="app-menu__item" href="bookingRequestStatus.html"><i class='app-menu__icon bx bx-tachometer'></i><span class="app-menu__label"
+      <li><a class="app-menu__item" href="/PageStaff/bookingRequestStatus.html"><i class='app-menu__icon bx bx-tachometer'></i><span class="app-menu__label"
             style="font-size: 23px;">Booking Request Handling</span></a></li>
-      <li><a class="app-menu__item" href="bookingSchedule.html"><i class='app-menu__icon bx bxs-timer'></i><span
+      <li><a class="app-menu__item" href="/PageStaff/bookingSchedule.html"><i class='app-menu__icon bx bxs-timer'></i><span
             class="app-menu__label" style="font-size: 23px;">Booking Date</span></a></li>
-      <li><a class="app-menu__item" href=""><i class='app-menu__icon bx bx-purchase-tag-alt'></i><span
+      <li><a class="app-menu__item" href="/PageStaff/facilityStaff.html"><i class='app-menu__icon bx bx-purchase-tag-alt'></i><span
             class="app-menu__label">Facility</span></a>
       </li>
-      <li><a class="app-menu__item" href="billingAll.html"><i class='app-menu__icon bx bx-money-withdraw'></i><span
+      <li><a class="app-menu__item" href="/PageStaff/billingAll.html"><i class='app-menu__icon bx bx-money-withdraw'></i><span
             class="app-menu__label" style="font-size: 23px;">Billing</span></a></li>
-      <li><a class="app-menu__item" href="residentHistory.html" ><i class='app-menu__icon bx bx-history'></i><span
+      <li><a class="app-menu__item" href="/PageStaff/residentHistory.html" ><i class='app-menu__icon bx bx-history'></i><span
             class="app-menu__label" style="font-size: 23px;">Resident History</span></a></li>
     </ul>
   </aside>
@@ -131,11 +131,6 @@
       }
       ]
     };
-    var ctxl = $("#lineChartDemo").get(0).getContext("2d");
-    var lineChart = new Chart(ctxl).Line(data);
-
-    var ctxb = $("#barChartDemo").get(0).getContext("2d");
-    var barChart = new Chart(ctxb).Bar(data);
   </script>
   <script type="text/javascript">
     //Thời Gian
@@ -178,5 +173,5 @@
     }
   </script>
 </body>
-<script src="js/bookingrequesthandling.js"></script>
+<script src="/js/bookingrequesthandling.js"></script>
 </html>
