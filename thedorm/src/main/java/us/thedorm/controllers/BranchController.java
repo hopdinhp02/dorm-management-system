@@ -52,14 +52,12 @@ public class BranchController {
     ResponseEntity<ResponseObject> insertBranch(@RequestBody Branch newBranch) {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         int numInsert = authRepository.getNumberOfPermission(user.getId(),"BRANCH","INSERT");
-        if(numInsert >=1) {
+
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("OK", "Insert successfully", branchRepository.save(newBranch))
             );
-        }else{
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                new ResponseObject("ERROR", "User does not have permission to insert a new branch", null));
-        }
+
+
     }
 
     @PutMapping("/{id}")

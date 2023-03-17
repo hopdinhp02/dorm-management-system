@@ -251,6 +251,12 @@ public class UserInfoController {
                 new ResponseObject("Fail","NOT FOUND",""));
     }
 
+    @GetMapping("/search-users")
+    List<UserInfo> searchUsers(@RequestParam String name,@RequestParam String role,@RequestParam String isActive){
+return userInfoRepository.SearchUsers("%"+name+"%","%"+role+"%","%"+isActive+"%");
+}
+
+
     @GetMapping("/balance")
     ResponseEntity<ResponseObject> getBalance() {
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -260,7 +266,8 @@ public class UserInfoController {
                 new ResponseObject("OK", "", user.getBalance())
         );
 
+
     }
-    }
+ }
 
 
