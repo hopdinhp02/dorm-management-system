@@ -2,19 +2,19 @@
 <html lang="en">
 
 <head>
-  <title>Staff Page</title>
+  <title>Student Page</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Main CSS-->
-  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"> -->
   <!-- or -->
   <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/elegant-icons.css">
-  <link rel="stylesheet" href="css/style.css" type="text/css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/elegant-icons.css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
 </head>
 
 <body onload="time()" class="app sidebar-mini rtl">
@@ -35,25 +35,28 @@
   <!-- Sidebar menu-->
   <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
   <aside class="app-sidebar">
-    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="images/user0.png" width="50px"
+    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="/images/user0.png" width="50px"
         alt="User Image">
       <div>
-        <p class="app-sidebar__user-name"><b>Staff Page</b></p>
+        <p class="app-sidebar__user-name"><b>Student Page</b></p>
         <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
       </div>
     </div>
     <hr>
     <ul class="app-menu">
-      <li><a class="app-menu__item" href="bookingRequestStatus.html"><i class='app-menu__icon bx bx-tachometer'></i><span class="app-menu__label"
-            style="font-size: 23px;">Booking Request Handling</span></a></li>
-      <li><a class="app-menu__item" href="bookingSchedule.html"><i class='app-menu__icon bx bxs-timer'></i><span
-            class="app-menu__label" style="font-size: 23px;">Booking Date</span></a></li>
-      <li><a class="app-menu__item" href=""><i class='app-menu__icon bx bx-purchase-tag-alt'></i><span
-            class="app-menu__label">Facility</span></a></li>
-      <li><a class="app-menu__item" href="billingAll.html"><i class='app-menu__icon bx bx-money-withdraw'></i><span
-            class="app-menu__label" style="font-size: 23px;">Billing</span></a></li>
-      <li><a class="app-menu__item" href="residentHistory.html" target="_blank"><i class='app-menu__icon bx bx-history'></i><span
-            class="app-menu__label" style="font-size: 23px;">Resident History</span></a></li>
+      <li><a class="app-menu__item" href="/PageResident/new.html"><i class='app-menu__icon bx bx-bed'></i><span
+            class="app-menu__label">New</span></a></li>
+      <li><a class="app-menu__item" href="/PageResident/BookingRequest.html"><i class='app-menu__icon bx bx-bed'></i><span
+            class="app-menu__label">Book room</span></a></li>
+      <li><a class="app-menu__item" href="/PageResident/electricWaterUsage.html"><i class='app-menu__icon bx bx-shower'></i><span
+            class="app-menu__label">Electric water usage</span></a></li>
+      <li><a class="app-menu__item" href="/PageResident/billing.html"><i class='app-menu__icon bx bx-money-withdraw'></i><span
+            class="app-menu__label ">Billing</span></a>
+      </li>
+      <li><a class="app-menu__item" href="#"><i class='app-menu__icon bx bx-history'></i><span
+            class="app-menu__label">Resident history</span></a></li>
+      <li><a class="app-menu__item" href="#" ><i class='app-menu__icon bx bxs-to-top'></i><span
+            class="app-menu__label">Top-up</span></a></li>
     </ul>
   </aside>
   <main class="app-content">
@@ -66,17 +69,52 @@
       </div>
       </div>
     </div>
+
+
     <div class="row">
       <div class="col-md-12 col-lg-12" style="padding-left: 125px">
         <div class="row">
           <div class="col-md-12">
             <div class="tile">
-              <!-- / div trống-->
+              <h3 class="tile-title"></h3>
+              <div class="">
+                <h1 class="big-title">ElectricWaterUsage</h1>
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                    <tr>
+                      <th>ID</th>
+                      <th>roomID</th>
+                      <th>electricUsage</th>
+                      <th>waterUsage</th>
+                      <th>createdDate</th>
+                      <th>electricEnd</th>
+                      <th>electricStart</th>
+                      <th>monthPay</th>
+                      <th>waterStart</th>
+                      <th>waterEnd</th>
+                  </thead>
+                  <tbody id="electricWaterUsage">
+                    <tr>
+                      <th scope="row"></th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+
+                    </tr>
+
+                  </tbody>
+
+                </table><br>
+              </div>
             </div>
+
           </div>
-          <!-- / col-12 -->
         </div>
+
       </div>
+    </div>
     </div>
   </main>
   <script type="text/javascript">
@@ -104,11 +142,11 @@
       }
       ]
     };
-    var ctxl = $("#lineChartDemo").get(0).getContext("2d");
-    var lineChart = new Chart(ctxl).Line(data);
+    // var ctxl = $("#lineChartDemo").get(0).getContext("2d");
+    // var lineChart = new Chart(ctxl).Line(data);
 
-    var ctxb = $("#barChartDemo").get(0).getContext("2d");
-    var barChart = new Chart(ctxb).Bar(data);
+    // var ctxb = $("#barChartDemo").get(0).getContext("2d");
+    // var barChart = new Chart(ctxb).Bar(data);
   </script>
   <script type="text/javascript">
     //Thời Gian
@@ -151,4 +189,7 @@
     }
   </script>
 </body>
-</html>s
+<script src="/js/electricWaterUsage.js"></script>
+<script src="/js/auth.js"></script>
+
+</html>
