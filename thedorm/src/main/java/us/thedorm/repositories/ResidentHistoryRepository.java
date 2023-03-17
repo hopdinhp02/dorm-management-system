@@ -98,5 +98,3 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
 
 
 }
-
-
