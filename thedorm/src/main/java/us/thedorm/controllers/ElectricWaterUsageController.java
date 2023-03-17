@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
 import us.thedorm.repositories.*;
+import us.thedorm.service.NotificationService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,6 +24,8 @@ import java.util.Optional;
 @RequestMapping(path = "/api/v1/elec-water-usages")
 public class ElectricWaterUsageController {
     @Autowired
+    private NotificationService notificationService;
+    @Autowired
     private BillingRepository billingRepository;
     @Autowired
     private RoomRepository roomRepository;
@@ -32,6 +35,8 @@ public class ElectricWaterUsageController {
     private ElectricWaterUsageRepo electricWaterUsageRepo;
     @Autowired
     private SlotRepository slotRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllUsage() {
@@ -144,29 +149,38 @@ public class ElectricWaterUsageController {
         List<ResidentHistory> Lists = residentHistoryRepository.findResidentsByRoomIdInMonth(roomId, monthPay, monthPay, monthPay, monthPay, monthPay);
         for (ResidentHistory resident : Lists) {
             Long residentId = resident.getUserInfo().getId();
-            Billing newElecBilling = Billing.builder()
-                    .userInfo(UserInfo.builder().id(residentId).build())
-                    .type(Billing.Type.Electric)
-                    .cost((electricWaterUsage.getElectricUsage() * 3000) / Lists.size())
-                    .status(Billing.Status.Unpaid)
-                    .createdDate(new Date())
-                    .build();
-            billingRepository.save(newElecBilling);
-
-            Billing newWaterBilling = Billing.builder()
-                    .userInfo(UserInfo.builder().id(residentId).build())
-                    .type(Billing.Type.Water)
-                    .cost((electricWaterUsage.getWaterUsage() * 5000) / Lists.size())
-                    .status(Billing.Status.Unpaid)
-                    .createdDate(new Date())
-                    .build();
-            billingRepository.save(newWaterBilling);
+            int costElectric = (electricWaterUsage.getElectricUsage()*electricWaterUsage.getRoom().getBasePrice().getElectricPrice())/Lists.size();
+            addBill(costElectric,residentId,Billing.Type.Electric);
+            int costWater = (electricWaterUsage.getWaterUsage()*electricWaterUsage.getRoom().getBasePrice().getWaterPrice())/Lists.size();
+            addBill(costWater,residentId,Billing.Type.Water);
+            String titleUsage="Electric Water Usage";
+            String contentUsage="The Electric Water Usage Month: "+ monthPay+ " of Room: "+ room.getName()+
+                  " Electric : "+ electricWaterUsage.getElectricUsage()+" And Water : "+ electricWaterUsage.getWaterUsage();
+            notificationService.sendNotification(titleUsage,contentUsage,residentId);
+//            Notification newNotification = Notification.builder()
+//                    .title(titleUsage)
+//                    .content(contentUsage)
+//                    .createdDate(new Date())
+//                    .userInfo(UserInfo.builder().id(residentId).build())
+//                    .build();
+//            notificationRepository.save(newNotification);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "record electric water usage successfully! ", ListElectric)
+                new ResponseObject("OK", "Record electric water usage successfully! ", ListElectric)
 
         );
+
+    }
+    public Billing addBill(int cost,Long residentId,Billing.Type type ){
+        Billing newBilling = Billing.builder()
+                .userInfo(UserInfo.builder().id(residentId).build())
+                .type(type)
+                .cost(cost)
+                .status(Billing.Status.Unpaid)
+                .createdDate(new Date())
+                .build();
+        return billingRepository.save(newBilling);
 
     }
 

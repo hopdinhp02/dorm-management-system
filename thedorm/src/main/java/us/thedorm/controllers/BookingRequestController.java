@@ -37,6 +37,8 @@ public class BookingRequestController {
     private BookingScheduleRepository bookingScheduleRepository;
     @Autowired
     private AuthRepository authRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
 
     @GetMapping("")
@@ -68,7 +70,10 @@ public class BookingRequestController {
 
         UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+
+
      return bookingService.checkBooking(newBookingRequest,user);
+
     }
 
 

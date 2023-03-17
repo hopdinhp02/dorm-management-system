@@ -26,7 +26,9 @@ import java.util.List;
 public class UserInfo implements UserDetails {
     public enum Role {
         ADMIN,
-        USER
+        USER,
+        STAFF,
+        GUARD
 
     }
     @Id
@@ -44,34 +46,38 @@ public class UserInfo implements UserDetails {
 
     private String image;
     private double balance;
+    private boolean isActive;
 
     private boolean gender;
 
 
-    @OneToMany(mappedBy = "userInfo")
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<BookingRequest> bookingRequests;
-    @OneToMany(mappedBy = "userInfo")
+    @OneToMany(mappedBy = "userInfo",cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<Billing> billings;
 
-    @OneToMany(mappedBy = "userInfo")
+    @OneToMany(mappedBy = "userInfo",cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<ResidentHistory> residentHistories;
 
-    @OneToMany(mappedBy = "userInfo")
+    @OneToMany(mappedBy = "userInfo",cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<HistoryBookingRequest> historyBookingRequests;
-    @OneToMany(mappedBy = "userInfo")
+    @OneToMany(mappedBy = "userInfo",cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<HistoryBasePrice> historyBasePrices;
-    @OneToMany(mappedBy = "guard")
+    @OneToMany(mappedBy = "userInfo")
+    @JsonIgnore
+    private Collection<Notification> notifications;
+    @OneToMany(mappedBy = "guard" ,cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<CheckInOut> guardCheck;
-    @OneToMany(mappedBy = "resident")
+    @OneToMany(mappedBy = "resident",cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<CheckInOut> residentCheck;
-    @OneToMany(mappedBy = "resident")
+    @OneToMany(mappedBy = "resident",cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<Request> requests;
 
