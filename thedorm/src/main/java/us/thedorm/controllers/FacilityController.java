@@ -11,6 +11,8 @@ import us.thedorm.repositories.FacilityHistoryRepository;
 import us.thedorm.repositories.FacilityRepository;
 import us.thedorm.repositories.MaintenanceRepository;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -82,7 +84,7 @@ public class FacilityController {
             FacilityDetail newFD = FacilityDetail.builder()
                     .name(facilityDetail.getName())
                     .provider(facilityDetail.getProvider())
-                    .producingDate(facilityDetail.getProducingDate())
+                    .producingDate(new Date())
                     .expirationDate(facilityDetail.getExpirationDate())
                     .price(facilityDetail.getPrice())
                     .value(facilityDetail.getValue())
@@ -151,8 +153,11 @@ public class FacilityController {
 
                 }).orElseGet(() -> null);
         Optional<FacilityHistory> oldFH = facilityHistoryRepository.findTopByFacility_IdOrderByIdDesc(id);
+        LocalDate now = LocalDate.now();
+        LocalDate yesterday = LocalDate.from(now.atStartOfDay().minusSeconds(1L));
         if(oldFH.isPresent()){
-            oldFH.get().setEndDate(new Date());
+
+            oldFH.get().setEndDate(java.sql.Date.valueOf(yesterday));
         }
         if (updateFacility != null) {
             FacilityHistory facilityHistory = FacilityHistory.builder()
@@ -161,7 +166,7 @@ public class FacilityController {
                     .room(updateFacility.getRoom())
                     .dorm(updateFacility.getDorm())
                     .branch(updateFacility.getBranch())
-                    .startDate(new Date())
+                    .startDate(java.sql.Date.valueOf(now))
                     .build();
             facilityHistoryRepository.save(facilityHistory);
             return ResponseEntity.status(HttpStatus.OK).body(
