@@ -108,7 +108,7 @@ public class ElectricWaterUsageController {
 
     }
 
-    @PutMapping("/{roomId}/write-electric-water-usage")
+    @PostMapping("/{roomId}/write-electric-water-usage")
     public ResponseEntity<ResponseObject> writeElectricWaterUsage(@PathVariable Long roomId,@RequestBody ElectricWaterUsage electricWaterUsage) throws ParseException {
 
 
