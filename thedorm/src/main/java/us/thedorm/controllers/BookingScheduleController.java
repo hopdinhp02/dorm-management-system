@@ -51,6 +51,13 @@ public class BookingScheduleController {
 
     @PostMapping("")
     ResponseEntity<ResponseObject> insertBookingSchedule(@RequestBody BookingSchedule newBookingSchedule) {
+        if(newBookingSchedule.getKeepStartDate().after(newBookingSchedule.getKeepEndDate()) ||
+        newBookingSchedule.getNewStartDate().after(newBookingSchedule.getNewEndDate()) ||
+        newBookingSchedule.getStartDate().after(newBookingSchedule.getEndDate())){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Invalid date", "")
+            );
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Insert successfully", bookingScheduleRepository.save(newBookingSchedule))
