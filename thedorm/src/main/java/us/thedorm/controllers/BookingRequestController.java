@@ -117,7 +117,7 @@ public class BookingRequestController {
             if(bookingSchedule.isPresent()){
                 if (foundBookingRequest.get().getStartDate().equals(bookingSchedule.get().getStartDate()) && foundBookingRequest.get().getEndDate().equals(bookingSchedule.get().getEndDate())){
                     return ResponseEntity.status(HttpStatus.OK).body(
-                            new ResponseObject("", "Booked", true)
+                            new ResponseObject("", "Booked", foundBookingRequest)
                     );
                 }
             }
