@@ -25,7 +25,7 @@ public class Room {
 //    private int base_price_id;
  //   private int type_id;
     private int status;
-    private boolean sex;
+    private boolean gender;
     @ManyToOne
     @JoinColumn(name = "dorm_id")
     private Dorm dorm;
