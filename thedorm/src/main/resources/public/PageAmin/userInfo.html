@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>User Info</h1>
+    <label>Enter name</label>
+    <input type="text" id="name">
+    <select id="role">
+        <option value="">All</option>
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+        <option value="staff">Staff</option>
+        <option value="guard">Guard</option>
+    </select>
+    <select id="isActive">
+        <option value="1">Active</option>
+        <option value="0">Not Active</option>
+        
+    </select>
+    <button class="btn btn-primary" type="" onclick="searchUser()">Search</button><br>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Gender</th>
+                <th>Image</th>
+                <th>Role</th>
+                <th>Active</th>
+
+        </thead>
+        <tbody id="userTable">
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+        </tbody>
+
+    </table><br>
+</body>
+    
+<script src="/js/userInfo.js"></script>
+</html>
