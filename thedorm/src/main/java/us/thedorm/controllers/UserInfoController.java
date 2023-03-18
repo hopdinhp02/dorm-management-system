@@ -269,7 +269,7 @@ return userInfoRepository.SearchUsers("%"+name+"%","%"+role+"%","%"+isActive+"%"
 
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/active")
     ResponseEntity<ResponseObject> updateIsActive(@RequestParam(name="is-active") String isActiveRaw, @PathVariable Long id) {
         try{
             boolean isActive = Boolean.parseBoolean(isActiveRaw);
