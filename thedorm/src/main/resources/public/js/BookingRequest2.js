@@ -131,7 +131,7 @@ function loadrooms() {
   const selectElement = document.getElementById("dorms");
   const dormId = selectElement.value;
   console.log("dormid: " + dormId);
-  let url = "http://localhost:8081/api/v1/rooms/dorm/" + dormId;
+  let url = "http://localhost:8081/api/v1/rooms/dorm/"+ dormId +"/gender" ;
   fetch(url, {
     method: 'GET',
     headers: {
