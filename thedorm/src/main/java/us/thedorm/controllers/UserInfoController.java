@@ -281,7 +281,7 @@ return userInfoRepository.SearchUsers("%"+name+"%","%"+role+"%","%"+isActive+"%"
 
             if (updateUserInfo != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("OK", "Insert Product successfully", updateUserInfo)
+                        new ResponseObject("OK", "update successfully", updateUserInfo)
                 );
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
