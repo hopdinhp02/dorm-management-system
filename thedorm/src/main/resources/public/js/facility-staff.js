@@ -23,13 +23,13 @@ function loadFacility() {
     console.log(value);
     if (value == 1) {
         loadFacilityAssign()
-        addButton = `<select id="facility"  onchange="loadFacility()">
+        addButton = `<select class="BB-input1" id="facility"  onchange="loadFacility()">
         <option value="1" disabled selected>Assigned</option>
         <option value="2" >Not Assign</option>
     </select>`
     } else if (value == 2) {
         loadFacilityNotAssign()
-        addButton = `<select id="facility"  onchange="loadFacility()">
+        addButton = `<select class="BB-input1" id="facility"  onchange="loadFacility()">
         <option value="1" >Assigned</option>
         <option value="2" disabled selected>Not Assign</option>
     </select><br><button class="btn btn-primary" type="submit" id="show" onclick="showFormAddFacilityNotAssign()">Add</button><br>`
@@ -39,13 +39,66 @@ function loadFacility() {
 
 function showFormAddFacilityNotAssign() {
     let form = document.getElementById("formAddFacility")
-    form.innerHTML = `Code Product: <input type="text" id="codeProduct"><br>
-    Name: <input type="text" id="name"><br>
-    Price: <input type="number" id="price"><br>
-    Provider: <input type="text" id="provider"><br>
-    Expiration Date: <input type="datetime-local" id="expirationDate"><br>
-    Quantity: <input type="number" value = "1" id="quantity"><br>
-    Type: <input type="text" id="type"><br>
+    form.innerHTML = `
+    <div class=" no-padding no-margin">
+       <h1 id="check"></h1>
+       <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Code Product</label>
+                    <div class="" >
+                        <input class="SBB-input" type="text" id="codeProduct">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Name</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="name">
+                    </div>
+                </div>
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Price</label>
+                    <div class="" >
+                        <input class="SBB-input" type="number" id="price">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Provider</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="provider">
+                    </div>
+                </div>
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Expiration Date</label>
+                    <div class="" >
+                        <input class="SBB-input" type="datetime-local" id="expirationDate">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Producing Date</label>
+                    <div class="" >
+                       <input class="SBB-input" type="datetime-local" id="procudingDate">
+                    </div>
+                </div>
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Quantity</label>
+                    <div class="" >
+                        <input class="SBB-input" type="number" value = "1" id="quantity">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Type</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="type">
+                    </div>
+                </div>
+        </div>
+    </div>
     <button class="btn btn-primary" type="submit" id="show" onclick="addFacilityNotAssign()">Add</button><br>`
 
     let show = document.getElementById("show")
@@ -53,14 +106,15 @@ function showFormAddFacilityNotAssign() {
 }
 
 function addFacilityNotAssign() {
-    Quantity = document.getElementById("quantity").value == "" ? 1:document.getElementById("quantity").value;
+    Quantity = document.getElementById("quantity").value == "" ? 1 : document.getElementById("quantity").value;
     console.log(1);
-    url = "http://localhost:8081/api/v1/facilities?quantity="+Quantity;
+    url = "http://localhost:8081/api/v1/facilities?quantity=" + Quantity;
     codeProduct = document.getElementById("codeProduct").value;
     Name = document.getElementById("name").value;
     Price = document.getElementById("price").value;
     Provider = document.getElementById("provider").value;
     expirationDate = document.getElementById("expirationDate").value;
+    procudingDate = document.getElementById("procudingDate").value;
     Type = document.getElementById("type").value;
 
     const expirationdate = new Date(expirationDate);
@@ -73,6 +127,14 @@ function addFacilityNotAssign() {
     const expirationFormattedDate = `${expirationyear}-${expirationmonth.toString().padStart(2, "0")}-${expirationday.toString().padStart(2, "0")} ${expirationhours.toString().padStart(2, "0")}:${expirationminutes.toString().padStart(2, "0")}:${expirationseconds.toString().padStart(2, "0")}`;
 
 
+    const procudingdate = new Date(procudingDate);
+    const procudingyear = procudingdate.getFullYear();
+    const procudingmonth = procudingdate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
+    const procudingday = procudingdate.getDate();
+    const procudinghours = procudingdate.getHours();
+    const procudingminutes = procudingdate.getMinutes();
+    const procudingseconds = procudingdate.getSeconds();
+    const procudingFormattedDate = `${procudingyear}-${procudingmonth.toString().padStart(2, "0")}-${procudingday.toString().padStart(2, "0")} ${procudinghours.toString().padStart(2, "0")}:${procudingminutes.toString().padStart(2, "0")}:${procudingseconds.toString().padStart(2, "0")}`;
     jsonData = {
         facilityDetail: {
             codeProduct: codeProduct,
@@ -80,6 +142,7 @@ function addFacilityNotAssign() {
             price: Price,
             provider: Provider,
             expirationDate: expirationFormattedDate,
+            procudingDate: procudingFormattedDate,
             type: Type,
         }
     };
@@ -173,7 +236,7 @@ function loadFacilityNotAssign() {
 
         })
         .catch(error => {
-            console.log(error);
+            console.log("error");
         });
 }
 function updateFacilityDetail(id, value) {
@@ -208,27 +271,80 @@ function accept(id, value) {
     } 
 }
 
-function loadFormAddFacilityAssign(){
+function loadFormAddFacilityAssign() {
     let form = document.getElementById("formAddFacility")
-    form.innerHTML = `Code Product: <input type="text" id="codeProduct"><br>
-    Name: <input type="text" id="name"><br>
-    Price: <input type="number" id="price"><br>
-    Provider: <input type="text" id="provider"><br>
-    Expiration Date: <input type="datetime-local" id="expirationDate"><br>
-    Quantity: <input type="number" id="quantity"><br>
-    Type: <input type="text" id="type"><br>
+    form.innerHTML = `
+    <div class=" no-padding no-margin">
+       <h1 id="check"></h1>
+       <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Code Product</label>
+                    <div class="" >
+                        <input class="SBB-input" type="text" id="codeProduct">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Name</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="name">
+                    </div>
+                </div>
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Price</label>
+                    <div class="" >
+                        <input class="SBB-input" type="number" id="price">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Provider</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="provider">
+                    </div>
+                </div>
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Expiration Date</label>
+                    <div class="" >
+                        <input class="SBB-input" type="datetime-local" id="expirationDate">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Producing Date</label>
+                    <div class="" >
+                       <input class="SBB-input" type="datetime-local" id="procudingDate">
+                    </div>
+                </div>
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Quantity</label>
+                    <div class="" >
+                        <input class="SBB-input" type="number" value = "1" id="quantity">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Type</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="type">
+                    </div>
+                </div>
+        </div>
+    </div>
     <button class="btn btn-primary" type="" id="show" onclick="addFacilityAssign()">Add</button><br>`
     let show = document.getElementById("show")
     show.innerHTML = ``
-    
+
 }
 
-function addFacilityAssign(){
+function addFacilityAssign() {
     let idSelected = document.getElementById("idRemove").value
     console.log(2);
-    let quantityValue = document.getElementById("quantity").value==""?1:document.getElementById("quantity").value
+    let quantityValue = document.getElementById("quantity").value == "" ? 1 : document.getElementById("quantity").value
     console.log(quantityValue);
-    url = "http://localhost:8081/api/v1/facilities?quantity="+quantityValue;
+    url = "http://localhost:8081/api/v1/facilities?quantity=" + quantityValue;
     codeProduct = document.getElementById("codeProduct").value;
     Name = document.getElementById("name").value;
     Price = document.getElementById("price").value;
@@ -247,8 +363,15 @@ function addFacilityAssign(){
     const expirationFormattedDate = `${expirationyear}-${expirationmonth.toString().padStart(2, "0")}-${expirationday.toString().padStart(2, "0")} ${expirationhours.toString().padStart(2, "0")}:${expirationminutes.toString().padStart(2, "0")}:${expirationseconds.toString().padStart(2, "0")}`;
 
 
-
-    if (idSelected ==1) {
+    const procudingdate = new Date(procudingDate);
+    const procudingyear = procudingdate.getFullYear();
+    const procudingmonth = procudingdate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
+    const procudingday = procudingdate.getDate();
+    const procudinghours = procudingdate.getHours();
+    const procudingminutes = procudingdate.getMinutes();
+    const procudingseconds = procudingdate.getSeconds();
+    const procudingFormattedDate = `${procudingyear}-${procudingmonth.toString().padStart(2, "0")}-${procudingday.toString().padStart(2, "0")} ${procudinghours.toString().padStart(2, "0")}:${procudingminutes.toString().padStart(2, "0")}:${procudingseconds.toString().padStart(2, "0")}`;
+    if (idSelected == 1) {
         let branchId = document.getElementById("branchRemove").value
         console.log(branchId);
         jsonData = {
@@ -258,11 +381,12 @@ function addFacilityAssign(){
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
+                procudingDate: procudingFormattedDate,
                 type: Type,
             },
-            branch: {id: branchId}
+            branch: { id: branchId }
         };
-    }else if(idSelected == 2){
+    } else if (idSelected == 2) {
         let dormId = document.getElementById("dormRemove").value
         console.log(dormId);
         jsonData = {
@@ -272,11 +396,12 @@ function addFacilityAssign(){
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
+                procudingDate: procudingFormattedDate,
                 type: Type,
             },
-            dorm: {id: dormId}
+            dorm: { id: dormId }
         };
-    }else if(idSelected == 3){
+    } else if (idSelected == 3) {
         let roomId = document.getElementById("roomRemove").value
         console.log(roomId);
         jsonData = {
@@ -286,11 +411,12 @@ function addFacilityAssign(){
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
+                procudingDate: procudingFormattedDate,
                 type: Type,
             },
-            room: {id: roomId}
+            room: { id: roomId }
         };
-    }else if(idSelected == 4){
+    } else if (idSelected == 4) {
         let slotId = document.getElementById("slotRemove").value
         console.log(slotId);
         jsonData = {
@@ -300,12 +426,13 @@ function addFacilityAssign(){
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
+                procudingDate: procudingFormattedDate,
                 type: Type,
             },
-            slot: {id: slotId}
+            slot: { id: slotId }
         };
     }
-    
+
     console.log(jsonData);
     fetch(url,
         {
@@ -325,7 +452,7 @@ function addFacilityAssign(){
 
             console.log(data);
         })
-        
+
         .catch(error => {
             console.error('Error:', error);
         });
@@ -728,7 +855,8 @@ function moveToUpdate(id) {
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
-    window.location.href = 'update-facility.html?data=' + encodeURIComponent(data);
+    // window.location.href = 'update-facility.html?data=' + encodeURIComponent(data);
+    window.open('update-facility.html?data=' + encodeURIComponent(data), '_blank');
 
 }
 
@@ -739,7 +867,8 @@ function moveToMaintenance(id) {
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
-    window.location.href = 'add-maintenance.html?data=' + encodeURIComponent(data);
+    // window.location.href = 'add-maintenance.html?data=' + encodeURIComponent(data);
+    window.open('add-maintenance.html?data=' + encodeURIComponent(data), '_blank');
 }
 
 
@@ -749,7 +878,8 @@ function moveToRemove(id) {
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
-    window.location.href = 'remove-facility.html?data=' + encodeURIComponent(data);
+    // window.location.href = 'remove-facility.html?data=' + encodeURIComponent(data);
+    window.open('remove-facility.html?data=' + encodeURIComponent(data), '_blank');
 }
 
 
