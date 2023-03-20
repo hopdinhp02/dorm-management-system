@@ -23,11 +23,11 @@ function searchUser(){
         user += ` 
     <tr>
     <td>${element.id}</td>
+    <td><img src="/images/avata.jpg" style="width: 80px; height: 80px;"></td>
     <td>${element.name}</td>
     <td>${element.email}</td>
     <td>${element.phone}</td>
     <td>${element.gender==true?"Male":"Female"}</td>
-    <td>${element.image}</td>
     <td>${element.role}</td>
     <td><select id="isActive" onchange="updateIsActive(${element.id},this.value)"> 
     <option ${element.active==true?"selected":""} value = "true">True</option>
