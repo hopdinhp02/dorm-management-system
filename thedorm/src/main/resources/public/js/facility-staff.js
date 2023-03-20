@@ -736,7 +736,7 @@ function moveToUpdate(id) {
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
-    window.location.href = 'updateFacility.html?data=' + encodeURIComponent(data);
+    window.location.href = 'update-facility.html?data=' + encodeURIComponent(data);
 
 }
 
@@ -747,7 +747,7 @@ function moveToMaintenance(id) {
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
-    window.location.href = 'maintenanceFacility.html?data=' + encodeURIComponent(data);
+    window.location.href = 'add-maintenance.html?data=' + encodeURIComponent(data);
 }
 
 
@@ -757,7 +757,7 @@ function moveToRemove(id) {
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
-    window.location.href = 'removeFacility2.html?data=' + encodeURIComponent(data);
+    window.location.href = 'remove-facility.html?data=' + encodeURIComponent(data);
 }
 
 

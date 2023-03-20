@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/elegant-icons.css">
+    <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+    <h1>Remove Facility</h1>
+  <div id="remove-facility-form">
+    
+      <table class="table table-bordered">
+        <thead>
+            <tr>
+            <tr>
+                <th>ID</th>
+                <th>Branch</th>
+                <th>Dorm</th>
+                <th>Room</th>
+                <th>Slot</th>
+                <th>FacilityDetailID</th>
+        </thead>
+        <tbody id="facilityTable">
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+        </tbody>
+
+    </table><br>
+    Remove to: <br><select class="SBB-input" id="idRemove" onchange="loadIdRemove()">
+      <option value="" disabled selected>Chọn một lựa chọn</option>
+      <option value="1" >Branch</option>
+      <option value="2" >Dorm</option>
+      <option value="3" >Room</option>
+      <option value="4" >Slot</option>
+    </select><br>
+    <div id="load">
+      
+    </div>
+    <button class="btn btn-primary" type="submit" onclick="removeFacility()">Remove</button>
+    <button class="btn btn-primary" type="submit" onclick="notAssignFacility()">Not Assign</button>
+
+  </div>
+</body>
+<script src="/js/remove-facility.js"></script>
+</html>
