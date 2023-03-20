@@ -36,6 +36,7 @@ public class AuthenticationService {
             .email(request.getEmail())
             .phone(request.getPhone())
             .gender(request.isGender())
+            .isActive(true)
         .build();
     repository.save(user);
     var jwtToken = jwtService.generateToken(user);

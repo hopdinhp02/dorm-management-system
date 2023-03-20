@@ -16,7 +16,7 @@ function checkJwtExpiration(token) {
   if (Date.now() >= expirationTime) {
     alert('Token has expired');
     console.log('Token has expired.\n Please login again!');
-    window.location.href = "login.html";
+    window.location.href = "/login.html";
   } else {
     console.log('Token is still valid');
   }

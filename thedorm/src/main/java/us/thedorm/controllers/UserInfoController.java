@@ -294,6 +294,18 @@ return userInfoRepository.SearchUsers("%"+name+"%","%"+role+"%","%"+isActive+"%"
         }
 
     }
+
+    @GetMapping("/role")
+    ResponseEntity<ResponseObject> getRole() {
+        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "", user.getRole())
+        );
+
+
+    }
  }
 
 
