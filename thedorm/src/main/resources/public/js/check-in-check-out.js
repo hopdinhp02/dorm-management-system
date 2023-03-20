@@ -198,8 +198,8 @@ function checkIn (){
             dataJson.data.forEach(element => {
                 checkInOut = `<tr>
                 <td scope="row">${element.userInfo.id}</td>
+                <td><img src="/images/avata.jpg" style="width: 80px; height: 80px;"></td>
                 <td>${element.userInfo.name}</td>
-                <td>${element.userInfo.image}</td>
                 <td>${element.userInfo.email}</td>
                 <td>${element.userInfo.phone}</td>
                 <td><button class="btn btn-primary" type="" onclick="acceptCheckIn(${element.userInfo.id})">Check In</button></td>
@@ -261,8 +261,8 @@ function checkOut (){
             dataJson.data.forEach(element => {
                 checkInOut = `<tr>
                 <td scope="row">${element.userInfo.id}</td>
+                <td><img src="/images/avata.jpg" style="width: 80px; height: 80px;"></td>
                 <td>${element.userInfo.name}</td>
-                <td>${element.userInfo.image}</td>
                 <td>${element.userInfo.email}</td>
                 <td>${element.userInfo.phone}</td>
                 <td><button class="btn btn-primary" type="" onclick="acceptCheckOut(${element.userInfo.id})">Check Out</button></td>

@@ -220,10 +220,10 @@ function searchInAll(name){
                 resident += `<tr>
                 
                 <td>${element.userInfo.id}</td>
+                <td><img src="/images/avata.jpg" style="width: 80px; height: 80px;"></td>
                 <td>${element.userInfo.name == null?"": element.userInfo.name}</td>
                 <td>${element.userInfo.email == null?"": element.userInfo.email}</td>
                 <td>${element.userInfo.phone == null?"": element.userInfo.phone}</td>
-                <td>${element.userInfo.image == null?"": element.userInfo.image}</td>
                 <td>${element.slot.room.dorm.branch.name == null?"": element.slot.room.dorm.branch.name}</td>
                 <td>${element.slot.room.dorm.name == null?"": element.slot.room.dorm.name}</td>
                 <td>${element.slot.room.name == null?"": element.slot.room.name}</td>
