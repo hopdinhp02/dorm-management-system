@@ -38,26 +38,26 @@
     <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="/images/user0.png" width="50px"
         alt="User Image">
       <div>
-        <p class="app-sidebar__user-name"><b>Student Page</b></p>
+        <p class="app-sidebar__user-name"><b>Resident Page</b></p>
         <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
       </div>
     </div>
     <hr>
     <ul class="app-menu">
       <li><a class="app-menu__item" href="/resident/notification.html"><i class='app-menu__icon bx bx-bed'></i><span
-                  class="app-menu__label">New</span></a></li>
+            class="app-menu__label">Notification</span></a></li>
       <li><a class="app-menu__item" href="/resident/booking-request.html"><i class='app-menu__icon bx bx-bed'></i><span
-                  class="app-menu__label">Book room</span></a></li>
-      <li><a class="app-menu__item" href="/resident/electric-water-usage.html"><i class='app-menu__icon bx bx-shower'></i><span
-                  class="app-menu__label">Electric water usage</span></a></li>
-      <li><a class="app-menu__item" href="/resident/billing.html"><i class='app-menu__icon bx bx-money-withdraw'></i><span
-                  class="app-menu__label ">Billing</span></a>
+            class="app-menu__label">Book room</span></a></li>
+      <li><a class="app-menu__item" href="/resident/electric-water-usage.html"><i
+            class='app-menu__icon bx bx-shower'></i><span class="app-menu__label">Electric water usage</span></a></li>
+      <li><a class="app-menu__item" href="/resident/billing.html"><i
+            class='app-menu__icon bx bx-money-withdraw'></i><span class="app-menu__label ">Billing</span></a>
       </li>
-      <li><a class="app-menu__item" href="/resident/resident-studen.html"><i class='app-menu__icon bx bx-history'></i><span
-                  class="app-menu__label">Resident history</span></a></li>
-      <li><a class="app-menu__item" href="/resident/resident-balance.html"><i class='app-menu__icon bx bxs-to-top'></i><span
-                  class="app-menu__label">Top-up</span></a></li>
-  </ul>
+      <li><a class="app-menu__item" href="/resident/resident-studen.html"><i
+            class='app-menu__icon bx bx-history'></i><span class="app-menu__label">Resident history</span></a></li>
+      <li><a class="app-menu__item" href="/resident/resident-balance.html"><i
+            class='app-menu__icon bx bxs-to-top'></i><span class="app-menu__label">Top-up</span></a></li>
+    </ul>
   </aside>
   <main class="app-content">
     <div class="row">
@@ -66,9 +66,9 @@
           <ul class="app-breadcrumb ">
           </ul>
           <div id="clock"></div>
-      </div>
         </div>
       </div>
+    </div>
     </div>
 
 
@@ -81,7 +81,7 @@
 
               <div class="container-fluid my-container">
                 <h1 class="big-title" id="bookingtitle">Booking bed</h1>
-                <form action="" id="create" method="post"><input name="__RequestVerificationToken" type="hidden" />
+                <!-- <form action="" id="create" method="post"><input name="__RequestVerificationToken" type="hidden" /> -->
                   <div class="SBB-create-container">
                     <div class="col-xs-12 col-md-5 no-padding no-margin">
                       <p class="SBB-l-title"> Your Account Balance</p>
@@ -90,8 +90,8 @@
                       <p id="cost" class="SBB-l-content">0 VND</p>
                     </div>
                   </div>
-                </form>
-                <h1 id="check"></h1>
+                <!-- </form> -->
+                <!-- <h1 id="check"></h1> -->
                 <div id="booking-request-form">
                   <form>
                     <div class="col-xs-12 col-md-7 no-padding no-margin">
@@ -105,8 +105,9 @@
                         <h1 id="check"></h1>
                       </div>
                     </div>
-                </div>
+                
                 </form><br>
+              </div>
               </div>
             </div>
 
@@ -191,4 +192,5 @@
 </body>
 <script src="/js/booking-request.js"></script>
 <script src="/js/auth.js"></script>
+
 </html>

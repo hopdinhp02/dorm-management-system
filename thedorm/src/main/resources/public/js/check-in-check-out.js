@@ -146,7 +146,7 @@ function loadslots() {
     const selectElement = document.getElementById("rooms");
     const roomId = selectElement.value;
     console.log("roomid for slot: " + roomId);
-    let url = "http://localhost:8081/api/v1/slots/room/" + roomId + "/available";
+    let url = "http://localhost:8081/api/v1/slots/room/" + roomId;
     fetch(url, {
         method: 'GET',
         headers: {
@@ -203,7 +203,6 @@ function checkIn (){
                 <td>${element.userInfo.email}</td>
                 <td>${element.userInfo.phone}</td>
                 <td><button class="btn btn-primary" type="" onclick="acceptCheckIn(${element.userInfo.id})">Check In</button></td>
-                <td>
                 </tr>
                 `;
             });
@@ -222,7 +221,8 @@ function acceptCheckIn(id) {
         {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("jwt")}`
             },
 
             body: JSON.stringify(jsonData)
@@ -235,6 +235,7 @@ function acceptCheckIn(id) {
         })
         .then(checkIn)
         .then(alert("Checkin successfully!"))
+        .then(checkInCheckOut)
         .catch(error => {
             console.error('Error:', error);
         });
@@ -265,7 +266,6 @@ function checkOut (){
                 <td>${element.userInfo.email}</td>
                 <td>${element.userInfo.phone}</td>
                 <td><button class="btn btn-primary" type="" onclick="acceptCheckOut(${element.userInfo.id})">Check Out</button></td>
-                <td>
                 </tr>
                 `;
             });
@@ -284,7 +284,8 @@ function acceptCheckOut(id) {
         {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("jwt")}`
             },
 
             body: JSON.stringify(jsonData)
@@ -297,6 +298,7 @@ function acceptCheckOut(id) {
         })
         .then(checkOut)
         .then(alert("Checkout successfully!"))
+        .then(checkInCheckOut)
         .catch(error => {
             console.error('Error:', error);
         });

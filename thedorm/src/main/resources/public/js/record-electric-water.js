@@ -26,7 +26,9 @@ function loadbranch() {
 }
 
 
-
+function disabledForm(){
+    document.getElementById("recordElectric").innerHTML = "";
+}
 function loaddorm() {
     
 
@@ -138,6 +140,8 @@ function recordElectric() {
         .then(data => {
 
             console.log(data);
+            alert("Record electric water usage successfully!");
+            disabledForm();
         })
         .catch(error => {
             console.error('Error:', error);

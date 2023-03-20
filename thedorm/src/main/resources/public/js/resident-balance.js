@@ -17,7 +17,8 @@ setInterval(function () {
   }
 function payment(){
     let amount = document.getElementById("amount").value
-    url = "http://localhost:8081/api/v1/user-infos/topup" + `?amount=${amount}`
+    url = "http://localhost:8081/api/v1/user-infos/topup" + `?amount=${amount}`;
+    console.log(url);
     fetch(url, {
         method: "PUT",
         headers: {
@@ -27,6 +28,7 @@ function payment(){
     })
         .then(response => response.json())
         .then(data => {
+        
             if (data.data == true) {
                 alert("Top up successfully")
             }else{

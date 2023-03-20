@@ -24,7 +24,7 @@ public class Room {
 //    private long dorm_id;
 //    private int base_price_id;
  //   private int type_id;
-    private int status;
+//    private int status;
     private boolean gender;
     @ManyToOne
     @JoinColumn(name = "dorm_id")

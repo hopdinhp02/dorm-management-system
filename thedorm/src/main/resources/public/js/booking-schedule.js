@@ -34,6 +34,7 @@ function loadForm() {
     <br>
     EndDate: <br><input type="datetime-local" id="endDate">
     <br>
+    <button class="orange-btn1" type="" id="updateButton" onclick="addBookingSchedule()">Add</button><br><br>
     `
     form.innerHTML = formSchedule
 
@@ -83,8 +84,8 @@ function loadBookingSchedule() {
 
             dataJson.data.forEach(element => {
                 bookingSchedule += `<tr>
-                <td onclick="loadUpdateForm(${element.id})" id="bookingScheduleid">${element.id}</td>
-                <td>${element.branch.id}</td>
+                <td>${element.id}</td>
+                <td>${element.branch.name}</td>
                 <td>${element.keepStartDate}</td>
                 <td>${element.keepEndDate}</td>
                 <td>${element.newStartDate}</td>
@@ -92,7 +93,7 @@ function loadBookingSchedule() {
                 <td>${element.startDate}</td>
                 <td>${element.endDate}</td>
                 <td style=" font-weight:900; font-size:18px">${element.reset}</td>
-                <td style="color: green; font-weight:900; font-size:18px">${element.active ? "Actived" : `<button class="btn btn-primary"   onclick="activeSchedule(${element.branch.id})" style="color: red;">Active</button>`}</td>
+                <td style="color: green; font-weight:900; font-size:18px">${element.active ? "Actived" : `<button class="btn btn-primary"   onclick="activeSchedule(${element.branch.id})" >Active</button>`}</td>
                 </tr>`;
                 console.log(dataJson);
             });
@@ -149,14 +150,13 @@ function loadUpdateForm(id) {
 function addBookingSchedule() {
     let url = "http://localhost:8081/api/v1/booking-schedule";
     let branch = document.getElementById("branchs").value
-    let keepStartDate = document.getElementById("keepStartDate").value
-    let keepEndDate = document.getElementById("keepEndDate").value
-    let NewStartDate = document.getElementById("newStartDate").value
-    let NewEndDate = document.getElementById("newEndDate").value
-    let StartDate = document.getElementById("startDate").value
-    let EndDate = document.getElementById("endDate").value
-    let isReset = document.getElementById("isReset").value
-    jsonData = { branch: { id: branch }, keepStartDate: keepStartDate, keepEndDate: keepEndDate, newStartDate: NewStartDate, newEndDate: NewEndDate, startDate: StartDate, endDate: EndDate, reset: isReset };
+    let keepStartDate = document.getElementById("keepStartDate").value.slice(0, 19).replace('T', ' ') + ":00";
+    let keepEndDate = document.getElementById("keepEndDate").value.slice(0, 19).replace('T', ' ') + ":00";
+    let NewStartDate = document.getElementById("newStartDate").value.slice(0, 19).replace('T', ' ') + ":00";
+    let NewEndDate = document.getElementById("newEndDate").value.slice(0, 19).replace('T', ' ') + ":00";
+    let StartDate = document.getElementById("startDate").value.slice(0, 19).replace('T', ' ') + ":00";
+    let EndDate = document.getElementById("endDate").value.slice(0, 19).replace('T', ' ') + ":00";
+    jsonData = { branch: { id: branch }, keepStartDate: keepStartDate, keepEndDate: keepEndDate, newStartDate: NewStartDate, newEndDate: NewEndDate, startDate: StartDate, endDate: EndDate};
     fetch(url, {
         method: 'POST',
         headers: {
@@ -170,6 +170,7 @@ function addBookingSchedule() {
 
             console.log(data);
         })
+        .then(loadBookingSchedule)
         .catch(error => {
             console.error('Error:', error);
         });

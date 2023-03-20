@@ -131,11 +131,11 @@ public class UserInfoController {
             userInfoRepository.save(user);
 
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("OK", "Top up successfully", ""));
+                        new ResponseObject("OK", "Top up successfully", true));
 
         }catch (NumberFormatException ex){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseObject("failed", ex.getMessage(), "")
+                    new ResponseObject("failed", ex.getMessage(), false)
             );
         }
 

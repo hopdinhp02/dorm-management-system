@@ -48,6 +48,9 @@ function loadIdSearch(){
       searchDropDown.innerHTML = searchRequest
       loadbranch();
     }
+    if (idSelected == 5) {
+      searchDropDown.innerHTML = "";
+    }
 }
 
 function loadbranch() {

@@ -70,7 +70,7 @@ public class BranchController {
                     branch.setAddress(newBranch.getAddress());
                     branch.setPhone(newBranch.getPhone());
 //                    branch.setTypeId(newBranch.getTypeId());
-                    branch.setStatus(newBranch.getStatus());
+//                    branch.setStatus(newBranch.getStatus());
                     return branchRepository.save(branch);
                 }).orElseGet(() -> null);
         if(updateBranch != null){

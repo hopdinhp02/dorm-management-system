@@ -44,7 +44,6 @@ function showFormAddFacilityNotAssign() {
     Price: <input type="number" id="price"><br>
     Provider: <input type="text" id="provider"><br>
     Expiration Date: <input type="datetime-local" id="expirationDate"><br>
-    Producing Date: <input type="datetime-local" id="procudingDate"><br>
     Quantity: <input type="number" value = "1" id="quantity"><br>
     Type: <input type="text" id="type"><br>
     <button class="btn btn-primary" type="submit" id="show" onclick="addFacilityNotAssign()">Add</button><br>`
@@ -62,7 +61,6 @@ function addFacilityNotAssign() {
     Price = document.getElementById("price").value;
     Provider = document.getElementById("provider").value;
     expirationDate = document.getElementById("expirationDate").value;
-    procudingDate = document.getElementById("procudingDate").value;
     Type = document.getElementById("type").value;
 
     const expirationdate = new Date(expirationDate);
@@ -75,14 +73,6 @@ function addFacilityNotAssign() {
     const expirationFormattedDate = `${expirationyear}-${expirationmonth.toString().padStart(2, "0")}-${expirationday.toString().padStart(2, "0")} ${expirationhours.toString().padStart(2, "0")}:${expirationminutes.toString().padStart(2, "0")}:${expirationseconds.toString().padStart(2, "0")}`;
 
 
-    const procudingdate = new Date(procudingDate);
-    const procudingyear = procudingdate.getFullYear();
-    const procudingmonth = procudingdate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
-    const procudingday = procudingdate.getDate();
-    const procudinghours = procudingdate.getHours();
-    const procudingminutes = procudingdate.getMinutes();
-    const procudingseconds = procudingdate.getSeconds();
-    const procudingFormattedDate = `${procudingyear}-${procudingmonth.toString().padStart(2, "0")}-${procudingday.toString().padStart(2, "0")} ${procudinghours.toString().padStart(2, "0")}:${procudingminutes.toString().padStart(2, "0")}:${procudingseconds.toString().padStart(2, "0")}`;
     jsonData = {
         facilityDetail: {
             codeProduct: codeProduct,
@@ -90,7 +80,6 @@ function addFacilityNotAssign() {
             price: Price,
             provider: Provider,
             expirationDate: expirationFormattedDate,
-            procudingDate: procudingFormattedDate,
             type: Type,
         }
     };
@@ -184,7 +173,7 @@ function loadFacilityNotAssign() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 function updateFacilityDetail(id, value) {
@@ -234,7 +223,6 @@ function loadFormAddFacilityAssign(){
     Price: <input type="number" id="price"><br>
     Provider: <input type="text" id="provider"><br>
     Expiration Date: <input type="datetime-local" id="expirationDate"><br>
-    Producing Date: <input type="datetime-local" id="procudingDate"><br>
     Quantity: <input type="number" id="quantity"><br>
     Type: <input type="text" id="type"><br>
     <button class="btn btn-primary" type="" id="show" onclick="addFacilityAssign()">Add</button><br>`
@@ -267,14 +255,7 @@ function addFacilityAssign(){
     const expirationFormattedDate = `${expirationyear}-${expirationmonth.toString().padStart(2, "0")}-${expirationday.toString().padStart(2, "0")} ${expirationhours.toString().padStart(2, "0")}:${expirationminutes.toString().padStart(2, "0")}:${expirationseconds.toString().padStart(2, "0")}`;
 
 
-    const procudingdate = new Date(procudingDate);
-    const procudingyear = procudingdate.getFullYear();
-    const procudingmonth = procudingdate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
-    const procudingday = procudingdate.getDate();
-    const procudinghours = procudingdate.getHours();
-    const procudingminutes = procudingdate.getMinutes();
-    const procudingseconds = procudingdate.getSeconds();
-    const procudingFormattedDate = `${procudingyear}-${procudingmonth.toString().padStart(2, "0")}-${procudingday.toString().padStart(2, "0")} ${procudinghours.toString().padStart(2, "0")}:${procudingminutes.toString().padStart(2, "0")}:${procudingseconds.toString().padStart(2, "0")}`;
+
     if (idSelected ==1) {
         let branchId = document.getElementById("branchRemove").value
         console.log(branchId);
@@ -285,7 +266,6 @@ function addFacilityAssign(){
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
-                procudingDate: procudingFormattedDate,
                 type: Type,
             },
             branch: {id: branchId}
@@ -300,7 +280,6 @@ function addFacilityAssign(){
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
-                procudingDate: procudingFormattedDate,
                 type: Type,
             },
             dorm: {id: dormId}
@@ -315,7 +294,6 @@ function addFacilityAssign(){
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
-                procudingDate: procudingFormattedDate,
                 type: Type,
             },
             room: {id: roomId}
@@ -330,7 +308,6 @@ function addFacilityAssign(){
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
-                procudingDate: procudingFormattedDate,
                 type: Type,
             },
             slot: {id: slotId}

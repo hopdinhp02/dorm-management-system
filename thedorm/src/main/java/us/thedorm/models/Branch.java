@@ -22,7 +22,7 @@ public class Branch {
     private String phone;
 //    @Column(name = "type_id")
 //    private int typeId;
-    private int status;
+//    private int status;
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<Dorm> Dorms;

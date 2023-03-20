@@ -86,7 +86,7 @@ public class RoomController {
                    room.setDorm(newRoom.getDorm());
                    room.setSlots(newRoom.getSlots());
                    room.setBasePrice(newRoom.getBasePrice());
-                   room.setStatus(newRoom.getStatus());
+//                   room.setStatus(newRoom.getStatus());
 
                     return roomRepository.save(room);
                 }).orElseGet(() -> null);

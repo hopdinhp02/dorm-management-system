@@ -36,7 +36,8 @@ function checkUserIsBook() {
       console.log(dataJson);
       if (dataJson.data != false) {
         bookingForm.innerHTML = `<h3 class="big-title"  style='color: red;'>You have booked</h3>
-             <div style="font-size: 20px;" >
+             <div class="col-xs-12 col-md-7 no-padding no-margin"
+             style="font-size: 20px;" >
               Branch: ${dataJson.data.slot.room.dorm.branch.name}<br>
               Dorm: ${dataJson.data.slot.room.dorm.name}<br>
               Room: ${dataJson.data.slot.room.name}<br>

@@ -24,10 +24,10 @@ public class BasePrice {
     private int electricPrice;
     @Column(name = "water_price")
     private int waterPrice;
-    @Column(name = "internet_price")
-    private int internetPrice;
-    @Column(name = "clean_price")
-    private int cleanPrice;
+//    @Column(name = "internet_price")
+//    private int internetPrice;
+//    @Column(name = "clean_price")
+//    private int cleanPrice;
     @OneToMany(mappedBy = "basePrice", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<Room> rooms;

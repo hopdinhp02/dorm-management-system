@@ -20,10 +20,6 @@ import java.util.Date;
 @Builder
 
 public class FacilityDetail {
-    public enum Type{
-        bed
-
-    }
     public enum Status{
         good,
         broken,
@@ -40,8 +36,8 @@ public class FacilityDetail {
     private int price;
     private int value;
     private String codeProduct;
-    @Enumerated(EnumType.STRING)
-   private Type type;
+
+   private String type;
     @Enumerated(EnumType.STRING)
     private Status status;
     @OneToMany(mappedBy = "facilityDetail",cascade = CascadeType.ALL)
