@@ -192,16 +192,12 @@ function updateFacilityDetail(id, value) {
         .then(response => response.json())
         .then(data => {
             console.log(data);
+            alert("Update Successfully!")
         })
         .catch(error => {
             console.error('Error:', error);
         });
-    if (value1 == 1) {
-        setTimeout(loadFacilityAssign, 500);
 
-    } else {
-        setTimeout(loadFacilityNotAssign, 500);
-    }
 }
 
 function accept(id, value) {
@@ -209,11 +205,7 @@ function accept(id, value) {
 
     if (confirm("The value has changed to: " + value)) {
         updateFacilityDetail(id, value)
-    } else if (value1 == 1) {
-        setTimeout(loadFacilityAssign(), 500)
-    } else if (value1 == 2) {
-        setTimeout(loadFacilityNotAssign(), 500)
-    }
+    } 
 }
 
 function loadFormAddFacilityAssign(){
@@ -344,46 +336,46 @@ function loadIdRemove() {
     let removeDropDown = document.getElementById("load")
     let reMoveRequest = ``
     if (idSelected == 1) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange="loadFacilityByBranch()">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange="loadFacilityByBranch()">
                  <option value="" disabled selected>Chọn một lựa chọn</option>
                </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>
        `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
     } if (idSelected == 2) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
     <option value="" disabled selected>Chọn một lựa chọn</option>
   </select><br> 
-  DormID: <br><select class="SBB-input" id="dormRemove" onchange="loadFacilityByDorm()">
+  Dorm: <br><select class="SBB-input" id="dormRemove" onchange="loadFacilityByDorm()">
        <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>
        `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
     } if (idSelected == 3) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
     <option value="" disabled selected>Chọn một lựa chọn</option>
   </select><br> 
-  DormID: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
+  Dorm: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
        <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br>
-       RoomID: <br><select class="SBB-input" id="roomRemove" onchange="loadFacilityByRoom()">
+       Room: <br><select class="SBB-input" id="roomRemove" onchange="loadFacilityByRoom()">
          <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>
       `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
     } if (idSelected == 4) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
         <option value="" disabled selected>Chọn một lựa chọn</option>
       </select><br> 
-      DormID: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
+      Dorm: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
            <option value="" disabled selected>Chọn một lựa chọn</option>
            </select><br>
-           RoomID: <br><select class="SBB-input" id="roomRemove" onchange=" loadslots()">
+           Room: <br><select class="SBB-input" id="roomRemove" onchange=" loadslots()">
              <option value="" disabled selected>Chọn một lựa chọn</option>
            </select><br>
-           SlotID: <br><select class="SBB-input" id="slotRemove" onchange="loadFacilityBySlot()">
+           Slot: <br><select class="SBB-input" id="slotRemove" onchange="loadFacilityBySlot()">
          <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>`
         removeDropDown.innerHTML = reMoveRequest

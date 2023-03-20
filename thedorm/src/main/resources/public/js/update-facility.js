@@ -6,7 +6,13 @@ loadFacilityDetail()
 function loadFacilityDetail() {
     console.log(3);
     let url = "http://localhost:8081/api/v1/facilities/facility-detail/" + data;
-    fetch(url)
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+        }
+    })
         .then(response => response.json())
         .then(dataJson => {
 
@@ -16,7 +22,6 @@ function loadFacilityDetail() {
             document.getElementById("price").value = facilityDetailSelected.data.price;
             document.getElementById("provider").value = facilityDetailSelected.data.provider;
             document.getElementById("expirationDate").value = facilityDetailSelected.data.expirationDate;
-            document.getElementById("procudingDate").value = facilityDetailSelected.data.producingDate;
             document.getElementById("type").value = facilityDetailSelected.data.type;
         })
         .catch(error => {
@@ -45,15 +50,8 @@ function updateFacility() {
     const expirationFormattedDate = `${expirationyear}-${expirationmonth.toString().padStart(2, "0")}-${expirationday.toString().padStart(2, "0")} ${expirationhours.toString().padStart(2, "0")}:${expirationminutes.toString().padStart(2, "0")}:${expirationseconds.toString().padStart(2, "0")}`;
 
 
-    const procudingdate = new Date(procudingDate);
-    const procudingyear = procudingdate.getFullYear();
-    const procudingmonth = procudingdate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
-    const procudingday = procudingdate.getDate();
-    const procudinghours = procudingdate.getHours();
-    const procudingminutes = procudingdate.getMinutes();
-    const procudingseconds = procudingdate.getSeconds();
-    const procudingFormattedDate = `${procudingyear}-${procudingmonth.toString().padStart(2, "0")}-${procudingday.toString().padStart(2, "0")} ${procudinghours.toString().padStart(2, "0")}:${procudingminutes.toString().padStart(2, "0")}:${procudingseconds.toString().padStart(2, "0")}`;
-    jsonData = { codeProduct: codeProduct, name: namee, price: price, provider: provider, expirationDate: expirationFormattedDate, producingDate: procudingFormattedDate, type: type };
+   
+    jsonData = { codeProduct: codeProduct, name: namee, price: price, provider: provider, expirationDate: expirationFormattedDate, type: type };
     console.log(jsonData);
     fetch(url, {
         method: "PUT",
