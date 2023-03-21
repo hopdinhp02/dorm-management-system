@@ -1,5 +1,5 @@
 const urlParams = new URLSearchParams(window.location.search);
-let data = urlParams.get('data');
+data = urlParams.get('data');
 loadFacilityDetailToTable()
 loadFacilityDetail()
 
@@ -22,6 +22,7 @@ function loadFacilityDetail() {
             document.getElementById("price").value = facilityDetailSelected.data.price;
             document.getElementById("provider").value = facilityDetailSelected.data.provider;
             document.getElementById("expirationDate").value = facilityDetailSelected.data.expirationDate;
+            document.getElementById("procudingDate").value = facilityDetailSelected.data.producingDate;
             document.getElementById("type").value = facilityDetailSelected.data.type;
         })
         .catch(error => {

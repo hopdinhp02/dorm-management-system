@@ -1,5 +1,5 @@
 const urlParams = new URLSearchParams(window.location.search);
-let data = urlParams.get('data');
+data = urlParams.get('data');
 loadMaintenanceToTable()
 function loadMaintenanceToTable() {
     console.log(3);
@@ -39,22 +39,13 @@ function addMaintenanceFacility() {
     let url = "http://localhost:8081/api/v1/facilities/" + data + "/facility-detail/maintenances";
     maintenancePrice = document.getElementById("price").value;
     maintenanceNote = document.getElementById("note").value;
-    maintenanceFixDate = document.getElementById("fixDate").value;
-    const date = new Date(maintenanceFixDate);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
-    const day = date.getDate();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
-    const formattedDate = `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")} ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-    console.log(formattedDate);
-    jsonData = { price: maintenancePrice, note: maintenanceNote, fixDate: formattedDate };
+    jsonData = { price: maintenancePrice, note: maintenanceNote};
     fetch(url,
         {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
             },
 
             body: JSON.stringify(jsonData)

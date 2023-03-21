@@ -53,8 +53,9 @@ function updateIsActive(userId, value){
     fetch(url, {
         method: "PUT",
         headers: {
-            "Content-Type": "application/json"
-        },
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+        }
         
     })
         .then(response => response.json())

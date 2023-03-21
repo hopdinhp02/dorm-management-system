@@ -1,5 +1,7 @@
+
 const urlParams = new URLSearchParams(window.location.search);
-let data = urlParams.get('data');
+ data = urlParams.get('data');
+console.log(data);
 loadFacility()
 function loadFacility() {
     console.log(1);

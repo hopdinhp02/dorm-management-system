@@ -77,12 +77,7 @@ function showFormAddFacilityNotAssign() {
                         <input class="SBB-input" type="datetime-local" id="expirationDate">
                     </div>
                 </div>
-                <div class="SBB-layout-1">
-                    <label class="SBB-input-label no-margin">Producing Date</label>
-                    <div class="" >
-                       <input class="SBB-input" type="datetime-local" id="procudingDate">
-                    </div>
-                </div>
+
         </div>
         <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
                 <div class="SBB-layout-1">
@@ -114,7 +109,6 @@ function addFacilityNotAssign() {
     Price = document.getElementById("price").value;
     Provider = document.getElementById("provider").value;
     expirationDate = document.getElementById("expirationDate").value;
-    procudingDate = document.getElementById("procudingDate").value;
     Type = document.getElementById("type").value;
 
     const expirationdate = new Date(expirationDate);
@@ -127,14 +121,7 @@ function addFacilityNotAssign() {
     const expirationFormattedDate = `${expirationyear}-${expirationmonth.toString().padStart(2, "0")}-${expirationday.toString().padStart(2, "0")} ${expirationhours.toString().padStart(2, "0")}:${expirationminutes.toString().padStart(2, "0")}:${expirationseconds.toString().padStart(2, "0")}`;
 
 
-    const procudingdate = new Date(procudingDate);
-    const procudingyear = procudingdate.getFullYear();
-    const procudingmonth = procudingdate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
-    const procudingday = procudingdate.getDate();
-    const procudinghours = procudingdate.getHours();
-    const procudingminutes = procudingdate.getMinutes();
-    const procudingseconds = procudingdate.getSeconds();
-    const procudingFormattedDate = `${procudingyear}-${procudingmonth.toString().padStart(2, "0")}-${procudingday.toString().padStart(2, "0")} ${procudinghours.toString().padStart(2, "0")}:${procudingminutes.toString().padStart(2, "0")}:${procudingseconds.toString().padStart(2, "0")}`;
+    
     jsonData = {
         facilityDetail: {
             codeProduct: codeProduct,
@@ -142,7 +129,6 @@ function addFacilityNotAssign() {
             price: Price,
             provider: Provider,
             expirationDate: expirationFormattedDate,
-            procudingDate: procudingFormattedDate,
             type: Type,
         }
     };
@@ -311,12 +297,7 @@ function loadFormAddFacilityAssign() {
                         <input class="SBB-input" type="datetime-local" id="expirationDate">
                     </div>
                 </div>
-                <div class="SBB-layout-1">
-                    <label class="SBB-input-label no-margin">Producing Date</label>
-                    <div class="" >
-                       <input class="SBB-input" type="datetime-local" id="procudingDate">
-                    </div>
-                </div>
+ 
         </div>
         <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
                 <div class="SBB-layout-1">
@@ -350,7 +331,6 @@ function addFacilityAssign() {
     Price = document.getElementById("price").value;
     Provider = document.getElementById("provider").value;
     expirationDate = document.getElementById("expirationDate").value;
-    procudingDate = document.getElementById("procudingDate").value;
     Type = document.getElementById("type").value;
 
     const expirationdate = new Date(expirationDate);
@@ -363,14 +343,7 @@ function addFacilityAssign() {
     const expirationFormattedDate = `${expirationyear}-${expirationmonth.toString().padStart(2, "0")}-${expirationday.toString().padStart(2, "0")} ${expirationhours.toString().padStart(2, "0")}:${expirationminutes.toString().padStart(2, "0")}:${expirationseconds.toString().padStart(2, "0")}`;
 
 
-    const procudingdate = new Date(procudingDate);
-    const procudingyear = procudingdate.getFullYear();
-    const procudingmonth = procudingdate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
-    const procudingday = procudingdate.getDate();
-    const procudinghours = procudingdate.getHours();
-    const procudingminutes = procudingdate.getMinutes();
-    const procudingseconds = procudingdate.getSeconds();
-    const procudingFormattedDate = `${procudingyear}-${procudingmonth.toString().padStart(2, "0")}-${procudingday.toString().padStart(2, "0")} ${procudinghours.toString().padStart(2, "0")}:${procudingminutes.toString().padStart(2, "0")}:${procudingseconds.toString().padStart(2, "0")}`;
+
     if (idSelected == 1) {
         let branchId = document.getElementById("branchRemove").value
         console.log(branchId);
@@ -381,7 +354,6 @@ function addFacilityAssign() {
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
-                procudingDate: procudingFormattedDate,
                 type: Type,
             },
             branch: { id: branchId }
@@ -396,7 +368,6 @@ function addFacilityAssign() {
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
-                procudingDate: procudingFormattedDate,
                 type: Type,
             },
             dorm: { id: dormId }
@@ -411,7 +382,6 @@ function addFacilityAssign() {
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
-                procudingDate: procudingFormattedDate,
                 type: Type,
             },
             room: { id: roomId }
@@ -426,7 +396,6 @@ function addFacilityAssign() {
                 price: Price,
                 provider: Provider,
                 expirationDate: expirationFormattedDate,
-                procudingDate: procudingFormattedDate,
                 type: Type,
             },
             slot: { id: slotId }
@@ -447,10 +416,18 @@ function addFacilityAssign() {
     )
         .then(respone => respone.json())
         .then(alert("Add Successfully!!"))
-        .then(location.reload())
         .then(data => {
 
             console.log(data);
+            if (idSelected == 1) {
+                loadFacilityByBranch()
+            } else if (idSelected == 2) {
+                loadFacilityByDorm()
+            } else if (idSelected == 3) {
+                loadFacilityByRoom()
+            } else if (idSelected == 4) {
+                loadFacilityBySlot()
+            }
         })
 
         .catch(error => {
@@ -863,7 +840,7 @@ function moveToUpdate(id) {
 
 
 function moveToMaintenance(id) {
-
+    
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
