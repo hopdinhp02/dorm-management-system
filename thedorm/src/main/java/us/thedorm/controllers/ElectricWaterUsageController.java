@@ -231,7 +231,7 @@ public class ElectricWaterUsageController {
     @GetMapping ("/endNumberElectricWater")
     ResponseEntity<ResponseObject> GetEndNumberElectricWater(@RequestParam (name="roomid")  Long roomid )
     {
-//        UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//       UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ElectricWaterUsage endNumberElectricWater = electricWaterUsageRepo.EndNumberELectricWater(roomid);
         if(endNumberElectricWater != null){
             return ResponseEntity.status(HttpStatus.OK).body(
