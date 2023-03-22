@@ -14,10 +14,10 @@ function loadNotification(){
         .then(response => response.json())
         .then(jsonData => {
             jsonData.data.forEach(element => {
-                a += ` <li><a>${element.createdDate}</a>
-                <a>${element.title}</a>&nbsp&nbsp&nbsp<button class="btn btn-primary" type="" onclick="loadContent(${element.id})">View Detail</button><br>
-                <div>
-                <p style="display: none;" id="${element.id}">${element.content}</p>
+                a += `<li ><a>${element.createdDate} : </a>
+                <a> ${element.title}</a>
+                <div >
+                <p  id="${element.id}">${element.content}</p>
                 </div>
                 </li>
         `;
