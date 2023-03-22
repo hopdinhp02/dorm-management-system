@@ -88,7 +88,7 @@ public class BookingService {
 
         List<Slot> slots = slotRepository.getSlotsByRoom_Id(id);
 
-        return slots.stream().filter(e -> !foundSlots.contains(e))
+        return slots.stream().filter(e -> !foundSlots.contains(e) && e.getStatus().equals(Slot.Status.Available))
                  .toList();
     }
 
