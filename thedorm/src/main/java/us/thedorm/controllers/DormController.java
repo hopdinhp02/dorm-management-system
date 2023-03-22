@@ -4,10 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import us.thedorm.models.ResponseObject;
-import us.thedorm.models.Dorm;
+import us.thedorm.models.*;
 import us.thedorm.repositories.DormRepository;
+import us.thedorm.repositories.SlotRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,8 @@ import java.util.Optional;
 public class DormController {
     @Autowired
     private DormRepository dormRepository;
+    @Autowired
+    private SlotRepository slotRepository;
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllDorms() {
         List<Dorm> foundDorms = dormRepository.findAll();
@@ -93,4 +96,23 @@ public class DormController {
         );
     }
 
+    @GetMapping("/{id}/room-status")
+    ResponseEntity<ResponseObject> getRoomStatus(@PathVariable Long id) {
+        Optional<Dorm> foundDorm = dormRepository.findById(id);
+        if(foundDorm.isPresent()){
+            List<ResponseRoomStatus> roomStatuses = new ArrayList<>();
+            for (Room room: foundDorm.get().getRooms()) {
+                List<Slot> availableSlot = slotRepository.getSlotsByRoom_IdAndStatus(room.getId(), Slot.Status.Available);
+                List<Slot> bookedSlot = slotRepository.getSlotsByRoom_IdAndStatus(room.getId(), Slot.Status.NotAvailable);
+                roomStatuses.add(new ResponseRoomStatus(room, availableSlot, bookedSlot, null));
+            }
+            return  ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "", roomStatuses));
+        }
+
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("false", "", ""
+                ));
+    }
 }

@@ -34,7 +34,7 @@ function loadForm() {
     <br>
     EndDate: <br><input type="datetime-local" id="endDate">
     <br>
-    <button class="orange-btn1" type="" id="updateButton" onclick="addBookingSchedule()">Add</button><br><br>
+    <button class="orange-btn1" type="" id="updateButton" onclick="checkDate()">Add</button><br><br>
     `
     form.innerHTML = formSchedule
 
@@ -145,6 +145,32 @@ function loadUpdateForm(id) {
     <br>`
     updateForm.innerHTML = updateSchedule
     loadBookingScheduleById(id)
+}
+
+function checkDate() {
+    let keepStartDate = document.getElementById("keepStartDate").value.slice(0, 19).replace('T', ' ') + ":00";
+    let keepEndDate = document.getElementById("keepEndDate").value.slice(0, 19).replace('T', ' ') + ":00";
+    let NewStartDate = document.getElementById("newStartDate").value.slice(0, 19).replace('T', ' ') + ":00";
+    let NewEndDate = document.getElementById("newEndDate").value.slice(0, 19).replace('T', ' ') + ":00";
+    let StartDate = document.getElementById("startDate").value.slice(0, 19).replace('T', ' ') + ":00";
+    let EndDate = document.getElementById("endDate").value.slice(0, 19).replace('T', ' ') + ":00";
+
+    if (keepEndDate > NewStartDate) {
+        alert("keepEndDate must be earlier than NewStartDate!!")
+    }else if(keepEndDate<keepStartDate){
+        alert("keepStartDate must be earlier than keepEndDate!!")
+    }else if (NewEndDate < NewStartDate) {
+        alert("NewStartDate must be earlier than NewEndDate!!")
+    }else if (StartDate > EndDate) {
+        alert("StartDate must be earlier than EndDate!!")
+    }else if (StartDate <= keepEndDate) {
+        alert("keepEndDate must be earlier than StartDate!!")
+    }else if (StartDate <= NewEndDate) {
+        alert("NewEndDate must be earlier than StartDate!!")
+    }
+    else{
+        addBookingSchedule();
+    }
 }
 
 function addBookingSchedule() {

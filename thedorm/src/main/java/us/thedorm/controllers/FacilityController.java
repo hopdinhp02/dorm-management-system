@@ -260,6 +260,7 @@ public class FacilityController {
         Facility updateFacilityDetail = facilityRepository.findById(id)
                 .map(facility -> {
                     maintenance.setFacilityDetail(facility.getFacilityDetail());
+                    maintenance.setFixDate(new Date());
                     facility.getFacilityDetail().getMaintenances().add(maintenance);
                     return facilityRepository.save(facility);
                 }).orElseGet(() -> null);

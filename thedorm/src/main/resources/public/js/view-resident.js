@@ -220,10 +220,11 @@ function searchInAll(name){
                 resident += `<tr>
                 
                 <td>${element.userInfo.id}</td>
+                <td><img src="/images/avata.jpg" style="width: 80px; height: 80px;" onclick="enlargeImage(this)" id="myImage"></td>
+                <td><img src="/images/cccd.jpg" style="width: 150px; height: 80px;" onclick="enlargeImage(this)" id="myImage"></td>
                 <td>${element.userInfo.name == null?"": element.userInfo.name}</td>
                 <td>${element.userInfo.email == null?"": element.userInfo.email}</td>
                 <td>${element.userInfo.phone == null?"": element.userInfo.phone}</td>
-                <td>${element.userInfo.image == null?"": element.userInfo.image}</td>
                 <td>${element.slot.room.dorm.branch.name == null?"": element.slot.room.dorm.branch.name}</td>
                 <td>${element.slot.room.dorm.name == null?"": element.slot.room.dorm.name}</td>
                 <td>${element.slot.room.name == null?"": element.slot.room.name}</td>
@@ -237,6 +238,31 @@ function searchInAll(name){
             console.log("error");
         });
 }
+
+
+function enlargeImage(img) {
+    var overlay = document.createElement("div");
+    overlay.setAttribute("id", "overlay");
+    overlay.setAttribute("onclick", "shrinkImage()");
+    overlay.setAttribute("class", "floating-div");
+    document.body.appendChild(overlay);
+    
+    var image = document.createElement("img");
+    image.setAttribute("src", img.src);
+    image.setAttribute("id", "enlarged-image");
+    console.log(image);
+    overlay.appendChild(image)
+    console.log(overlay);
+    
+  }
+  
+  function shrinkImage() {
+    var overlay = document.getElementById("overlay");
+    var image = document.getElementById("enlarged-image");
+    document.body.removeChild(overlay);
+    document.body.removeChild(image);
+  }
+
 
 function searchInBranch(name) {
     let branchId = document.getElementById("branchSearch").value

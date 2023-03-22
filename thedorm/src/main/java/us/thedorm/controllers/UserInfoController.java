@@ -14,6 +14,7 @@ import us.thedorm.repositories.UserInfoRepository;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -241,6 +242,7 @@ public class UserInfoController {
             }else{
                 user.setBalance(user.getBalance()-cost);
                 billing.get().setStatus(Billing.Status.Paid);
+                billing.get().setPayDate(new Date());
                 userInfoRepository.save(user);
                 billingRepository.save(billing.get());
                 return ResponseEntity.status(HttpStatus.OK).body(

@@ -29,7 +29,7 @@
 
 
             <!-- User Menu-->
-            <li><a class="app-nav__item" href="home"><i class='bx bx-log-out bx-rotate-180'></i> </a>
+            <li><a class="app-nav__item" onclick="logout()"><i class='bx bx-log-out bx-rotate-180'></i> </a>
 
             </li>
         </ul>
@@ -98,6 +98,14 @@
                                         </div>
                                         <div class="col-4">
                                             <canvas id="yearPieChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class="col-8">
+                                            <canvas id="yearSlotChart"></canvas>
+                                        </div>
+                                        <div class="col-4">
+                                            <!-- <canvas id="yearPieChart"></canvas> -->
                                         </div>
                                     </div>
                                 </div>
@@ -183,5 +191,5 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/profit.js"></script>
-
+<script src="/js/auth.js"></script>
 </html>

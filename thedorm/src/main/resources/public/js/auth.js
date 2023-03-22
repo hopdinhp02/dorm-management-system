@@ -67,6 +67,7 @@ function login() {
 
 function logout() {
     localStorage.removeItem('jwt');
+    window.location.href = '/home.html'
 }
 
 function moveToDashboard() {

@@ -12,4 +12,5 @@ public interface SlotRepository extends JpaRepository<Slot, Long> {
 
     List<Slot> findAllByRoom_Dorm_BranchId(long id);
 
+    List<Slot> findByRoom_IdAndStatus(long roomId, Slot.Status status);
 }

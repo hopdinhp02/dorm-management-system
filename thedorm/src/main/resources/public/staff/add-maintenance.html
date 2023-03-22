@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Student Page</title>
+  <title>Staff Page</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,7 +27,7 @@
 
 
       <!-- User Menu-->
-      <li><a class="app-nav__item" onclick="logout()"><i class='bx bx-log-out bx-rotate-180'></i> </a>
+      <li><a class="app-nav__item" href="/staff/facility.html"><i class='bx bx-log-out bx-rotate-180'></i> </a>
 
       </li>
     </ul>
@@ -38,26 +38,19 @@
     <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="/images/user0.png" width="50px"
         alt="User Image">
       <div>
-        <p class="app-sidebar__user-name"><b>Resident Page</b></p>
+        <p class="app-sidebar__user-name"><b>Staff Page</b></p>
         <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
       </div>
     </div>
     <hr>
     <ul class="app-menu">
-      <li><a class="app-menu__item" href="/resident/notification.html"><i class='app-menu__icon bx bx-bed'></i><span
-            class="app-menu__label">Notification</span></a></li>
-      <li><a class="app-menu__item" href="/resident/booking-request.html"><i class='app-menu__icon bx bx-bed'></i><span
-            class="app-menu__label">Book room</span></a></li>
-      <li><a class="app-menu__item" href="/resident/electric-water-usage.html"><i
-            class='app-menu__icon bx bx-shower'></i><span class="app-menu__label">Electric water usage</span></a></li>
-      <li><a class="app-menu__item" href="/resident/billing.html"><i
-            class='app-menu__icon bx bx-money-withdraw'></i><span class="app-menu__label ">Billing</span></a>
-      </li>
-      <li><a class="app-menu__item" href="/resident/resident-studen.html"><i
-            class='app-menu__icon bx bx-history'></i><span class="app-menu__label">Resident history</span></a></li>
-      <li><a class="app-menu__item" href="/resident/resident-balance.html"><i
-            class='app-menu__icon bx bxs-to-top'></i><span class="app-menu__label">Top-up</span></a></li>
-    </ul>
+        <li><a class="app-menu__item" href="/staff/add-maintenance.html"><i
+              class='app-menu__icon bx bx-tachometer'></i><span class="app-menu__label" style="font-size: 23px;">Add Maintenance</span></a></li>
+        <!-- <li><a class="app-menu__item" href="/staff/update-facility.html"><i class='app-menu__icon bx bxs-timer'></i><span
+              class="app-menu__label" style="font-size: 23px;">Update Facility</span></a></li>
+        <li><a class="app-menu__item" href="/staff/remove-facility.html"><i
+              class='app-menu__icon bx bx-purchase-tag-alt'></i><span class="app-menu__label">Remove Facility</span></a></li> -->
+      </ul>
   </aside>
   <main class="app-content">
     <div class="row">
@@ -69,53 +62,61 @@
         </div>
       </div>
     </div>
-    </div>
-
-
     <div class="row">
       <div class="col-md-12 col-lg-12" style="padding-left: 125px">
         <div class="row">
           <div class="col-md-12">
             <div class="tile">
               <h3 class="tile-title"></h3>
-
-              <div class="container-fluid my-container">
-                <h1 class="big-title" id="bookingtitle">Booking bed</h1>
-                <!-- <form action="" id="create" method="post"><input name="__RequestVerificationToken" type="hidden" /> -->
-                  <div class="SBB-create-container">
-                    <div class="col-xs-12 col-md-5 no-padding no-margin">
-                      <p class="SBB-l-title"> Your Account Balance</p>
-                      <p id="balance" class="SBB-l-content">0 VND</p>
-                      <p class="SBB-l-title"> Minimum Balance required in VND</p>
-                      <p id="cost" class="SBB-l-content">0 VND</p>
+              <h1 class="big-title">Add Maintenance</h1> <br>
+              <div class=" no-padding no-margin">
+                <h1 id="check"></h1>
+ 
+                <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                  <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Price</label>
+                    <div class="" >
+                       <input class="SBB-input" type="number" id="price">
                     </div>
-                  </div>
-                <!-- </form> -->
-                <!-- <h1 id="check"></h1> -->
-                <div id="booking-request-form">
-                  <form>
-                    <div class="col-xs-12 col-md-7 no-padding no-margin">
-                      <div class="campus">
+                </div>
+                         <div class="SBB-layout-1">
+                             <label class="SBB-input-label no-margin">Note</label>
+                             <div class="" >
+                                 <input class="SBB-input" type="text" id="note">
+                             </div>
+                         </div>
+                         
+                 </div>
 
-                        <select class="SBB-input" id="branchs" onchange="checkDayKeep()">
-                          <option value="" disabled selected>Select Branch</option>
-                        </select><br>
-                      </div><br>
-                      <div id="dorm">
-                        <h1 id="check"></h1>
-                      </div>
-                    </div>
-                
-                </form><br>
-              </div>
-              </div>
+             </div>
+             <button class="btn btn-primary" type="submit" onclick="addMaintenanceFacility()">Add</button><br>
+             <table class="table table-bordered">
+                <thead id="head">
+                    <tr>
+                        <tr>
+                          <th>ID</th>
+                          <th>Price</th>
+                          <th>Note</th>
+                          <th>Fix Date</th>
+                </thead>
+                <tbody  id="maintenance">
+                    <tr>
+                        <th scope="row"></th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        
+                    </tr>
+        
+                </tbody>
+        
+            </table><br>
+              <!-- / div trống-->
             </div>
-
           </div>
+          <!-- / col-12 -->
         </div>
-
       </div>
-    </div>
     </div>
   </main>
   <script type="text/javascript">
@@ -143,11 +144,7 @@
       }
       ]
     };
-    var ctxl = $("#lineChartDemo").get(0).getContext("2d");
-    var lineChart = new Chart(ctxl).Line(data);
 
-    var ctxb = $("#barChartDemo").get(0).getContext("2d");
-    var barChart = new Chart(ctxb).Bar(data);
   </script>
   <script type="text/javascript">
     //Thời Gian
@@ -190,7 +187,50 @@
     }
   </script>
 </body>
-<script src="/js/booking-request.js"></script>
-<script src="/js/auth.js"></script>
+<script src="/js/maintenance-facility.js"></script>
 
 </html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/elegant-icons.css">
+    <link rel="stylesheet" href="css/booking.css">
+    
+</head>
+<body>
+    <form>
+        Note: <input type="text" id="note"><br>
+        Price: <input type="number" id="price"><br>
+        Fix Date: <input type="datetime-local" id="fixDate"><br>
+    </form><br>
+    <button class="btn btn-primary" type="submit" onclick="addMaintenanceFacility()">Add</button><br>
+    <table class="table table-bordered">
+        <thead id="head">
+            <tr>
+                <tr>
+                  <th>ID</th>
+                  <th>Price</th>
+                  <th>Note</th>
+                  <th>Fix Date</th>
+        </thead>
+        <tbody  id="maintenance">
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+        </tbody>
+
+    </table><br>
+</body>
+<script src="/js/maintenance-facility.js"></script>
+</html> -->

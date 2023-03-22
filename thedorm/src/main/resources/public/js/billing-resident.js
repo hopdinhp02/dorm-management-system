@@ -23,10 +23,10 @@ function loadBilling() {
                 <td>${element.userInfo.id}</td>
                 <td>${element.type}</td>
                 <td>${element.cost}</td>
-                <td>${element.status}</td>
                 <td>${element.createdDate}</td>
                 <td>${element.deadlineDate}</td>
                 <td>${element.payDate}</td>
+                <td>${element.status}</td>
                 <td>${element.status == "Unpaid" ? ` <button class="btn btn-primary" onclick="checkBallance(${element.id})">Pay</button>`:""}</td>
                 </tr>`;
                
@@ -57,7 +57,7 @@ function checkBallance(billId){
         .then(respone => respone.json())
         .then(data => {
             console.log(data.data);
-            if (data.data == true && confirm("Are you sure pay bill")) {
+            if (data.data == true && confirm("Are you sure pay bill?")) {
                 payBill(billId);
             } else {
                 alert("You don't have enough money to pay!!")

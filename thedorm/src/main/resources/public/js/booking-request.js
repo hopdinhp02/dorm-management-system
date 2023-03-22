@@ -36,8 +36,7 @@ function checkUserIsBook() {
       console.log(dataJson);
       if (dataJson.data != false) {
         bookingForm.innerHTML = `<h3 class="big-title"  style='color: red;'>You have booked</h3>
-             <div class="col-xs-12 col-md-7 no-padding no-margin"
-             style="font-size: 20px;" >
+             <div style="font-size: 20px;" >
               Branch: ${dataJson.data.slot.room.dorm.branch.name}<br>
               Dorm: ${dataJson.data.slot.room.dorm.name}<br>
               Room: ${dataJson.data.slot.room.name}<br>
@@ -385,7 +384,7 @@ function checkliving() {
       if (dataJson.data == true) {
         getOldSlot();
       } else {
-        // bookingRequest = `<h1>keeping day: 
+        // bookingRequest = `<h1>Keeping day: 
         //                                   you don't have room</h1>`
         text.innerHTML = "keeping day: you don't have room"
         document.getElementById("dorm").innerHTML = "";
@@ -398,9 +397,10 @@ function checkliving() {
 
 
 function getOldSlot() {
-  let url = "http://localhost:8081/api/v1/booking-requests/get-old-slot";
   let branchId = document.getElementById("branchs").value
   let dormRequest = ``;
+  let url = "http://localhost:8081/api/v1/booking-requests/get-old-slot/branchs/"+branchId;
+  console.log(url);
   let dorm = document.getElementById("dorm")
   fetch(url, {
     method: 'GET',
@@ -438,7 +438,7 @@ function getOldSlot() {
                     <label class="SBB-input-label no-margin">Dom</label>
                     <div class="my-select-style">
                       <select class="SBB-input" id="dorms" name="DomId" onchange="loadrooms()">
-                      <option value="${dataJsondata.room.dorm.id}" disabled selected>${data.room.dorm.name}</option></select></select>
+                      <option value="${data.room.dorm.id}" disabled selected>${data.room.dorm.name}</option></select></select>
                     </div>
                   </div>
                   <div class="flex-1">
@@ -461,7 +461,7 @@ function getOldSlot() {
                 <div class="SBB-layout-1">
                   <label class="SBB-input-label no-margin" for="Note">Note</label>
                   <div class="">
-                    <input class="SBB-input text-box single-line" id="Note" name="Note" type="text" value="" style="height: 42px />
+                    <input class="SBB-input text-box single-line" id="Note" name="Note" type="text" value="" style="height: 42px" />
                   </div>
                 </div>
               </div>
@@ -538,7 +538,7 @@ function getBookingCost(){
 }
 
 function checkBalance(){
- 
+ console.log('balance');
   slotid = document.getElementById("slots").value;
   let url = "http://localhost:8081/api/v1/user-infos/check-balance?slotid="+slotid;
   console.log(url);
@@ -559,6 +559,6 @@ function checkBalance(){
       }
     })
     .catch(error => {
-      console.log("error");
+      console.log(error);
     });
 }

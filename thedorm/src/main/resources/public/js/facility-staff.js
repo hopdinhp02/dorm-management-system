@@ -23,13 +23,13 @@ function loadFacility() {
     console.log(value);
     if (value == 1) {
         loadFacilityAssign()
-        addButton = `<select id="facility"  onchange="loadFacility()">
+        addButton = `<select class="BB-input1" id="facility"  onchange="loadFacility()">
         <option value="1" disabled selected>Assigned</option>
         <option value="2" >Not Assign</option>
     </select>`
     } else if (value == 2) {
         loadFacilityNotAssign()
-        addButton = `<select id="facility"  onchange="loadFacility()">
+        addButton = `<select class="BB-input1" id="facility"  onchange="loadFacility()">
         <option value="1" >Assigned</option>
         <option value="2" disabled selected>Not Assign</option>
     </select><br><button class="btn btn-primary" type="submit" id="show" onclick="showFormAddFacilityNotAssign()">Add</button><br>`
@@ -39,13 +39,61 @@ function loadFacility() {
 
 function showFormAddFacilityNotAssign() {
     let form = document.getElementById("formAddFacility")
-    form.innerHTML = `Code Product: <input type="text" id="codeProduct"><br>
-    Name: <input type="text" id="name"><br>
-    Price: <input type="number" id="price"><br>
-    Provider: <input type="text" id="provider"><br>
-    Expiration Date: <input type="datetime-local" id="expirationDate"><br>
-    Quantity: <input type="number" value = "1" id="quantity"><br>
-    Type: <input type="text" id="type"><br>
+    form.innerHTML = `
+    <div class=" no-padding no-margin">
+       <h1 id="check"></h1>
+       <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Code Product</label>
+                    <div class="" >
+                        <input class="SBB-input" type="text" id="codeProduct">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Name</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="name">
+                    </div>
+                </div>
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Price</label>
+                    <div class="" >
+                        <input class="SBB-input" type="number" id="price">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Provider</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="provider">
+                    </div>
+                </div>
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Expiration Date</label>
+                    <div class="" >
+                        <input class="SBB-input" type="datetime-local" id="expirationDate">
+                    </div>
+                </div>
+
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Quantity</label>
+                    <div class="" >
+                        <input class="SBB-input" type="number" value = "1" id="quantity">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Type</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="type">
+                    </div>
+                </div>
+        </div>
+    </div>
     <button class="btn btn-primary" type="submit" id="show" onclick="addFacilityNotAssign()">Add</button><br>`
 
     let show = document.getElementById("show")
@@ -53,9 +101,9 @@ function showFormAddFacilityNotAssign() {
 }
 
 function addFacilityNotAssign() {
-    Quantity = document.getElementById("quantity").value == "" ? 1:document.getElementById("quantity").value;
+    Quantity = document.getElementById("quantity").value == "" ? 1 : document.getElementById("quantity").value;
     console.log(1);
-    url = "http://localhost:8081/api/v1/facilities?quantity="+Quantity;
+    url = "http://localhost:8081/api/v1/facilities?quantity=" + Quantity;
     codeProduct = document.getElementById("codeProduct").value;
     Name = document.getElementById("name").value;
     Price = document.getElementById("price").value;
@@ -73,6 +121,7 @@ function addFacilityNotAssign() {
     const expirationFormattedDate = `${expirationyear}-${expirationmonth.toString().padStart(2, "0")}-${expirationday.toString().padStart(2, "0")} ${expirationhours.toString().padStart(2, "0")}:${expirationminutes.toString().padStart(2, "0")}:${expirationseconds.toString().padStart(2, "0")}`;
 
 
+    
     jsonData = {
         facilityDetail: {
             codeProduct: codeProduct,
@@ -146,7 +195,6 @@ function loadFacilityNotAssign() {
         .then(jsonData => {
             jsonData.data.forEach(element => {
                 facility += ` 
-                
         <tbody id="facilityDetail">
         <tr>
         <td>${element.facilityDetail.id}</td>
@@ -192,16 +240,12 @@ function updateFacilityDetail(id, value) {
         .then(response => response.json())
         .then(data => {
             console.log(data);
+            alert("Update Successfully!")
         })
         .catch(error => {
             console.error('Error:', error);
         });
-    if (value1 == 1) {
-        setTimeout(loadFacilityAssign, 500);
 
-    } else {
-        setTimeout(loadFacilityNotAssign, 500);
-    }
 }
 
 function accept(id, value) {
@@ -209,40 +253,83 @@ function accept(id, value) {
 
     if (confirm("The value has changed to: " + value)) {
         updateFacilityDetail(id, value)
-    } else if (value1 == 1) {
-        setTimeout(loadFacilityAssign(), 500)
-    } else if (value1 == 2) {
-        setTimeout(loadFacilityNotAssign(), 500)
-    }
+    } 
 }
 
-function loadFormAddFacilityAssign(){
+function loadFormAddFacilityAssign() {
     let form = document.getElementById("formAddFacility")
-    form.innerHTML = `Code Product: <input type="text" id="codeProduct"><br>
-    Name: <input type="text" id="name"><br>
-    Price: <input type="number" id="price"><br>
-    Provider: <input type="text" id="provider"><br>
-    Expiration Date: <input type="datetime-local" id="expirationDate"><br>
-    Quantity: <input type="number" id="quantity"><br>
-    Type: <input type="text" id="type"><br>
+    form.innerHTML = `
+    <div class=" no-padding no-margin">
+       <h1 id="check"></h1>
+       <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Code Product</label>
+                    <div class="" >
+                        <input class="SBB-input" type="text" id="codeProduct">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Name</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="name">
+                    </div>
+                </div>
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Price</label>
+                    <div class="" >
+                        <input class="SBB-input" type="number" id="price">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Provider</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="provider">
+                    </div>
+                </div>
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Expiration Date</label>
+                    <div class="" >
+                        <input class="SBB-input" type="datetime-local" id="expirationDate">
+                    </div>
+                </div>
+ 
+        </div>
+        <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Quantity</label>
+                    <div class="" >
+                        <input class="SBB-input" type="number" value = "1" id="quantity">
+                    </div>
+                </div>
+                <div class="SBB-layout-1">
+                    <label class="SBB-input-label no-margin">Type</label>
+                    <div class="" >
+                       <input class="SBB-input" type="text" id="type">
+                    </div>
+                </div>
+        </div>
+    </div>
     <button class="btn btn-primary" type="" id="show" onclick="addFacilityAssign()">Add</button><br>`
     let show = document.getElementById("show")
     show.innerHTML = ``
-    
+
 }
 
-function addFacilityAssign(){
+function addFacilityAssign() {
     let idSelected = document.getElementById("idRemove").value
     console.log(2);
-    let quantityValue = document.getElementById("quantity").value==""?1:document.getElementById("quantity").value
+    let quantityValue = document.getElementById("quantity").value == "" ? 1 : document.getElementById("quantity").value
     console.log(quantityValue);
-    url = "http://localhost:8081/api/v1/facilities?quantity="+quantityValue;
+    url = "http://localhost:8081/api/v1/facilities?quantity=" + quantityValue;
     codeProduct = document.getElementById("codeProduct").value;
     Name = document.getElementById("name").value;
     Price = document.getElementById("price").value;
     Provider = document.getElementById("provider").value;
     expirationDate = document.getElementById("expirationDate").value;
-    procudingDate = document.getElementById("procudingDate").value;
     Type = document.getElementById("type").value;
 
     const expirationdate = new Date(expirationDate);
@@ -256,7 +343,7 @@ function addFacilityAssign(){
 
 
 
-    if (idSelected ==1) {
+    if (idSelected == 1) {
         let branchId = document.getElementById("branchRemove").value
         console.log(branchId);
         jsonData = {
@@ -268,9 +355,9 @@ function addFacilityAssign(){
                 expirationDate: expirationFormattedDate,
                 type: Type,
             },
-            branch: {id: branchId}
+            branch: { id: branchId }
         };
-    }else if(idSelected == 2){
+    } else if (idSelected == 2) {
         let dormId = document.getElementById("dormRemove").value
         console.log(dormId);
         jsonData = {
@@ -282,9 +369,9 @@ function addFacilityAssign(){
                 expirationDate: expirationFormattedDate,
                 type: Type,
             },
-            dorm: {id: dormId}
+            dorm: { id: dormId }
         };
-    }else if(idSelected == 3){
+    } else if (idSelected == 3) {
         let roomId = document.getElementById("roomRemove").value
         console.log(roomId);
         jsonData = {
@@ -296,9 +383,9 @@ function addFacilityAssign(){
                 expirationDate: expirationFormattedDate,
                 type: Type,
             },
-            room: {id: roomId}
+            room: { id: roomId }
         };
-    }else if(idSelected == 4){
+    } else if (idSelected == 4) {
         let slotId = document.getElementById("slotRemove").value
         console.log(slotId);
         jsonData = {
@@ -310,10 +397,10 @@ function addFacilityAssign(){
                 expirationDate: expirationFormattedDate,
                 type: Type,
             },
-            slot: {id: slotId}
+            slot: { id: slotId }
         };
     }
-    
+
     console.log(jsonData);
     fetch(url,
         {
@@ -328,12 +415,20 @@ function addFacilityAssign(){
     )
         .then(respone => respone.json())
         .then(alert("Add Successfully!!"))
-        .then(location.reload())
         .then(data => {
 
             console.log(data);
+            if (idSelected == 1) {
+                loadFacilityByBranch()
+            } else if (idSelected == 2) {
+                loadFacilityByDorm()
+            } else if (idSelected == 3) {
+                loadFacilityByRoom()
+            } else if (idSelected == 4) {
+                loadFacilityBySlot()
+            }
         })
-        
+
         .catch(error => {
             console.error('Error:', error);
         });
@@ -344,46 +439,46 @@ function loadIdRemove() {
     let removeDropDown = document.getElementById("load")
     let reMoveRequest = ``
     if (idSelected == 1) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange="loadFacilityByBranch()">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange="loadFacilityByBranch()">
                  <option value="" disabled selected>Chọn một lựa chọn</option>
                </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>
        `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
     } if (idSelected == 2) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
     <option value="" disabled selected>Chọn một lựa chọn</option>
   </select><br> 
-  DormID: <br><select class="SBB-input" id="dormRemove" onchange="loadFacilityByDorm()">
+  Dorm: <br><select class="SBB-input" id="dormRemove" onchange="loadFacilityByDorm()">
        <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>
        `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
     } if (idSelected == 3) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
     <option value="" disabled selected>Chọn một lựa chọn</option>
   </select><br> 
-  DormID: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
+  Dorm: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
        <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br>
-       RoomID: <br><select class="SBB-input" id="roomRemove" onchange="loadFacilityByRoom()">
+       Room: <br><select class="SBB-input" id="roomRemove" onchange="loadFacilityByRoom()">
          <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>
       `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
     } if (idSelected == 4) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
         <option value="" disabled selected>Chọn một lựa chọn</option>
       </select><br> 
-      DormID: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
+      Dorm: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
            <option value="" disabled selected>Chọn một lựa chọn</option>
            </select><br>
-           RoomID: <br><select class="SBB-input" id="roomRemove" onchange=" loadslots()">
+           Room: <br><select class="SBB-input" id="roomRemove" onchange=" loadslots()">
              <option value="" disabled selected>Chọn một lựa chọn</option>
            </select><br>
-           SlotID: <br><select class="SBB-input" id="slotRemove" onchange="loadFacilityBySlot()">
+           Slot: <br><select class="SBB-input" id="slotRemove" onchange="loadFacilityBySlot()">
          <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br><button class="btn btn-primary" type="submit" id="show" onclick="loadFormAddFacilityAssign()">Add</button><br>`
         removeDropDown.innerHTML = reMoveRequest
@@ -532,7 +627,7 @@ function loadslots() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 
@@ -581,7 +676,7 @@ function loadFacilityByBranch() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 
@@ -630,7 +725,7 @@ function loadFacilityByDorm() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 
@@ -679,7 +774,7 @@ function loadFacilityByRoom() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 
@@ -727,7 +822,7 @@ function loadFacilityBySlot() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 
@@ -736,18 +831,20 @@ function moveToUpdate(id) {
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
-    window.location.href = 'updateFacility.html?data=' + encodeURIComponent(data);
+    // window.location.href = 'update-facility.html?data=' + encodeURIComponent(data);
+    window.open('update-facility.html?data=' + encodeURIComponent(data), '_blank');
 
 }
 
 
 
 function moveToMaintenance(id) {
-
+    
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
-    window.location.href = 'maintenanceFacility.html?data=' + encodeURIComponent(data);
+    // window.location.href = 'add-maintenance.html?data=' + encodeURIComponent(data);
+    window.open('add-maintenance.html?data=' + encodeURIComponent(data), '_blank');
 }
 
 
@@ -757,7 +854,8 @@ function moveToRemove(id) {
     const data = id;
 
     // Chuyển đến trang mới với dữ liệu
-    window.location.href = 'removeFacility2.html?data=' + encodeURIComponent(data);
+    // window.location.href = 'remove-facility.html?data=' + encodeURIComponent(data);
+    window.open('remove-facility.html?data=' + encodeURIComponent(data), '_blank');
 }
 
 

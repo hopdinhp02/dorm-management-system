@@ -7,10 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
-import us.thedorm.repositories.ResidentHistoryRepository;
-import us.thedorm.repositories.SlotRepository;
-import us.thedorm.service.BookingService;
 
+import us.thedorm.repositories.*;
+import us.thedorm.service.RoomStatusService;
+
+
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,14 @@ public class SlotController {
     private BookingService bookingService;
     @Autowired
     private ResidentHistoryRepository residentHistoryRepository;
+    @Autowired
+    private RoomStatusService roomStatusService;
+    @Autowired
+    private RoomRepository roomRepository;
+    @Autowired
+    private DormRepository dormRepository;
+    @Autowired
+    private BranchRepository branchRepository;
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllslots() {
         List<Slot> foundSlots = slotRepository.findAll();
@@ -131,4 +141,97 @@ public class SlotController {
         ));
 
     }
+
+    @GetMapping("/available")
+    ResponseEntity<ResponseObject> getNumOfAvailableSlotInYear(@RequestParam String year,
+                                                                   @RequestParam(required = false) String roomid,
+                                                                   @RequestParam(required = false) String dormid,
+                                                                   @RequestParam(required = false) String branchid)
+    {
+        try{
+            int yearInt = Integer.parseInt(year);
+            int[] numOfAvailable = null;
+            if(roomid != null){
+            long roomId = Long.parseLong(roomid);
+            Optional<Room> room = roomRepository.findById(roomId);
+            if(room.isPresent()){
+                numOfAvailable = roomStatusService.getNumOfAvailableSlotByMonthInDayOfRoom(room.get(), yearInt);
+            }
+            }else if(dormid != null){
+                long dormId = Long.parseLong(dormid);
+                Optional<Dorm> dorm = dormRepository.findById(dormId);
+                if(dorm.isPresent()){
+                    numOfAvailable = roomStatusService.getNumOfAvailableSlotByMonthInDayOfDorm(dorm.get(), yearInt);
+                }
+            }else if(branchid != null){
+                long branchId = Long.parseLong(branchid);
+                Optional<Branch> branch = branchRepository.findById(branchId);
+                if(branch.isPresent()){
+                    numOfAvailable = roomStatusService.getNumOfAvailableSlotByMonthInDayOfBranch(branch.get(), yearInt);
+                }
+            }else{
+                numOfAvailable = roomStatusService.getNumOfAvailableSlotByMonthInDay(yearInt);
+            }
+            if(numOfAvailable.length > 0){
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("OK", "", numOfAvailable)
+                );
+            }else{
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("Fail", "", ""));
+            }
+
+        }catch (NumberFormatException e){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Fail", "", ""));
+        }
+
+    }
+
+    @GetMapping("/booked")
+    ResponseEntity<ResponseObject> getNumOfBookedSlotInYear(@RequestParam String year,
+                                                               @RequestParam(required = false) String roomid,
+                                                               @RequestParam(required = false) String dormid,
+                                                               @RequestParam(required = false) String branchid)
+    {
+        try{
+            int yearInt = Integer.parseInt(year);
+            int[] numOfBooked = null;
+            if(roomid != null){
+                long roomId = Long.parseLong(roomid);
+                Optional<Room> room = roomRepository.findById(roomId);
+                if(room.isPresent()){
+                    numOfBooked = roomStatusService.getNumOfBookedSlotByMonthInDayOfRoom(room.get(), yearInt);
+                }
+            }else if(dormid != null){
+                long dormId = Long.parseLong(dormid);
+                Optional<Dorm> dorm = dormRepository.findById(dormId);
+                if(dorm.isPresent()){
+                    numOfBooked = roomStatusService.getNumOfBookedSlotByMonthInDayOfDorm(dorm.get(), yearInt);
+                }
+            }else if(branchid != null){
+                long branchId = Long.parseLong(branchid);
+                Optional<Branch> branch = branchRepository.findById(branchId);
+                if(branch.isPresent()){
+                    numOfBooked = roomStatusService.getNumOfBookedSlotByMonthInDayOfBranch(branch.get(), yearInt);
+                }
+            }else{
+                numOfBooked = roomStatusService.getNumOfBookedSlotByMonthInDay(yearInt);
+            }
+            if(numOfBooked.length > 0){
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("OK", "", numOfBooked)
+                );
+            }else{
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("Fail", "", ""));
+            }
+
+        }catch (NumberFormatException e){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Fail", "", ""));
+        }
+
+    }
+
 }

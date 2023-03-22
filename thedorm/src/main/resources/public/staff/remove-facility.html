@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Student Page</title>
+  <title>Staff Page</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,7 +27,7 @@
 
 
       <!-- User Menu-->
-      <li><a class="app-nav__item" onclick="logout()"><i class='bx bx-log-out bx-rotate-180'></i> </a>
+      <li><a class="app-nav__item" href="/staff/facility.html"><i class='bx bx-log-out bx-rotate-180'></i> </a>
 
       </li>
     </ul>
@@ -38,26 +38,19 @@
     <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="/images/user0.png" width="50px"
         alt="User Image">
       <div>
-        <p class="app-sidebar__user-name"><b>Resident Page</b></p>
+        <p class="app-sidebar__user-name"><b>Staff Page</b></p>
         <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
       </div>
     </div>
     <hr>
     <ul class="app-menu">
-      <li><a class="app-menu__item" href="/resident/notification.html"><i class='app-menu__icon bx bx-bed'></i><span
-                  class="app-menu__label">Notification</span></a></li>
-      <li><a class="app-menu__item" href="/resident/booking-request.html"><i class='app-menu__icon bx bx-bed'></i><span
-                  class="app-menu__label">Book room</span></a></li>
-      <li><a class="app-menu__item" href="/resident/electric-water-usage.html"><i class='app-menu__icon bx bx-shower'></i><span
-                  class="app-menu__label">Electric water usage</span></a></li>
-      <li><a class="app-menu__item" href="/resident/billing.html"><i class='app-menu__icon bx bx-money-withdraw'></i><span
-                  class="app-menu__label ">Billing</span></a>
-      </li>
-      <li><a class="app-menu__item" href="/resident/resident-studen.html"><i class='app-menu__icon bx bx-history'></i><span
-                  class="app-menu__label">Resident history</span></a></li>
-      <li><a class="app-menu__item" href="/resident/resident-balance.html"><i class='app-menu__icon bx bxs-to-top'></i><span
-                  class="app-menu__label">Top-up</span></a></li>
-  </ul>
+      <!-- <li><a class="app-menu__item" href="/staff/add-maintenance.html"><i
+            class='app-menu__icon bx bx-tachometer'></i><span class="app-menu__label" style="font-size: 23px;">Add Maintenance</span></a></li>
+      <li><a class="app-menu__item" href="/staff/update-facility.html"><i class='app-menu__icon bx bxs-timer'></i><span
+            class="app-menu__label" style="font-size: 23px;">Update Facility</span></a></li> -->
+      <li><a class="app-menu__item" href="/staff/remove-facility.html"><i
+            class='app-menu__icon bx bx-purchase-tag-alt' target="_blank"></i><span class="app-menu__label">Remove Facility</span></a></li>
+    </ul>
   </aside>
   <main class="app-content">
     <div class="row">
@@ -66,56 +59,60 @@
           <ul class="app-breadcrumb ">
           </ul>
           <div id="clock"></div>
-      </div>
+        </div>
       </div>
     </div>
-
-
     <div class="row">
       <div class="col-md-12 col-lg-12" style="padding-left: 125px">
         <div class="row">
           <div class="col-md-12">
             <div class="tile">
               <h3 class="tile-title"></h3>
-              <div class="">
-                <h1 class="big-title">ElectricWaterUsage</h1>
+              <h1 class="big-title">Remove Facility</h1>
+              <div id="remove-facility-form"> <br>
+                  <h1 id="check"></h1>
+                  <label class="SBB-input-label no-margin"> Remove to</label>
+                  <select class="SBB-input" id="idRemove" onchange="loadIdRemove()">
+                    <option value="" disabled selected>Chọn một lựa chọn</option>
+                    <option value="1" >Branch</option>
+                    <option value="2" >Dorm</option>
+                    <option value="3" >Room</option>
+                    <option value="4" >Slot</option>
+                  </select><br>
+                  <div id="load">
+                    
+                  </div><br><br>
+                  <button class="btn btn-primary" type="submit" onclick="removeFacility()">Remove</button>
+                  <button class="btn btn-primary" type="submit" onclick="notAssignFacility()">Not Assign</button><br><br>
                 <table class="table table-bordered">
                   <thead>
                     <tr>
                     <tr>
                       <th>ID</th>
-                      <th>roomID</th>
-                      <th>electricUsage</th>
-                      <th>waterUsage</th>
-                      <th>createdDate</th>
-                      <th>electricEnd</th>
-                      <th>electricStart</th>
-                      <th>monthPay</th>
-                      <th>waterStart</th>
-                      <th>waterEnd</th>
+                      <th>Branch</th>
+                      <th>Dorm</th>
+                      <th>Room</th>
+                      <th>Slot</th>
+                      <th>FacilityDetailID</th>
                   </thead>
-                  <tbody id="electricWaterUsage">
+                  <tbody id="facilityTable">
                     <tr>
                       <th scope="row"></th>
                       <td></td>
                       <td></td>
                       <td></td>
-                      <td></td>
-
                     </tr>
 
                   </tbody>
 
                 </table><br>
+                <!-- / div trống-->
               </div>
             </div>
-
+            <!-- / col-12 -->
           </div>
         </div>
-
       </div>
-    </div>
-    </div>
   </main>
   <script type="text/javascript">
     var data = {
@@ -142,11 +139,7 @@
       }
       ]
     };
-    // var ctxl = $("#lineChartDemo").get(0).getContext("2d");
-    // var lineChart = new Chart(ctxl).Line(data);
 
-    // var ctxb = $("#barChartDemo").get(0).getContext("2d");
-    // var barChart = new Chart(ctxb).Bar(data);
   </script>
   <script type="text/javascript">
     //Thời Gian
@@ -189,7 +182,61 @@
     }
   </script>
 </body>
-<script src="/js/electric-water-usage.js"></script>
-<script src="/js/auth.js"></script>
+<script src="/js/remove-facility.js"></script>
 
 </html>
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/elegant-icons.css">
+    <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+    <h1>Remove Facility</h1>
+  <div id="remove-facility-form">
+    
+      <table class="table table-bordered">
+        <thead>
+            <tr>
+            <tr>
+                <th>ID</th>
+                <th>Branch</th>
+                <th>Dorm</th>
+                <th>Room</th>
+                <th>Slot</th>
+                <th>FacilityDetailID</th>
+        </thead>
+        <tbody id="facilityTable">
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+        </tbody>
+
+    </table><br>
+    Remove to: <br><select class="SBB-input" id="idRemove" onchange="loadIdRemove()">
+      <option value="" disabled selected>Chọn một lựa chọn</option>
+      <option value="1" >Branch</option>
+      <option value="2" >Dorm</option>
+      <option value="3" >Room</option>
+      <option value="4" >Slot</option>
+    </select><br>
+    <div id="load">
+      
+    </div>
+    <button class="btn btn-primary" type="submit" onclick="removeFacility()">Remove</button>
+    <button class="btn btn-primary" type="submit" onclick="notAssignFacility()">Not Assign</button>
+
+  </div>
+</body>
+<script src="/js/remove-facility.js"></script>
+</html> -->
