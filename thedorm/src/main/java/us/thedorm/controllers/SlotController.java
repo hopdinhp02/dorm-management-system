@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
 
 import us.thedorm.repositories.*;
+import us.thedorm.service.BookingService;
 import us.thedorm.service.RoomStatusService;
 
 

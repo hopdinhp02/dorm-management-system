@@ -1,4 +1,23 @@
 loadbranch()
+
+// let month = document.getElementById("month")
+// let x = new Date();
+// let lastMonth = x.getFullYear() + "-" + x.getMonth()
+// console.log(x);
+// console.log(lastMonth);
+// console.log(month.value);
+
+const currDate = new Date();
+const currYear = currDate.getFullYear();
+const currMonth = currDate.getMonth();
+if (currMonth >= 10) {
+    month.value = currYear + "-" + currMonth;
+} else {
+    month.value = currYear + "-0" + currMonth;
+}
+
+
+
 function loadbranch() {
     let branchDropDown = document.getElementById("branchs");
     console.log(branchDropDown.value);

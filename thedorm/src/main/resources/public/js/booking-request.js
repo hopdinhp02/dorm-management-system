@@ -36,7 +36,7 @@ function checkUserIsBook() {
       console.log(dataJson);
       if (dataJson.data != false) {
         bookingForm.innerHTML = `<h3 class="big-title"  style='color: red;'>You have booked</h3>
-             <div style="font-size: 20px;" >
+             <div style="font-size: 20px;" class="col-xs-12 col-md-7 no-padding no-margin" >
               Branch: ${dataJson.data.slot.room.dorm.branch.name}<br>
               Dorm: ${dataJson.data.slot.room.dorm.name}<br>
               Room: ${dataJson.data.slot.room.name}<br>
@@ -365,12 +365,21 @@ function checkDayBooking() {
     });
 }
 
+function loadOption(){
+  let value = document.getElementById("book").value
+  if (value == 1) {
+    getOldSlot();
+  } else {
+    getNewSlotInKeepDay();
+  }
+}
+
 function checkliving() {
   let branchId = document.getElementById("branchs").value
   let url = "http://localhost:8081/api/v1/booking-requests/check-living/branchs/" + branchId;
   let text = document.getElementById("bookingtitle");
   let bookingRequest = ``;
-
+  
   fetch(url, {
     method: 'GET',
     headers: {
@@ -382,7 +391,12 @@ function checkliving() {
     .then(dataJson => {
 
       if (dataJson.data == true) {
-        getOldSlot();
+        let select = document.getElementById("select")
+        select.innerHTML = `<select class="SBB-input" id="book" onchange="loadOption()">
+        <option value="" disabled selected>Select option</option>
+        <option value="1" >Keep room</option>
+        <option value="2" >Book new room</option>
+      </select>`
       } else {
         // bookingRequest = `<h1>Keeping day: 
         //                                   you don't have room</h1>`
@@ -395,6 +409,103 @@ function checkliving() {
     });
 }
 
+function getNewSlotInKeepDay() {
+  let branchId = document.getElementById("branchs").value
+  console.log(branchId);
+  let dormRequest = ``;
+  dormRequest = `
+  <div id="booking-request-form">
+  <div class=" no-padding no-margin">
+      <h1 id="check"></h1>
+      <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+          <div class="SBB-available-btn" >
+              <a href="#" class="sidebar-linkItem flex items-center" style="height: 42px">See available beds</a>
+          </div>
+          <div class="SBB-layout-1">
+              <label class="SBB-input-label no-margin">Room Type</label>
+              <div class="" >
+                  <input class="SBB-input " readonly="" type="text" value="SV - 3 beds - 950.000">
+                  <input id="RoomTypeId" name="RoomTypeId" type="hidden" value="3">
+              </div>
+          </div>
+      </div>
+      <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+          <div class="SBB-layout-1">
+              <label class="SBB-input-label no-margin">Dom</label>
+              <div class="my-select-style">
+                  <select class="SBB-input" id="dorms" name="DomId" onchange="loadrooms()"></select>
+              </div>
+          </div>
+          <div class="SBB-layout-1">
+              <label class="SBB-input-label no-margin">Room</label>
+              <div class="my-select-style">
+                  <select class="SBB-input" id="rooms" name="Rooms" onchange="loadSlotNew()"></select>
+              </div>
+          </div>
+      </div>
+      <div class="flex" style="gap: 24px;  margin-bottom: 24px;">
+          <div class="SBB-layout-1">
+              <label class="SBB-input-label no-margin" for="Semester">Slot</label>
+              <div class="my-select-style">
+                  <select class="SBB-input" id="slots" name="Slot" onchange="getBookingCost()">
+                  </select>
+              </div>
+          </div>
+          
+          <div class="SBB-layout-1">
+              <label class="SBB-input-label no-margin" for="Note">Note</label>
+              <div class="">
+                  <input class="SBB-input text-box single-line" id="Note" name="Note" type="text" value="" style="height: 42px">
+                  </input>
+              </div>
+          </div>
+          
+      </div>
+      <div id="booking">
+      
+      </div>
+      
+  </div>
+</div>`
+        dorm.innerHTML = dormRequest;
+        loaddorm();
+}
+
+function loadSlotNew(){
+  
+  let slotDropDown = document.getElementById("slots");
+  slotDropDown.innerHTML = '';
+  const selectElement = document.getElementById("rooms");
+  const roomId = selectElement.value;
+  console.log("roomid for slot: " + roomId);
+  let url = "http://localhost:8081/api/v1/slots/slot-available/room/" + roomId ;
+  console.log(url);
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+    }
+  })
+    .then(response => response.json())
+    .then(jsonData => {
+      var option = document.createElement("option");
+      option.text = "Select slot";
+      option.disabled = true;
+      option.selected = true;
+      slotDropDown.append(option);
+      jsonData.data.forEach(element => {
+        var option = document.createElement("option");
+        option.text = element.name;
+        option.value = element.id;
+        slotDropDown.append(option);
+      });
+
+    })
+    .catch(error => {
+      console.log("error");
+    });
+}
 
 function getOldSlot() {
   let branchId = document.getElementById("branchs").value
