@@ -45,8 +45,8 @@ public interface ElectricWaterUsageRepo extends JpaRepository<ElectricWaterUsage
             "            OR(ewu.month_pay >= reh.checkin_date AND DATEADD(month, DATEDIFF(month, 0, ewu.month_pay), 0)<= reh.checkout_date AND reh.checkout_date IS NOT NULl\n" +
             "            ))",nativeQuery = true)
     List<ElectricWaterUsage> ListElecWaterOfResidenId(Long ResidentId) ;
-    @Query (value="SELECT * FROM electric_water_usage\n" +
-            "WHERE room_id = :roomid AND CONVERT(VARCHAR(7), month_pay, 23) = CONVERT(VARCHAR(7), DATEADD(MONTH, -1, :month), 23)",nativeQuery = true)
-    ElectricWaterUsage EndNumberELectricWater(@Param("roomid") Long roomId,@Param("month") String month);
+    @Query (value="SELECT TOP 1 * FROM electric_water_usage\n" +
+            "WHERE room_id = ? ORDER BY id DESC",nativeQuery = true)
+    ElectricWaterUsage EndNumberELectricWater(@Param("roomid") Long roomId);
 }
 
