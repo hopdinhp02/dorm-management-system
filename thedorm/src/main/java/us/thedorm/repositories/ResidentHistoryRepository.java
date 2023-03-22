@@ -96,5 +96,36 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
     List<ResidentHistory> findResidentHistoriesByNameAndBranchId(@Param("name") String name, @Param("branch_id") long id);
 
 
+    @Query(value = "  select rh.*from resident_history as rh \n" +
+            "    inner join user_info as uf on rh.resident_id = uf.id\n" +
+            "\tinner join slot sl on rh.slot_id = sl.id\n" +
+            "   where GETDATE() between rh.start_date and rh.end_date and sl.room_id=:room_id", nativeQuery = true)
+    List<ResidentHistory> findResidentHistoriesByRoom_Id(@Param("room_id") long id);
+
+
+    @Query(value = "SELECT rh.* FROM resident_history rh\n" +
+        "inner join slot s on rh.slot_id = s.id\n" +
+        "inner join room r on s.room_id = r.id\n" +
+        "where r.id = :roomId and :date between rh.start_date and rh.end_date\n", nativeQuery = true)
+    List<ResidentHistory> findByRoomIdAndDate(@Param("roomId") long roomId,@Param("date")  LocalDate date);
+
+    @Query(value = "SELECT rh.* FROM resident_history rh\n" +
+            "inner join slot s on rh.slot_id = s.id\n" +
+            "inner join room r on s.room_id = r.id\n" +
+            "inner join dorm d on r.dorm_id = d.id\n" +
+            "where d.id = :dormId and :date between rh.start_date and rh.end_date", nativeQuery = true)
+    List<ResidentHistory> findByDormIdAndDate(@Param("dormId") long dormId,@Param("date")  LocalDate date);
+
+    @Query(value = "SELECT rh.* FROM resident_history rh\n" +
+            "inner join slot s on rh.slot_id = s.id\n" +
+            "inner join room r on s.room_id = r.id\n" +
+            "inner join dorm d on r.dorm_id = d.id\n" +
+            "inner join branch b on d.branch_id = b.id\n" +
+            "where b.id = :branchId and :date between rh.start_date and rh.end_date", nativeQuery = true)
+    List<ResidentHistory> findByBranchIdAndDate(@Param("branchId") long branchId,@Param("date")  LocalDate date);
+
+    @Query(value = "SELECT rh.* FROM resident_history rh\n" +
+            "where :date between rh.start_date and rh.end_date", nativeQuery = true)
+    List<ResidentHistory> findAllByDate(@Param("date")  LocalDate date);
 
 }

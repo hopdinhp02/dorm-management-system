@@ -228,6 +228,21 @@ public class ElectricWaterUsageController {
         );
 
     }
+    @GetMapping ("/endNumberElectricWater")
+    ResponseEntity<ResponseObject> GetEndNumberElectricWater(@RequestParam (name="roomid")  Long roomid )
+    {
+//       UserInfo user = (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ElectricWaterUsage endNumberElectricWater = electricWaterUsageRepo.EndNumberELectricWater(roomid);
+        if(endNumberElectricWater != null){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Ok","",endNumberElectricWater)
+            );
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("Fail","","")
+            );
+        }
+    }
 
     @GetMapping("/all-rooms-not-even-record-electric-water-usage-of-dorm/{dormId}")
     ResponseEntity<ResponseObject> GetListRoomNotEvenRecordElectricWaterUsageOfDorm(@PathVariable Long dormId, @RequestParam String month, @RequestParam String year) {

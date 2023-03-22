@@ -87,6 +87,50 @@ async function getSlotMoneybyMonthsInYear(id, moneyType, year) {
     data = dataJson.data;
     return data;
 }
+
+async function getNumOfBookedSlotbyMonthsInYear(year, type, id) {
+    let url = `http://localhost:8081/api/v1/slots/booked?year=${year}`;
+    if(type == "room"){
+        url +='&roomid='+id
+    }else if(type == "dorm"){
+        url +='&dormid='+id
+    }else if(type == "branch"){
+        url +='&branchid='+id
+    }
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+        }
+    });
+    const dataJson = await response.json();
+    data = dataJson.data;
+    return data;
+}
+
+async function getNumOfAvailableSlotbyMonthsInYear(year, type, id) {
+    let url = `http://localhost:8081/api/v1/slots/available?year=${year}`;
+    if(type == "room"){
+        url +='&roomid='+id
+    }else if(type == "dorm"){
+        url +='&dormid='+id
+    }else if(type == "branch"){
+        url +='&branchid='+id
+    }
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+        }
+    });
+    const dataJson = await response.json();
+    data = dataJson.data;
+    return data;
+
+}
 // getAllBranchsMoneybyDaysInMonth("revenue", 2, 2023)
 async function genLineChart() {
     chartCanvas = document.getElementById('yearBarChart');
@@ -100,7 +144,11 @@ async function genLineChart() {
     if (chart != undefined) {
         chart.destroy();
     }
-    
+    chartCanvas = document.getElementById('yearSlotChart');
+    chart = Chart.getChart(chartCanvas);
+    if (chart != undefined) {
+        chart.destroy();
+    }
     const year = document.getElementById("year").value;
     const yearLabels = [];
     for (let i = 0; i < 12; i++) {
@@ -109,33 +157,44 @@ async function genLineChart() {
     var monthsRevenueArr = [];
         var monthsDepreciationArr = [];
         var monthsMaintenanceArr =[];
+        var slotAvailable = []
+        var slotBooked = []
     let type = document.getElementById("show-by").value
     if(type == 0){
          monthsRevenueArr = await getAllBranchsMoneybyMonthsInYear("revenue", year);
         monthsDepreciationArr = await getAllBranchsMoneybyMonthsInYear("depreciation", year);
          monthsMaintenanceArr = await getAllBranchsMoneybyMonthsInYear("maintenance", year);
+         slotAvailable = await getNumOfAvailableSlotbyMonthsInYear(year, null, null);
+         slotBooked = await getNumOfBookedSlotbyMonthsInYear(year, null, null);
     }else if(type == 1){
         let id = document.getElementById("branch").value;
         monthsRevenueArr = await getBranchMoneybyMonthsInYear(id,"revenue", year);
         monthsDepreciationArr = await getBranchMoneybyMonthsInYear(id,"depreciation", year);
          monthsMaintenanceArr = await getBranchMoneybyMonthsInYear(id, "maintenance", year);
+         slotAvailable = await getNumOfAvailableSlotbyMonthsInYear(year, "branch", id);
+         slotBooked = await getNumOfBookedSlotbyMonthsInYear(year, "branch", id);
     }else if(type == 2){
         let id = document.getElementById("dorm").value;
         monthsRevenueArr = await getDormMoneybyMonthsInYear(id,"revenue", year);
         monthsDepreciationArr = await getDormMoneybyMonthsInYear(id,"depreciation", year);
          monthsMaintenanceArr = await getDormMoneybyMonthsInYear(id, "maintenance", year);
+         slotAvailable = await getNumOfAvailableSlotbyMonthsInYear(year, "dorm", id);
+         slotBooked = await getNumOfBookedSlotbyMonthsInYear(year, "dorm", id);
     }
     else if(type == 3){
         let id = document.getElementById("room").value;
         monthsRevenueArr = await getRoomMoneybyMonthsInYear(id,"revenue", year);
         monthsDepreciationArr = await getRoomMoneybyMonthsInYear(id,"depreciation", year);
          monthsMaintenanceArr = await getRoomMoneybyMonthsInYear(id, "maintenance", year);
+         slotAvailable = await getNumOfAvailableSlotbyMonthsInYear(year, "room", id);
+         slotBooked = await getNumOfBookedSlotbyMonthsInYear(year, "room", id);
     }
     else if(type == 4){
         let id = document.getElementById("slot").value;
         monthsRevenueArr = await getSlotMoneybyMonthsInYear(id,"revenue", year);
         monthsDepreciationArr = await getSlotMoneybyMonthsInYear(id,"depreciation", year);
          monthsMaintenanceArr = await getSlotMoneybyMonthsInYear(id, "maintenance", year);
+
     }
     console.log("monthsRevenueArr: " + monthsRevenueArr);
     console.log("monthsDepreciationArr: " + monthsDepreciationArr);
@@ -182,13 +241,60 @@ async function genLineChart() {
             }
         }
     };
+    if(type != 4){
+        const yearSlotData = {
+            labels: yearLabels,
+            datasets: [
+                {
+                    label: 'Booked',
+                    data: slotBooked,
+                    backgroundColor: '#3F497F',
+                    borderColor: '#3F497F',
+                },
+                {
+                    label: 'Available',
+                    backgroundColor: '#F7C04A',
+                    borderColor: '#F7C04A',
+                    data: slotAvailable,
+                }
+                
+            ]
+        };
+    
+        const yearSlotConfig = {
+            type: 'bar',
+            data: yearSlotData,
+            options: {
+                plugins: {
+                  title: {
+                    display: true,
+                    text: 'Number of Booked and Available Slot'
+                  },
+                },
+                responsive: true,
+                scales: {
+                  x: {
+                    stacked: true,
+                  },
+                  y: {
+                    stacked: true
+                  }
+                }
+              }
+        };
+    
+        const yearSlotChart = new Chart(
+            document.getElementById('yearSlotChart'),
+            yearSlotConfig
+        );
+    }
     
 
     const yearBarChart = new Chart(
         document.getElementById('yearBarChart'),
         yearBarConfig
     );
-    
+
     function clickHandler(evt) {
         const points = yearBarChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
 
