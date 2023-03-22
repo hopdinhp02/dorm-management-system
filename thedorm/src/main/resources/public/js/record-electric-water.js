@@ -74,7 +74,6 @@ function loadRoom() {
     
     let id = document.getElementById("dorms").value
     let url = "http://localhost:8081/api/v1/elec-water-usages/all-rooms-not-even-record-electric-water-usage-of-dorm/" + id + "?month=" + month + "&year=" + year;
-    console.log(url);
     fetch(url, {
         method: 'GET',
         headers: {
@@ -118,34 +117,50 @@ function recordElectric() {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     const formattedDate = lastDayOfMonth.toLocaleDateString('en-CA', options).replace(/\//g, '/');
     let electricStart = document.getElementById("electricStart").value
-    let electricEnd = document.getElementById("electricStart").value
+    let electricEnd = document.getElementById("electricEnd").value
     let waterStart = document.getElementById("waterStart").value
     let waterEnd = document.getElementById("waterEnd").value
+    
+    
+    let electricStartInt = parseInt(electricStart);
+    let electricEndInt = parseInt(electricEnd);
+    let waterStartInt = parseInt(waterStart);
+    let waterEndInt = parseInt(waterEnd);
+    console.log(electricEnd);
+    if ( electricStartInt > electricEndInt) {
+        console.log(1);
+        alert("electricEnd must be greater than electricStart")
+    }
+    else if (waterStartInt > waterEndInt) {
+        alert("WaterEnd must be greater than waterStart")
+        
+    }
+    else{
+        jsonData = {electricStart: electricStart, electricEnd: electricEnd, waterStart: waterStart, waterEnd:waterEnd, monthPay:formattedDate, room : {id: roomID} };
+        fetch(url,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+                },
+    
+                body: JSON.stringify(jsonData)
+            }
+        )
+            .then(respone => respone.json())
+            .then(data => {
+    
+                console.log(data);
+                alert("Record electric water usage successfully!");
+                disabledForm();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
 
-
-    jsonData = {electricStart: electricStart, electricEnd: electricEnd, waterStart: waterStart, waterEnd:waterEnd, monthPay:formattedDate, room : {id: roomID} };
-    console.log(jsonData);
-    fetch(url,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
-            },
-
-            body: JSON.stringify(jsonData)
-        }
-    )
-        .then(respone => respone.json())
-        .then(data => {
-
-            console.log(data);
-            alert("Record electric water usage successfully!");
-            disabledForm();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    
 }
 
 function loadForm(){
@@ -160,8 +175,38 @@ function loadForm(){
     <label class="SBB-input-label no-margin">WaterEnd</label><br>
           <input class="SBB-input" type="number" id="waterEnd"><br><br>
     <button style="margin-left: 94%  ;" type="button" onclick="recordElectric()"  class="orange-btn">Record</button>`
-
+    loadStartElectricWater();
 }
+
+function loadStartElectricWater(){
+    let roomId = document.getElementById("rooms").value
+    let url = "http://localhost:8081/api/v1/elec-water-usages/endNumberElectricWater"+`?roomid=${roomId}`;
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+        }
+    })
+        .then(response => response.json())
+        .then(jsonData => {
+            if (jsonData.data == "") {
+                document.getElementById("electricStart").value = 0
+            document.getElementById("waterStart").value = 0
+            } else {
+                document.getElementById("electricStart").value = jsonData.data.electricEnd
+            document.getElementById("waterStart").value = jsonData.data.waterEnd
+        }
+            }
+            
+
+        )
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+
 function accept(id, value) {
 
     if (confirm("The value has changed to: " + value)) {
