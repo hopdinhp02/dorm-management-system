@@ -95,6 +95,28 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
             "   where  uf.name like '%'+:name +'%' AND ( rh.checkin_date IS NOT NULL and rh.checkout_date IS NULL) and GETDATE() between rh.start_date and rh.end_date and dorm.branch_id =:branch_id", nativeQuery = true)
     List<ResidentHistory> findResidentHistoriesByNameAndBranchId(@Param("name") String name, @Param("branch_id") long id);
 
+    @Query(value = "SELECT rh.* FROM resident_history rh\n" +
+        "inner join slot s on rh.slot_id = s.id\n" +
+        "inner join room r on s.room_id = r.id\n" +
+        "where r.id = :roomId and :date between rh.start_date and rh.end_date\n", nativeQuery = true)
+    List<ResidentHistory> findByRoomIdAndDate(@Param("roomId") long roomId,@Param("date")  LocalDate date);
 
+    @Query(value = "SELECT rh.* FROM resident_history rh\n" +
+            "inner join slot s on rh.slot_id = s.id\n" +
+            "inner join room r on s.room_id = r.id\n" +
+            "inner join dorm d on r.dorm_id = d.id\n" +
+            "where d.id = :dormId and :date between rh.start_date and rh.end_date", nativeQuery = true)
+    List<ResidentHistory> findByDormIdAndDate(@Param("dormId") long dormId,@Param("date")  LocalDate date);
 
+    @Query(value = "SELECT rh.* FROM resident_history rh\n" +
+            "inner join slot s on rh.slot_id = s.id\n" +
+            "inner join room r on s.room_id = r.id\n" +
+            "inner join dorm d on r.dorm_id = d.id\n" +
+            "inner join branch b on d.branch_id = b.id\n" +
+            "where b.id = :branchId and :date between rh.start_date and rh.end_date", nativeQuery = true)
+    List<ResidentHistory> findByBranchIdAndDate(@Param("branchId") long branchId,@Param("date")  LocalDate date);
+
+    @Query(value = "SELECT rh.* FROM resident_history rh\n" +
+            "where :date between rh.start_date and rh.end_date", nativeQuery = true)
+    List<ResidentHistory> findAllByDate(@Param("date")  LocalDate date);
 }
