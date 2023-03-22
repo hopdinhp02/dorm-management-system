@@ -7,8 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import us.thedorm.models.*;
+
 import us.thedorm.repositories.*;
 import us.thedorm.service.RoomStatusService;
+
 
 import java.text.ParseException;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.Optional;
 public class SlotController {
     @Autowired
     private SlotRepository slotRepository;
+    @Autowired
+    private BookingService bookingService;
     @Autowired
     private ResidentHistoryRepository residentHistoryRepository;
     @Autowired
@@ -60,9 +64,22 @@ public class SlotController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "", foundSlots));
     }
+
+
+
+
     @GetMapping("/room/{id}/available")
     ResponseEntity<ResponseObject> findslotsByRoomId(@PathVariable Long id) {
         List<Slot> foundSlots = slotRepository.getSlotsByRoom_IdAndStatus(id, Slot.Status.Available);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "", foundSlots));
+    }
+
+    @GetMapping("/slot-available/room/{id}")
+    ResponseEntity<ResponseObject> findslotsAvailable(@PathVariable Long id) {
+
+        List<Slot> foundSlots = bookingService.findAllSlotAvailable(id);
+
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "", foundSlots));
     }

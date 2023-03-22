@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import us.thedorm.models.*;
 import us.thedorm.repositories.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
@@ -32,6 +34,8 @@ public class BookingService {
 
     @Autowired
     private UserInfoRepository userInfoRepository;
+
+
 
     public Billing addBilling(BookingRequest bookingRequest) {
         Billing newBilling = Billing
@@ -66,6 +70,28 @@ public class BookingService {
 
         return null;
     }
+
+
+    public List<Slot> findAllSlotNotAvailable(List<ResidentHistory> residentHistoryList){
+        List<Slot> slots = new ArrayList<>();
+        for(ResidentHistory residentHistory : residentHistoryList){
+            slots.add(residentHistory.getSlot());
+        }
+        return  slots;
+    }
+
+
+    public List<Slot> findAllSlotAvailable(long id){
+
+        List<ResidentHistory> residentHistories = residentHistoryRepository.findResidentHistoriesByRoom_Id(id);
+        List<Slot> foundSlots = findAllSlotNotAvailable(residentHistories);
+
+        List<Slot> slots = slotRepository.getSlotsByRoom_Id(id);
+
+        return slots.stream().filter(e -> !foundSlots.contains(e))
+                 .toList();
+    }
+
 
     public void updateBookingRequest(BookingRequest newBookingRequest, BookingRequest booking_request) {
         Optional<UserInfo> user = userInfoRepository.findById(booking_request.getUserInfo().getId());
