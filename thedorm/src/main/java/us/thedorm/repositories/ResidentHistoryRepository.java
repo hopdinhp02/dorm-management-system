@@ -95,6 +95,14 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
             "   where  uf.name like '%'+:name +'%' AND ( rh.checkin_date IS NOT NULL and rh.checkout_date IS NULL) and GETDATE() between rh.start_date and rh.end_date and dorm.branch_id =:branch_id", nativeQuery = true)
     List<ResidentHistory> findResidentHistoriesByNameAndBranchId(@Param("name") String name, @Param("branch_id") long id);
 
+
+    @Query(value = "  select rh.*from resident_history as rh \n" +
+            "    inner join user_info as uf on rh.resident_id = uf.id\n" +
+            "\tinner join slot sl on rh.slot_id = sl.id\n" +
+            "   where GETDATE() between rh.start_date and rh.end_date and sl.room_id=:room_id", nativeQuery = true)
+    List<ResidentHistory> findResidentHistoriesByRoom_Id(@Param("room_id") long id);
+
+
     @Query(value = "SELECT rh.* FROM resident_history rh\n" +
         "inner join slot s on rh.slot_id = s.id\n" +
         "inner join room r on s.room_id = r.id\n" +
@@ -119,4 +127,5 @@ public interface ResidentHistoryRepository extends JpaRepository<ResidentHistory
     @Query(value = "SELECT rh.* FROM resident_history rh\n" +
             "where :date between rh.start_date and rh.end_date", nativeQuery = true)
     List<ResidentHistory> findAllByDate(@Param("date")  LocalDate date);
+
 }
