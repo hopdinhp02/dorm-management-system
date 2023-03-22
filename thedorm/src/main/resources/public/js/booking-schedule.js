@@ -22,18 +22,20 @@ function checkJwtExpiration(token) {
 
 function loadForm() {
     let form = document.getElementById("form")
-    let formSchedule = `keepStartDate: <br><input type="datetime-local" id="keepStartDate">
+    let formSchedule = `
+    
+    keepStartDate: <br><input class="SBB-input" type="datetime-local" id="keepStartDate">
     <br>
-    keepEndDate: <br><input type="datetime-local" id="keepEndDate">
+    keepEndDate: <br><input class="SBB-input" type="datetime-local" id="keepEndDate">
     <br>
-    NewStartDate: <br><input type="datetime-local" id="newStartDate">
+    NewStartDate: <br><input class="SBB-input" type="datetime-local" id="newStartDate">
     <br>
-    NewEndDate: <br><input type="datetime-local" id="newEndDate">
+    NewEndDate: <br><input class="SBB-input" type="datetime-local" id="newEndDate">
     <br>
-    StartDate: <br><input type="datetime-local" id="startDate">
+    StartDate: <br><input class="SBB-input" type="datetime-local" id="startDate">
     <br>
-    EndDate: <br><input type="datetime-local" id="endDate">
-    <br>
+    EndDate: <br><input class="SBB-input" type="datetime-local" id="endDate">
+    <br><br>
     <button class="orange-btn1" type="" id="updateButton" onclick="checkDate()">Add</button><br><br>
     `
     form.innerHTML = formSchedule
@@ -129,19 +131,20 @@ function activeSchedule(branchid) {
 
 function loadUpdateForm(id) {
     let updateForm = document.getElementById("update")
-    let updateSchedule = `keepStartDate: <br><input type="datetime-local" id="keepStartDate">
+    let updateSchedule = `
+    keepStartDate: <br><input class="SBB-input" type="datetime-local" id="keepStartDate">
     <br>
-    keepEndDate: <br><input type="datetime-local" id="keepEndDate">
+    keepEndDate: <br><input class="SBB-input" type="datetime-local" id="keepEndDate">
     <br>
-    NewStartDate: <br><input type="datetime-local" id="newStartDate">
+    NewStartDate: <br><input class="SBB-input" type="datetime-local" id="newStartDate">
     <br>
-    NewEndDate: <br><input type="datetime-local" id="newEndDate">
+    NewEndDate: <br><input class="SBB-input" type="datetime-local" id="newEndDate">
     <br>
-    StartDate: <br><input type="datetime-local" id="startDate">
+    StartDate: <br><input class="SBB-input" type="datetime-local" id="startDate">
     <br>
-    EndDate: <br><input type="datetime-local" id="endDate">
+    EndDate: <br><input class="SBB-input" type="datetime-local" id="endDate">
     <br>
-    isReset: <br><input type="text" id="isReset">
+    isReset: <br><input class="SBB-input type="text" id="isReset">
     <br>`
     updateForm.innerHTML = updateSchedule
     loadBookingScheduleById(id)

@@ -27,6 +27,36 @@
 
 
             <!-- User Menu-->
+            <ul class="header__navber-list">
+                <li class="header__navber-item header__notify-item--has-notify">
+                    <a href="" class="header__navber-item-link">
+                        <i class="app-menu__icon1 bx bx-bell"></i>
+                    </a>
+                    <div class="header__notify">
+                        <header class="header__notify-header">
+                            <h3>Notification</h3>
+                        </header>
+                        <ul class="header__notify-list">
+                            <li class="header__notify-item .header__notify-item--viewed">
+                                <a href="" class="header__notify-link">
+                                    <div class="header__notify-info">
+                                        <div id="notification">
+                                            <div class="flex flex-col items-center" style="margin-top: 24px;">
+                                              
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                           
+                        </ul>
+
+
+                    </div>
+                </li>
+
+            </ul>
+            &ensp;
             <li><a class="app-nav__item" onclick="logout()"><i class='bx bx-log-out bx-rotate-180'></i> </a>
 
             </li>
@@ -38,14 +68,13 @@
         <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="/images/user0.png" width="50px"
                 alt="User Image">
             <div>
-                <p class="app-sidebar__user-name"><b>Resident Page</b></p>
+                <p class="app-sidebar__user-name"><b>Student Page</b></p>
                 <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
             </div>
         </div>
         <hr>
         <ul class="app-menu">
-            <li><a class="app-menu__item" href="/resident/notification.html"><i class='app-menu__icon bx bx-bed'></i><span
-                        class="app-menu__label">Notification</span></a></li>
+            
             <li><a class="app-menu__item" href="/resident/booking-request.html"><i class='app-menu__icon bx bx-bed'></i><span
                         class="app-menu__label">Book room</span></a></li>
             <li><a class="app-menu__item" href="/resident/electric-water-usage.html"><i class='app-menu__icon bx bx-shower'></i><span
@@ -139,11 +168,7 @@
             }
             ]
         };
-        var ctxl = $("#lineChartDemo").get(0).getContext("2d");
-        var lineChart = new Chart(ctxl).Line(data);
-
-        var ctxb = $("#barChartDemo").get(0).getContext("2d");
-        var barChart = new Chart(ctxb).Bar(data);
+        
     </script>
     <script type="text/javascript">
         //Thời Gian
@@ -188,5 +213,5 @@
 </body>
 <script src="/js/resident-student.js"></script>
 <script src="/js/auth.js"></script>
-
+<script src="/js/notification.js"></script>
 </html>

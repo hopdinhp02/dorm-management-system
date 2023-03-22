@@ -13721,7 +13721,16 @@ be a descendant of the grid when it is being dragged.
   -o-transition: background-color 0.3s ease;
   transition: background-color 0.3s ease;
 }
-
+.app-nav__item1 {
+  display: block;
+  padding: 15px;
+  line-height: 0px;
+  color: rgb(0, 28, 64);
+  background: #fff;
+  /* -webkit-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease; */
+}
 .app-nav__item:hover, .app-nav__item:focus {
   background: rgba(0, 0, 0, 0.1);
   color: #f6f6f6;
@@ -13966,7 +13975,21 @@ be a descendant of the grid when it is being dragged.
   flex: 0 0 auto;
   width: 40px;
 }
-
+.app-menu__icon1 {
+  /* font-size: 44px;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: 40px; */
+ 
+  padding: 15px;
+  line-height: 0px;
+  color: rgb(0, 28, 64);
+  background: #f36f21;
+  -webkit-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease; 
+}
 .app-menu__label {
   white-space: nowrap;
   -webkit-box-flex: 1;
