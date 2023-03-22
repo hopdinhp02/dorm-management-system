@@ -1,25 +1,25 @@
 
 
-setInterval(function(){
+setInterval(function () {
     checkJwtExpiration(localStorage.getItem("jwt"));
-}, 10000); 
+}, 10000);
 function checkJwtExpiration(token) {
     const decodedToken = JSON.parse(atob(token.split('.')[1]));
     const expirationTime = decodedToken.exp * 1000; // convert to milliseconds
-  
+
     // Check if the token has expired
     if (Date.now() >= expirationTime) {
         alert('Token has expired');
-      console.log('Token has expired.\n Please login again!');
-      window.location.href="login.html";
+        console.log('Token has expired.\n Please login again!');
+        window.location.href = "login.html";
     } else {
-      console.log('Token is still valid');
+        console.log('Token is still valid');
     }
-  }
+}
 
-function load(){
+function load() {
     let form = document.getElementById("checkIn-Out-form")
-    let formFacility =``
+    let formFacility = ``
 
     formFacility = `<form>
     Branch: <br><select class="SBB-input" id="branchs" onchange="loaddorm()">
@@ -36,11 +36,11 @@ function load(){
     </select><br>
   </form><br>`
 
-  form.innerHTML = formFacility;
-  loadbranch();
+    form.innerHTML = formFacility;
+    loadbranch();
 }
 
-  function loadbranch() {
+function loadbranch() {
     let branchDropDown = document.getElementById("branchs");
     console.log(1);
     console.log(branchDropDown.value);
@@ -141,7 +141,7 @@ function loadrooms() {
 
 function loadslots() {
     let slotDropDown = document.getElementById("slots");
-   
+
     slotDropDown.innerHTML = '';
     const selectElement = document.getElementById("rooms");
     const roomId = selectElement.value;
@@ -169,22 +169,22 @@ function loadslots() {
         });
 }
 
-function checkInCheckOut (){
+function checkInCheckOut() {
     let selected = document.getElementById("checkInCheckOut").value
     console.log(selected);
-    if (selected == 1 ) {
+    if (selected == 1) {
         checkIn()
-    }else if(selected ==2){
+    } else if (selected == 2) {
         checkOut()
     }
 }
 
-function checkIn (){
+function checkIn() {
     let slotID = document.getElementById("slots").value
     console.log(slotID);
     let url = "http://localhost:8081/api/v1/resident-histories/guard/check-in/slots/" + slotID;
     let checkInOutTable = document.getElementById("checkInCheckOut2")
-    let checkInOut =``
+    let checkInOut = ``
     fetch(url, {
         method: 'GET',
         headers: {
@@ -198,7 +198,8 @@ function checkIn (){
             dataJson.data.forEach(element => {
                 checkInOut = `<tr>
                 <td scope="row">${element.userInfo.id}</td>
-                <td><img src="/images/avata.jpg" style="width: 80px; height: 80px;"></td>
+                <td><img src="/images/avata.jpg" style="width: 80px; height: 80px;" onclick="enlargeImage(this)" id="myImage"></td>
+                <td><img src="/images/cccd.jpg" style="width: 150px; height: 80px;" onclick="enlargeImage(this)" id="myImage"></td>
                 <td>${element.userInfo.name}</td>
                 <td>${element.userInfo.email}</td>
                 <td>${element.userInfo.phone}</td>
@@ -214,15 +215,39 @@ function checkIn (){
         });
 }
 
+function enlargeImage(img) {
+    var overlay = document.createElement("div");
+    overlay.setAttribute("id", "overlay");
+    overlay.setAttribute("onclick", "shrinkImage()");
+    overlay.setAttribute("class", "floating-div");
+    document.body.appendChild(overlay);
+    
+    var image = document.createElement("img");
+    image.setAttribute("src", img.src);
+    image.setAttribute("id", "enlarged-image");
+    console.log(image);
+    overlay.appendChild(image)
+    console.log(overlay);
+    
+  }
+  
+  function shrinkImage() {
+    var overlay = document.getElementById("overlay");
+    var image = document.getElementById("enlarged-image");
+    document.body.removeChild(overlay);
+    document.body.removeChild(image);
+  }
+
+
 function acceptCheckIn(id) {
     url = "http://localhost:8081/api/v1/resident-histories/guard/check-in";
-    jsonData = {id: id};
+    jsonData = { id: id };
     fetch(url,
         {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
             },
 
             body: JSON.stringify(jsonData)
@@ -239,15 +264,15 @@ function acceptCheckIn(id) {
         .catch(error => {
             console.error('Error:', error);
         });
-       
-   
+
+
 }
 
-function checkOut (){
+function checkOut() {
     let slotID = document.getElementById("slots").value
     let url = "http://localhost:8081/api/v1/resident-histories/guard/check-out/slots/" + slotID;
     let checkInOutTable = document.getElementById("checkInCheckOut2")
-    let checkInOut =``
+    let checkInOut = ``
     fetch(url, {
         method: 'GET',
         headers: {
@@ -279,13 +304,13 @@ function checkOut (){
 
 function acceptCheckOut(id) {
     url = "http://localhost:8081/api/v1/resident-histories/guard/check-out";
-    jsonData = {id: id};
+    jsonData = { id: id };
     fetch(url,
         {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
             },
 
             body: JSON.stringify(jsonData)
@@ -302,7 +327,7 @@ function acceptCheckOut(id) {
         .catch(error => {
             console.error('Error:', error);
         });
-       
-   
+
+
 }
 

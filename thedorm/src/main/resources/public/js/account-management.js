@@ -19,11 +19,11 @@ function searchUser(){
     .then(console.log(4))
     .then(jsonData => {
         jsonData.forEach(element => {
-            console.log(jsonData);
         user += ` 
     <tr>
     <td>${element.id}</td>
-    <td><img src="/images/avata.jpg" style="width: 80px; height: 80px;"></td>
+    <td><img src="/images/avata.jpg" style="width: 80px; height: 80px;" onclick="enlargeImage(this)" id="myImage"></td>
+    <td><img src="/images/cccd.jpg" style="width: 150px; height: 80px;" onclick="enlargeImage(this)" id="myImage"></td>
     <td>${element.name}</td>
     <td>${element.email}</td>
     <td>${element.phone}</td>
@@ -45,6 +45,31 @@ function searchUser(){
         console.log(error);
     });
 }
+
+
+function enlargeImage(img) {
+    var overlay = document.createElement("div");
+    overlay.setAttribute("id", "overlay");
+    overlay.setAttribute("onclick", "shrinkImage()");
+    overlay.setAttribute("class", "floating-div");
+    document.body.appendChild(overlay);
+    
+    var image = document.createElement("img");
+    image.setAttribute("src", img.src);
+    image.setAttribute("id", "enlarged-image");
+    console.log(image);
+    overlay.appendChild(image)
+    console.log(overlay);
+    
+  }
+  
+  function shrinkImage() {
+    var overlay = document.getElementById("overlay");
+    var image = document.getElementById("enlarged-image");
+    document.body.removeChild(overlay);
+    document.body.removeChild(image);
+  }
+
 
 function updateIsActive(userId, value){
     if (confirm("Are you sure to update?")) {

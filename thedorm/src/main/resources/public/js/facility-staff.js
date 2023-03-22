@@ -209,7 +209,6 @@ function loadFacilityNotAssign() {
         .then(jsonData => {
             jsonData.data.forEach(element => {
                 facility += ` 
-                
         <tbody id="facilityDetail">
         <tr>
         <td>${element.facilityDetail.id}</td>
@@ -236,7 +235,7 @@ function loadFacilityNotAssign() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 function updateFacilityDetail(id, value) {
@@ -651,7 +650,7 @@ function loadslots() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 
@@ -700,7 +699,7 @@ function loadFacilityByBranch() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 
@@ -749,7 +748,7 @@ function loadFacilityByDorm() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 
@@ -798,7 +797,7 @@ function loadFacilityByRoom() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 
@@ -846,7 +845,7 @@ function loadFacilityBySlot() {
 
         })
         .catch(error => {
-            console.log("error");
+            console.log(error);
         });
 }
 
