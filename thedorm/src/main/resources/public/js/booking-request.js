@@ -202,6 +202,7 @@ function loadslots() {
 }
 
 function checkDayKeep() {
+  document.getElementById("dorm").innerHTML = "";
   let url = "http://localhost:8081/api/v1/booking-schedule/check-day-keep";
   let text = document.getElementById("bookingtitle");
   let bookingRequest = ``;
@@ -402,6 +403,8 @@ function checkliving() {
         //                                   you don't have room</h1>`
         text.innerHTML = "keeping day: you don't have room"
         document.getElementById("dorm").innerHTML = "";
+        let select = document.getElementById("select")
+        select.innerHTML = ``
       }
     })
     .catch(error => {

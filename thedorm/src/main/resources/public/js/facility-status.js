@@ -46,7 +46,6 @@ function checkJwtExpiration(token) {
                 <td>${element.facilityDetail.type}</td>
                 <td>
                 <select onchange=" accept(${element.id}, this.value)">
-                     <option>${element.facilityDetail.status}</option>
                      <option value="good" ${element.facilityDetail.status == "good" ? "selected" : ""}>good</option>
                      <option value="broken"  ${element.facilityDetail.status == "broken" ? "selected" : ""}>broken</option>
                      <option value="irreparable"  ${element.facilityDetail.status == "irreparable" ? "selected" : ""}>irreparable</option>

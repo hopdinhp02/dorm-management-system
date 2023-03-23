@@ -32,7 +32,7 @@ public class RoomStatusService {
         LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
         LocalDate endDayOfLoop = firstDayOfYear.plusMonths(endMonth);
         for (LocalDate localDate = firstDayOfYear; localDate.isBefore(endDayOfLoop); localDate = localDate.plusMonths(1)) {
-            availableSlot[i++] = room.getSlots().size() - residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
+            availableSlot[i++] += room.getSlots().size() - residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
         }
         return availableSlot;
     }
@@ -53,7 +53,7 @@ public class RoomStatusService {
         LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
         LocalDate endDayOfLoop = firstDayOfYear.plusMonths(endMonth);
         for (LocalDate localDate = firstDayOfYear; localDate.isBefore(endDayOfLoop); localDate = localDate.plusMonths(1)) {
-            bookedSlot[i++] = residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
+            bookedSlot[i++] += residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
         }
         return bookedSlot;
     }
@@ -75,7 +75,7 @@ public class RoomStatusService {
             LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
             LocalDate endDayOfLoop = firstDayOfYear.plusMonths(endMonth);
             for (LocalDate localDate = firstDayOfYear; localDate.isBefore(endDayOfLoop); localDate = localDate.plusMonths(1)) {
-                availableSlot[i++] = room.getSlots().size() - residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
+                availableSlot[i++] += room.getSlots().size() - residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
             }
         }
 
@@ -99,7 +99,7 @@ public class RoomStatusService {
             LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
             LocalDate endDayOfLoop = firstDayOfYear.plusMonths(endMonth);
             for (LocalDate localDate = firstDayOfYear; localDate.isBefore(endDayOfLoop); localDate = localDate.plusMonths(1)) {
-                bookedSlot[i++] = residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
+                bookedSlot[i++] += residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
             }
         }
         return bookedSlot;
@@ -123,7 +123,7 @@ public class RoomStatusService {
                 LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
                 LocalDate endDayOfLoop = firstDayOfYear.plusMonths(endMonth);
                 for (LocalDate localDate = firstDayOfYear; localDate.isBefore(endDayOfLoop); localDate = localDate.plusMonths(1)) {
-                    availableSlot[i++] = room.getSlots().size() - residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
+                    availableSlot[i++] += room.getSlots().size() - residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
                 }
             }
         }
@@ -148,7 +148,7 @@ public class RoomStatusService {
                 LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
                 LocalDate endDayOfLoop = firstDayOfYear.plusMonths(endMonth);
                 for (LocalDate localDate = firstDayOfYear; localDate.isBefore(endDayOfLoop); localDate = localDate.plusMonths(1)) {
-                    bookedSlot[i++] = residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
+                    bookedSlot[i++] += residentHistoryRepository.findByRoomIdAndDate(room.getId(),localDate).size();
                 }
             }
         }
@@ -172,7 +172,7 @@ public class RoomStatusService {
                 LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
                 LocalDate endDayOfLoop = firstDayOfYear.plusMonths(endMonth);
                 for (LocalDate localDate = firstDayOfYear; localDate.isBefore(endDayOfLoop); localDate = localDate.plusMonths(1)) {
-                    availableSlot[i++] = slotRepository.findAll().size() - residentHistoryRepository.findAllByDate(localDate).size();
+                    availableSlot[i++] += slotRepository.findAll().size() - residentHistoryRepository.findAllByDate(localDate).size();
                 }
         return availableSlot;
     }
@@ -193,7 +193,7 @@ public class RoomStatusService {
         LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
         LocalDate endDayOfLoop = firstDayOfYear.plusMonths(endMonth);
         for (LocalDate localDate = firstDayOfYear; localDate.isBefore(endDayOfLoop); localDate = localDate.plusMonths(1)) {
-            bookedSlot[i++] = residentHistoryRepository.findAllByDate(localDate).size();
+            bookedSlot[i++] += residentHistoryRepository.findAllByDate(localDate).size();
         }
         return bookedSlot;
     }

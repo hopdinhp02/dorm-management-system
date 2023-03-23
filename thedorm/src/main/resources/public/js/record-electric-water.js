@@ -49,7 +49,7 @@ function disabledForm(){
     document.getElementById("recordElectric").innerHTML = "";
 }
 function loaddorm() {
-    
+    document.getElementById("recordElectric").innerHTML = ""
 
     let dormDropDown = document.getElementById("dorms");
     dormDropDown.innerHTML = '';
@@ -83,7 +83,7 @@ function loaddorm() {
 }
 
 function loadRoom() {
-
+    document.getElementById("recordElectric").innerHTML = ""
     let roomDropDown = document.getElementById("rooms")
     roomDropDown.innerHTML = ``
     date = document.getElementById("month");

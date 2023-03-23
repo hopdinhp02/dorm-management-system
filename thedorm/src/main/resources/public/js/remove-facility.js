@@ -93,46 +93,46 @@ function loadIdRemove() {
     let removeDropDown = document.getElementById("load")
     let reMoveRequest = ``
     if (idSelected == 1) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange="">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange="">
                  <option value="" disabled selected>Chọn một lựa chọn</option>
                </select><br>
        `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
     } if (idSelected == 2) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
     <option value="" disabled selected>Chọn một lựa chọn</option>
   </select><br> 
-  DormID: <br><select class="SBB-input" id="dormRemove" onchange="">
+  Dorm: <br><select class="SBB-input" id="dormRemove" onchange="">
        <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br>
        `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
     } if (idSelected == 3) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
     <option value="" disabled selected>Chọn một lựa chọn</option>
   </select><br> 
-  DormID: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
+  Dorm: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
        <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br>
-       RoomID: <br><select class="SBB-input" id="roomRemove" onchange="">
+       Room: <br><select class="SBB-input" id="roomRemove" onchange="">
          <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br>
       `
         removeDropDown.innerHTML = reMoveRequest
         loadbranch();
     } if (idSelected == 4) {
-        reMoveRequest = `BranchID: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
+        reMoveRequest = `Branch: <br><select class="SBB-input" id="branchRemove" onchange=" loaddorm()">
         <option value="" disabled selected>Chọn một lựa chọn</option>
       </select><br> 
-      DormID: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
+      Dorm: <br><select class="SBB-input" id="dormRemove" onchange="loadrooms()">
            <option value="" disabled selected>Chọn một lựa chọn</option>
            </select><br>
-           RoomID: <br><select class="SBB-input" id="roomRemove" onchange=" loadslots()">
+           Room: <br><select class="SBB-input" id="roomRemove" onchange=" loadslots()">
              <option value="" disabled selected>Chọn một lựa chọn</option>
            </select><br>
-           SlotID: <br><select class="SBB-input" id="slotRemove" onchange="">
+           Slot: <br><select class="SBB-input" id="slotRemove" onchange="">
          <option value="" disabled selected>Chọn một lựa chọn</option>
        </select><br></br>`
         removeDropDown.innerHTML = reMoveRequest

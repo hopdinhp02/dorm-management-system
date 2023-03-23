@@ -14,12 +14,12 @@ function loadMaintenance (){
         .then(response => response.json())
         .then(jsonData => {
             jsonData.data.forEach(element => {
-                a += ` <td>${element.id}</td>
+                a += ` <tr><td>${element.id}</td>
                 <td>${element.facilityDetail.id}</td>
                 <td>${element.price}</td>
                 <td>${element.note}</td>
                 <td>${element.fixDate}</td>
-        
+                </tr>
                 `;
             });
             maintenanceTable.innerHTML = a;

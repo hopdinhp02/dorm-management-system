@@ -5,6 +5,7 @@ function searchUser(){
   let userTable = document.getElementById("userTable")
   let user = `` 
   let url = ""
+  userTable.innerHTML = "";
   console.log(isActive);
    url = "http://localhost:8081/api/v1/user-infos/search-users?name="+name+"&role="+role+"&isActive="+isActive ;
    console.log(url);

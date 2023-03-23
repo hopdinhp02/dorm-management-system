@@ -119,6 +119,7 @@ async function getNumOfAvailableSlotbyMonthsInYear(year, type, id) {
     }else if(type == "branch"){
         url +='&branchid='+id
     }
+    console.log(url);
     const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -199,6 +200,8 @@ async function genLineChart() {
     console.log("monthsRevenueArr: " + monthsRevenueArr);
     console.log("monthsDepreciationArr: " + monthsDepreciationArr);
     console.log("monthsMaintenanceArr: " + monthsMaintenanceArr);
+    console.log("slotAvailable: " + slotAvailable);
+    console.log("slotBooked: " + slotBooked);
     const monthsExpensiveArr = [];
     for (let index = 0; index < monthsDepreciationArr.length; index++) {
         // console.log(monthsRevenueArr[index]);

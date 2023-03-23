@@ -22,7 +22,7 @@ function loadFacilityDetail() {
             document.getElementById("price").value = facilityDetailSelected.data.price;
             document.getElementById("provider").value = facilityDetailSelected.data.provider;
             document.getElementById("expirationDate").value = facilityDetailSelected.data.expirationDate;
-            document.getElementById("procudingDate").value = facilityDetailSelected.data.producingDate;
+            // document.getElementById("procudingDate").value = facilityDetailSelected.data.producingDate;
             document.getElementById("type").value = facilityDetailSelected.data.type;
         })
         .catch(error => {
@@ -38,7 +38,7 @@ function updateFacility() {
     price = document.getElementById("price").value == "" ? null : document.getElementById("price").value
     provider = document.getElementById("provider").value == "" ? null : document.getElementById("provider").value
     expirationDate = document.getElementById("expirationDate").value == "" ? null : document.getElementById("expirationDate").value
-    procudingDate = document.getElementById("procudingDate").value == "" ? null : document.getElementById("procudingDate").value
+    // procudingDate = document.getElementById("procudingDate").value == "" ? null : document.getElementById("procudingDate").value
     type = document.getElementById("type").value == "" ? null : document.getElementById("type").value
     console.log(expirationDate);
     const expirationdate = new Date(expirationDate);
